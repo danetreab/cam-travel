@@ -1,0 +1,58 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**"],
+      "env": [
+        "DATABASE_URL",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "AUTH_SERVICE_URL",
+        "GRAPHQL_SERVICE_URL",
+        "REDIS_URL",
+        "PORT",
+        "VITE_API_URL",
+        "GRAPHQL_TCP_HOST",
+        "GRAPHQL_TCP_PORT",
+        "MINIO_ENDPOINT",
+        "MINIO_PORT",
+        "MINIO_USE_SSL",
+        "MINIO_ACCESS_KEY",
+        "MINIO_SECRET_KEY",
+        "MINIO_BUCKET"
+      ]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "check-types": {
+      "dependsOn": ["^check-types"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^build"],
+      "env": [
+        "DATABASE_URL",
+        "BETTER_AUTH_SECRET",
+        "BETTER_AUTH_URL",
+        "AUTH_SERVICE_URL",
+        "GRAPHQL_SERVICE_URL",
+        "REDIS_URL",
+        "PORT",
+        "VITE_API_URL",
+        "GRAPHQL_TCP_HOST",
+        "GRAPHQL_TCP_PORT",
+        "MINIO_ENDPOINT",
+        "MINIO_PORT",
+        "MINIO_USE_SSL",
+        "MINIO_ACCESS_KEY",
+        "MINIO_SECRET_KEY",
+        "MINIO_BUCKET"
+      ]
+    }
+  }
+}

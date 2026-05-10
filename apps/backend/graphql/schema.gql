@@ -1,0 +1,445 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Post {
+  id: ID!
+  title: String!
+  body: String!
+  authorId: String!
+}
+
+type OffsetPageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type UpdateManyResponse {
+  updatedCount: Int!
+}
+
+type DeleteManyResponse {
+  deletedCount: Int!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  emailVerified: Boolean!
+  image: String
+  role: String!
+  banned: Boolean!
+  banReason: String
+  banExpires: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type UserConnection {
+  nodes: [User!]!
+  totalCount: Int!
+  pageInfo: OffsetPageInfo!
+}
+
+type UserDeleteResponse {
+  id: ID
+}
+
+type Item {
+  id: ID!
+  name: String!
+  description: String
+  price: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  files: [ItemFile!]!
+}
+
+type ItemConnection {
+  nodes: [Item!]!
+  totalCount: Int!
+  pageInfo: OffsetPageInfo!
+}
+
+type ItemDeleteResponse {
+  id: ID
+}
+
+type ItemFile {
+  id: ID!
+  filename: String!
+  originalFilename: String!
+  mimetype: String!
+  size: Int!
+  url: String!
+  thumbnailUrl: String
+  hasThumbnail: Boolean!
+  createdAt: DateTime!
+}
+
+type Attraction {
+  id: ID!
+  name: String!
+  description: String
+  latitude: Float!
+  longitude: Float!
+  activityType: String
+  durationMinutes: Int
+  difficulty: Int
+  googlePlaceId: String
+  cachedRating: Float
+  cachedUserRatingsTotal: Int
+  placesRefreshedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  files: [AttractionFile!]!
+  photos: [AttractionPhoto!]!
+}
+
+type AttractionConnection {
+  nodes: [Attraction!]!
+  totalCount: Int!
+  pageInfo: OffsetPageInfo!
+}
+
+type AttractionDeleteResponse {
+  id: ID
+}
+
+type AttractionFile {
+  id: ID!
+  filename: String!
+  originalFilename: String!
+  mimetype: String!
+  size: Int!
+  url: String!
+  thumbnailUrl: String
+  hasThumbnail: Boolean!
+  createdAt: DateTime!
+}
+
+type AttractionPhoto {
+  name: String!
+  url: String!
+  widthPx: Int
+  heightPx: Int
+}
+
+type Query {
+  posts: [Post!]!
+  post(id: ID!): Post
+  users(filter: UserFilter! = {}, paging: OffsetPaging! = {limit: 10, offset: 0}, sorting: [UserSort!]! = []): UserConnection!
+  user(id: ID!): User
+  items(filter: ItemFilter! = {}, paging: OffsetPaging! = {limit: 10, offset: 0}, sorting: [ItemSort!]! = []): ItemConnection!
+  item(id: ID!): Item
+  attractions(filter: AttractionFilter! = {}, paging: OffsetPaging! = {limit: 10, offset: 0}, sorting: [AttractionSort!]! = []): AttractionConnection!
+  attraction(id: ID!): Attraction
+}
+
+input UserFilter {
+  and: [UserFilter!]
+  or: [UserFilter!]
+  id: IDFilterComparison
+  email: StringFieldComparison
+  name: StringFieldComparison
+  emailVerified: BooleanFieldComparison
+  role: StringFieldComparison
+  banned: BooleanFieldComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input IDFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: ID
+  neq: ID
+  in: [ID!]
+  notIn: [ID!]
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input BooleanFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Boolean
+  neq: Boolean
+}
+
+input DateFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: DateTime
+  neq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+}
+
+input OffsetPaging {
+  limit: Int = 10
+  offset: Int = 0
+}
+
+input UserSort {
+  field: UserSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum UserSortFields {
+  id
+  email
+  name
+  role
+  createdAt
+  updatedAt
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+input ItemFilter {
+  and: [ItemFilter!]
+  or: [ItemFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  price: StringFieldComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input ItemSort {
+  field: ItemSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum ItemSortFields {
+  id
+  name
+  price
+  createdAt
+  updatedAt
+}
+
+input AttractionFilter {
+  and: [AttractionFilter!]
+  or: [AttractionFilter!]
+  id: IDFilterComparison
+  name: StringFieldComparison
+  activityType: StringFieldComparison
+  durationMinutes: StringFieldComparison
+  difficulty: StringFieldComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input AttractionSort {
+  field: AttractionSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum AttractionSortFields {
+  id
+  name
+  activityType
+  durationMinutes
+  difficulty
+  cachedRating
+  cachedUserRatingsTotal
+  createdAt
+  updatedAt
+}
+
+type Mutation {
+  deleteOneUser(input: DeleteOneUserInput!): UserDeleteResponse!
+  deleteManyUser(input: DeleteManyUserInput!): DeleteManyResponse!
+  deleteOneItem(input: DeleteOneItemInput!): ItemDeleteResponse!
+  deleteManyItem(input: DeleteManyItemInput!): DeleteManyResponse!
+  createOneItem(input: CreateOneItemInput!): Item!
+  createManyItem(input: CreateManyItemInput!): [Item!]!
+  updateOneItem(input: UpdateOneItemInput!): Item!
+  updateManyItem(input: UpdateManyItemInput!): UpdateManyResponse!
+  deleteOneAttraction(input: DeleteOneAttractionInput!): AttractionDeleteResponse!
+  deleteManyAttraction(input: DeleteManyAttractionInput!): DeleteManyResponse!
+  createOneAttraction(input: CreateOneAttractionInput!): Attraction!
+  createManyAttraction(input: CreateManyAttractionInput!): [Attraction!]!
+  updateOneAttraction(input: UpdateOneAttractionInput!): Attraction!
+  updateManyAttraction(input: UpdateManyAttractionInput!): UpdateManyResponse!
+}
+
+input DeleteOneUserInput {
+  id: ID!
+}
+
+input DeleteManyUserInput {
+  filter: UserFilter!
+}
+
+input DeleteOneItemInput {
+  id: ID!
+}
+
+input DeleteManyItemInput {
+  filter: ItemFilter!
+}
+
+input CreateOneItemInput {
+  item: CreateItemInput!
+}
+
+input CreateItemInput {
+  name: String!
+  description: String
+  price: Float!
+}
+
+input CreateManyItemInput {
+  items: [CreateItemInput!]!
+}
+
+input UpdateOneItemInput {
+  id: ID!
+  update: UpdateItemInput!
+}
+
+input UpdateItemInput {
+  name: String
+  description: String
+  price: Float
+}
+
+input UpdateManyItemInput {
+  filter: ItemFilter!
+  update: UpdateItemInput!
+}
+
+input DeleteOneAttractionInput {
+  id: ID!
+}
+
+input DeleteManyAttractionInput {
+  filter: AttractionFilter!
+}
+
+input CreateOneAttractionInput {
+  attraction: CreateAttractionInput!
+}
+
+input CreateAttractionInput {
+  name: String!
+  description: String
+  latitude: Float!
+  longitude: Float!
+  activityType: String
+  durationMinutes: Int
+  difficulty: Int
+  googlePlaceId: String
+}
+
+input CreateManyAttractionInput {
+  attractions: [CreateAttractionInput!]!
+}
+
+input UpdateOneAttractionInput {
+  id: ID!
+  update: UpdateAttractionInput!
+}
+
+input UpdateAttractionInput {
+  name: String
+  description: String
+  latitude: Float
+  longitude: Float
+  activityType: String
+  durationMinutes: Int
+  difficulty: Int
+  googlePlaceId: String
+}
+
+input UpdateManyAttractionInput {
+  filter: AttractionFilter!
+  update: UpdateAttractionInput!
+}
+
+type Subscription {
+  createdUser(input: CreateUserSubscriptionFilterInput): User!
+  updatedOneUser(input: UpdateOneUserSubscriptionFilterInput): User!
+  deletedOneUser(input: DeleteOneUserSubscriptionFilterInput): User!
+  createdItem(input: CreateItemSubscriptionFilterInput): Item!
+  updatedOneItem(input: UpdateOneItemSubscriptionFilterInput): Item!
+  deletedOneItem(input: DeleteOneItemSubscriptionFilterInput): Item!
+  createdAttraction(input: CreateAttractionSubscriptionFilterInput): Attraction!
+  updatedOneAttraction(input: UpdateOneAttractionSubscriptionFilterInput): Attraction!
+  deletedOneAttraction(input: DeleteOneAttractionSubscriptionFilterInput): Attraction!
+}
+
+input CreateUserSubscriptionFilterInput {
+  filter: UserFilter
+}
+
+input UpdateOneUserSubscriptionFilterInput {
+  filter: UserFilter
+}
+
+input DeleteOneUserSubscriptionFilterInput {
+  filter: UserFilter
+}
+
+input CreateItemSubscriptionFilterInput {
+  filter: ItemFilter
+}
+
+input UpdateOneItemSubscriptionFilterInput {
+  filter: ItemFilter
+}
+
+input DeleteOneItemSubscriptionFilterInput {
+  filter: ItemFilter
+}
+
+input CreateAttractionSubscriptionFilterInput {
+  filter: AttractionFilter
+}
+
+input UpdateOneAttractionSubscriptionFilterInput {
+  filter: AttractionFilter
+}
+
+input DeleteOneAttractionSubscriptionFilterInput {
+  filter: AttractionFilter
+}

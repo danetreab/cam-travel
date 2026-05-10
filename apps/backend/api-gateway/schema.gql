@@ -1,0 +1,175 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Post {
+  id: ID!
+  title: String!
+  body: String!
+  authorId: String!
+}
+
+type OffsetPageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+}
+
+type DeleteManyResponse {
+  deletedCount: Int!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  emailVerified: Boolean!
+  image: String
+  role: String!
+  banned: Boolean!
+  banReason: String
+  banExpires: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type UserConnection {
+  nodes: [User!]!
+  totalCount: Int!
+  pageInfo: OffsetPageInfo!
+}
+
+type UserDeleteResponse {
+  id: ID
+}
+
+type Query {
+  posts: [Post!]!
+  post(id: ID!): Post
+  users(filter: UserFilter! = {}, paging: OffsetPaging! = {limit: 10, offset: 0}, sorting: [UserSort!]! = []): UserConnection!
+  user(id: ID!): User
+}
+
+input UserFilter {
+  and: [UserFilter!]
+  or: [UserFilter!]
+  id: IDFilterComparison
+  email: StringFieldComparison
+  name: StringFieldComparison
+  emailVerified: BooleanFieldComparison
+  role: StringFieldComparison
+  banned: BooleanFieldComparison
+  createdAt: DateFieldComparison
+  updatedAt: DateFieldComparison
+}
+
+input IDFilterComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: ID
+  neq: ID
+  in: [ID!]
+  notIn: [ID!]
+}
+
+input StringFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: String
+  neq: String
+  gt: String
+  gte: String
+  lt: String
+  lte: String
+  like: String
+  notLike: String
+  iLike: String
+  notILike: String
+  in: [String!]
+  notIn: [String!]
+}
+
+input BooleanFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Boolean
+  neq: Boolean
+}
+
+input DateFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: DateTime
+  neq: DateTime
+  gt: DateTime
+  gte: DateTime
+  lt: DateTime
+  lte: DateTime
+  in: [DateTime!]
+  notIn: [DateTime!]
+}
+
+input OffsetPaging {
+  limit: Int = 10
+  offset: Int = 0
+}
+
+input UserSort {
+  field: UserSortFields!
+  direction: SortDirection!
+  nulls: SortNulls
+}
+
+enum UserSortFields {
+  id
+  email
+  name
+  role
+  createdAt
+  updatedAt
+}
+
+enum SortDirection {
+  ASC
+  DESC
+}
+
+enum SortNulls {
+  NULLS_FIRST
+  NULLS_LAST
+}
+
+type Mutation {
+  deleteOneUser(input: DeleteOneUserInput!): UserDeleteResponse!
+  deleteManyUser(input: DeleteManyUserInput!): DeleteManyResponse!
+}
+
+input DeleteOneUserInput {
+  id: ID!
+}
+
+input DeleteManyUserInput {
+  filter: UserFilter!
+}
+
+type Subscription {
+  createdUser(input: CreateUserSubscriptionFilterInput): User!
+  updatedOneUser(input: UpdateOneUserSubscriptionFilterInput): User!
+  deletedOneUser(input: DeleteOneUserSubscriptionFilterInput): User!
+}
+
+input CreateUserSubscriptionFilterInput {
+  filter: UserFilter
+}
+
+input UpdateOneUserSubscriptionFilterInput {
+  filter: UserFilter
+}
+
+input DeleteOneUserSubscriptionFilterInput {
+  filter: UserFilter
+}

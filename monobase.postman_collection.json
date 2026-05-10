@@ -1,0 +1,1020 @@
+{
+  "info": {
+    "name": "Monobase",
+    "description": "API collection for the Monobase backend: auth (better-auth), api-gateway (REST + GraphQL proxy), and graphql (NestJS code-first).\n\nArchitecture:\n- gateway ({{gateway_url}}) is the single entry point for browser traffic. It proxies /api/auth/* to the auth service, exposes /api/v1/* REST routes, and forwards POST /graphql/v1 into the graphql service over a Redis/TCP microservice transport.\n- auth ({{auth_url}}) and graphql ({{graphql_url}}) are reachable directly for debugging only.\n\nGraphQL versioning: the GraphQL endpoint is path-versioned to mirror the REST surface — POST /graphql/v1 (gateway) and ws://localhost:3002/graphql/v1 (subscriptions) are the only supported paths.\n\nSession handling: Postman keeps cookies automatically across a session — better-auth sets the session cookie on sign-in and the same cookie is then sent on get-session, admin/* and authed /graphql/v1 calls.\n\nOrigin header: better-auth enforces an Origin check on authenticated state-changing requests. The collection-level pre-request script sets Origin: {{gateway_url}} on every request.\n\nGraphQL admin/users + admin/items: the @repo/graphql service exposes CrudResolvers over the user table (from @repo/db) and the item table. User mutations write directly to Postgres — they bypass better-auth password hashing and account-row creation, so users created via createOneUser cannot sign in via email/password until a password is set through the auth API.\n\nItem file upload: each item can have multiple files attached via the polymorphic uploaded_file table. Uploads are multipart REST requests handled directly by the graphql service (NOT proxied by the gateway): POST {{graphql_url}}/api/v1/items/:itemId/files. The server stores the binary in MinIO, generates thumbnails for compressible images, and returns presigned GET URLs in the response. The Item GraphQL type exposes a `files` field for read access.\n\nSubscriptions: createdUser / updatedOneUser / deletedOneUser (and the createdItem/updatedOneItem/deletedOneItem variants) are GraphQL subscriptions and require WebSocket transport. Use a Postman WebSocket request to ws://localhost:3002/graphql/v1 to test them — they aren't included as collection items because Postman models WS separately.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// better-auth requires Origin header on authenticated state-changing requests",
+          "// (CSRF protection). Always send the gateway URL as Origin.",
+          "const gatewayUrl = pm.collectionVariables.get('gateway_url');",
+          "if (gatewayUrl) {",
+          "  pm.request.headers.upsert({ key: 'Origin', value: gatewayUrl });",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "auth_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "graphql_url",
+      "value": "http://localhost:3002",
+      "type": "string"
+    },
+    {
+      "key": "admin_email",
+      "value": "admin@example.com",
+      "type": "string"
+    },
+    {
+      "key": "admin_password",
+      "value": "password123",
+      "type": "string"
+    },
+    {
+      "key": "user_email",
+      "value": "user@example.com",
+      "type": "string",
+      "description": "Regular (non-admin) user used by the Auth → Sign Up (regular user) request."
+    },
+    {
+      "key": "user_password",
+      "value": "password123",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string",
+      "description": "Populated by Sign Up / Sign In via test scripts."
+    },
+    {
+      "key": "created_user_id",
+      "value": "",
+      "type": "string",
+      "description": "Populated by GraphQL Create One User test script. Used by Get / Update One / Delete One."
+    },
+    {
+      "key": "created_item_id",
+      "value": "",
+      "type": "string",
+      "description": "Populated by GraphQL Create One Item test script. Used by item Get / Update / Delete and the multipart file upload endpoints."
+    },
+    {
+      "key": "uploaded_file_id",
+      "value": "",
+      "type": "string",
+      "description": "Populated by the multipart Upload Files endpoint. Used by Delete Uploaded File."
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Auth — direct (:3001)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{auth_url}}/health",
+              "host": ["{{auth_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "API Gateway",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/health",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth (via gateway)",
+      "description": "All requests go through the gateway at {{gateway_url}}, which proxies /api/auth/* to the auth service. This is how the dashboard talks to auth — never hit :3001 directly in real flows because the better-auth session cookie is scoped to the gateway origin.",
+      "item": [
+        {
+          "name": "Sign Up (admin email)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.user && json.user.id) {",
+                  "  pm.collectionVariables.set('user_id', json.user.id);",
+                  "  console.log('Saved user_id:', json.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\",\n  \"name\": \"Admin\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/sign-up/email",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "sign-up", "email"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sign Up (regular user)",
+          "description": "Creates a non-admin user. Run this then sign in as them to test flows with role=user (default).",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.user && json.user.id) {",
+                  "  pm.collectionVariables.set('user_id', json.user.id);",
+                  "  console.log('Saved user_id:', json.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{user_email}}\",\n  \"password\": \"{{user_password}}\",\n  \"name\": \"Regular User\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/sign-up/email",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "sign-up", "email"]
+            }
+          }
+        },
+        {
+          "name": "Sign In (admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.user && json.user.id) {",
+                  "  pm.collectionVariables.set('user_id', json.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/sign-in/email",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "sign-in", "email"]
+            }
+          }
+        },
+        {
+          "name": "Sign In (regular user)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json && json.user && json.user.id) {",
+                  "  pm.collectionVariables.set('user_id', json.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{user_email}}\",\n  \"password\": \"{{user_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/sign-in/email",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "sign-in", "email"]
+            }
+          }
+        },
+        {
+          "name": "Get Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/get-session",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "get-session"]
+            }
+          }
+        },
+        {
+          "name": "Sign Out",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/sign-out",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "sign-out"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin (better-auth admin plugin)",
+      "description": "Endpoints provided by better-auth's admin() plugin. Requires the calling user to have role='admin' in the user table. Promote a user with: UPDATE \"user\" SET role='admin' WHERE email='...';",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/admin/list-users?limit=100",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "admin", "list-users"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Set Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/admin/set-role",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "admin", "set-role"]
+            }
+          }
+        },
+        {
+          "name": "Ban User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/admin/ban-user",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "admin", "ban-user"]
+            }
+          }
+        },
+        {
+          "name": "Unban User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/admin/unban-user",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "admin", "unban-user"]
+            }
+          }
+        },
+        {
+          "name": "Remove User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{user_id}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/auth/admin/remove-user",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "auth", "admin", "remove-user"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "REST (api-gateway dummy data)",
+      "item": [
+        {
+          "name": "List Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/items",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "items"]
+            }
+          }
+        },
+        {
+          "name": "List Users (dummy REST)",
+          "description": "Hardcoded users from the gateway's REST controller. Distinct from the real auth users available via /api/auth/admin/list-users and the GraphQL admin/users CRUD.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/v1/users",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "v1", "users"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL — Posts",
+      "description": "Read-only resolver over an in-memory dummy list. Useful for verifying that the gateway → graphql TCP transport is working end-to-end.",
+      "item": [
+        {
+          "name": "Posts (via gateway)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Posts {\n  posts {\n    id\n    title\n    body\n    authorId\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Single Post by ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Post($id: ID!) {\n  post(id: $id) {\n    id\n    title\n    body\n    authorId\n  }\n}",
+                "variables": "{\n  \"id\": \"1\"\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Posts — direct (:3002)",
+          "description": "Bypasses the gateway's AuthGuard. Useful for schema introspection during development.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Posts {\n  posts {\n    id\n    title\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "{{graphql_url}}/graphql/v1",
+              "host": ["{{graphql_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL — Admin Users (CRUD)",
+      "description": "Generated by the CrudResolver in apps/backend/graphql against the user table from @repo/db. Every operation is protected by the better-auth admin AC — the calling session must have role='admin' (read=user:list, create=user:create, update=user:update, delete=user:delete).\n\nList query supports filter / paging (limit, offset) / sorting following the nestjs-query convention. Mutations follow the Input wrapper pattern: createOneUser takes { input: { user: { ... } } }, updateOneUser takes { input: { id, update: { ... } } }, deleteOneUser takes { input: { id } }, and the *Many variants take a list / filter respectively.",
+      "item": [
+        {
+          "name": "List Users",
+          "description": "Paginated list with filter and sort. Returns nodes + totalCount + pageInfo.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Users(\n  $filter: UserFilter\n  $paging: OffsetPaging\n  $sorting: [UserSort!]\n) {\n  users(filter: $filter, paging: $paging, sorting: $sorting) {\n    nodes {\n      id\n      email\n      name\n      emailVerified\n      role\n      banned\n      banReason\n      banExpires\n      createdAt\n      updatedAt\n    }\n    totalCount\n    pageInfo {\n      hasNextPage\n      hasPreviousPage\n    }\n  }\n}",
+                "variables": "{\n  \"filter\": {},\n  \"paging\": { \"limit\": 25, \"offset\": 0 },\n  \"sorting\": [{ \"field\": \"createdAt\", \"direction\": \"DESC\" }]\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "List Users — filtered by email",
+          "description": "Example of the filter shape: nestjs-query operator object per field.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query UsersByEmail($filter: UserFilter, $paging: OffsetPaging) {\n  users(filter: $filter, paging: $paging) {\n    nodes {\n      id\n      email\n      name\n      role\n    }\n    totalCount\n  }\n}",
+                "variables": "{\n  \"filter\": { \"email\": { \"iLike\": \"%@example.com\" } },\n  \"paging\": { \"limit\": 25, \"offset\": 0 }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query User($id: ID!) {\n  user(id: $id) {\n    id\n    email\n    name\n    emailVerified\n    image\n    role\n    banned\n    banReason\n    banExpires\n    createdAt\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"id\": \"{{created_user_id}}\"\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Create One User",
+          "description": "Writes directly to the user table — does not create the matching account row, so the new user cannot sign in via email/password until provisioned through better-auth. Test script captures the new id into {{created_user_id}}.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json && json.data && json.data.createOneUser && json.data.createOneUser.id;",
+                  "if (id) {",
+                  "  pm.collectionVariables.set('created_user_id', id);",
+                  "  console.log('Saved created_user_id:', id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateOneUser($input: CreateOneUserInput!) {\n  createOneUser(input: $input) {\n    id\n    email\n    name\n    role\n    createdAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"user\": {\n      \"email\": \"new.user@example.com\",\n      \"name\": \"New User\",\n      \"role\": \"user\"\n    }\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Create Many Users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateManyUsers($input: CreateManyUsersInput!) {\n  createManyUsers(input: $input) {\n    id\n    email\n    name\n    role\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"users\": [\n      { \"email\": \"bulk1@example.com\", \"name\": \"Bulk One\" },\n      { \"email\": \"bulk2@example.com\", \"name\": \"Bulk Two\" }\n    ]\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Update One User",
+          "description": "Uses {{created_user_id}} from Create One User by default.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateOneUser($input: UpdateOneUserInput!) {\n  updateOneUser(input: $input) {\n    id\n    email\n    name\n    role\n    banned\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": \"{{created_user_id}}\",\n    \"update\": {\n      \"name\": \"Renamed User\",\n      \"role\": \"admin\"\n    }\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Update Many Users",
+          "description": "Bulk update by filter. Returns { updatedCount }. Example: ban every user whose email ends with @example.com.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateManyUsers($input: UpdateManyUsersInput!) {\n  updateManyUsers(input: $input) {\n    updatedCount\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"filter\": { \"email\": { \"iLike\": \"%@example.com\" } },\n    \"update\": { \"banned\": true, \"banReason\": \"bulk-test\" }\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Delete One User",
+          "description": "Returns { id } (the DeleteResponse type). Uses {{created_user_id}} by default.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteOneUser($input: DeleteOneUserInput!) {\n  deleteOneUser(input: $input) {\n    id\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": \"{{created_user_id}}\"\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Many Users",
+          "description": "Bulk delete by filter. Returns { deletedCount }. Example deletes every user whose email starts with bulk.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteManyUsers($input: DeleteManyUsersInput!) {\n  deleteManyUsers(input: $input) {\n    deletedCount\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"filter\": { \"email\": { \"iLike\": \"bulk%@example.com\" } }\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "GraphQL — Admin Items (CRUD)",
+      "description": "CrudResolver over the item table from @repo/db. Supports the same nestjs-query filter/paging/sorting + Input-wrapper mutation convention as Admin Users.\n\nThe Item type exposes a `files: [ItemFile!]!` resolve-field that loads any uploaded files attached via the polymorphic uploaded_file table (entityType='item', entityId=<itemId>). Files are uploaded over REST — see the 'Item Files (multipart upload)' folder.",
+      "item": [
+        {
+          "name": "List Items",
+          "description": "Paginated list with filter, sort, and the polymorphic files resolve-field.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Items(\n  $filter: ItemFilter\n  $paging: OffsetPaging\n  $sorting: [ItemSort!]\n) {\n  items(filter: $filter, paging: $paging, sorting: $sorting) {\n    nodes {\n      id\n      name\n      description\n      price\n      createdAt\n      updatedAt\n      files {\n        id\n        filename\n        originalFilename\n        mimetype\n        size\n        url\n        thumbnailUrl\n        hasThumbnail\n        createdAt\n      }\n    }\n    totalCount\n    pageInfo {\n      hasNextPage\n      hasPreviousPage\n    }\n  }\n}",
+                "variables": "{\n  \"filter\": {},\n  \"paging\": { \"limit\": 25, \"offset\": 0 },\n  \"sorting\": [{ \"field\": \"createdAt\", \"direction\": \"DESC\" }]\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Get Item by ID",
+          "description": "Uses {{created_item_id}} captured by Create One Item.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query Item($id: ID!) {\n  item(id: $id) {\n    id\n    name\n    description\n    price\n    createdAt\n    updatedAt\n    files {\n      id\n      filename\n      originalFilename\n      mimetype\n      size\n      url\n      thumbnailUrl\n      hasThumbnail\n      createdAt\n    }\n  }\n}",
+                "variables": "{\n  \"id\": \"{{created_item_id}}\"\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Create One Item",
+          "description": "Test script captures the new id into {{created_item_id}}, used by the Update / Delete / file-upload requests.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const id = json && json.data && json.data.createOneItem && json.data.createOneItem.id;",
+                  "if (id) {",
+                  "  pm.collectionVariables.set('created_item_id', id);",
+                  "  console.log('Saved created_item_id:', id);",
+                  "} else if (json && json.errors) {",
+                  "  console.log('GraphQL errors:', JSON.stringify(json.errors));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateOneItem($input: CreateOneItemInput!) {\n  createOneItem(input: $input) {\n    id\n    name\n    description\n    price\n    createdAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"item\": {\n      \"name\": \"Sample Widget\",\n      \"description\": \"Created via Postman\",\n      \"price\": 19.99\n    }\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Create Many Items",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation CreateManyItems($input: CreateManyItemInput!) {\n  createManyItem(input: $input) {\n    id\n    name\n    price\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"items\": [\n      { \"name\": \"Bulk Item One\", \"price\": 1.00 },\n      { \"name\": \"Bulk Item Two\", \"price\": 2.00 }\n    ]\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Update One Item",
+          "description": "Uses {{created_item_id}} from Create One Item by default.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation UpdateOneItem($input: UpdateOneItemInput!) {\n  updateOneItem(input: $input) {\n    id\n    name\n    description\n    price\n    updatedAt\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": \"{{created_item_id}}\",\n    \"update\": {\n      \"name\": \"Renamed Widget\",\n      \"price\": 29.99\n    }\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        },
+        {
+          "name": "Delete One Item",
+          "description": "Returns { id } (the ItemDeleteResponse type). Uses {{created_item_id}} by default.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "mutation DeleteOneItem($input: DeleteOneItemInput!) {\n  deleteOneItem(input: $input) {\n    id\n  }\n}",
+                "variables": "{\n  \"input\": {\n    \"id\": \"{{created_item_id}}\"\n  }\n}"
+              }
+            },
+            "url": {
+              "raw": "{{gateway_url}}/graphql/v1",
+              "host": ["{{gateway_url}}"],
+              "path": ["graphql", "v1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Item Files (multipart upload)",
+      "description": "Multi-file upload scoped to a specific item. Endpoints live on the graphql service (NOT proxied by the gateway), so requests target {{graphql_url}} directly.\n\nFlow:\n1. Create an item via 'GraphQL — Admin Items (CRUD) → Create One Item' to populate {{created_item_id}}.\n2. POST one or more files to {{graphql_url}}/api/v1/items/:itemId/files with multipart form-data (field name 'files', up to 10 files per call). The server stores binaries in MinIO, generates JPEG thumbnails for compressible images (jpeg/png/webp/tiff/bmp), and stamps each row with entityType='item', entityId=:itemId.\n3. Read back via REST (List Files for Item) or via GraphQL (the `files` field on Item).\n\nResponse shape per file: { id, filename, originalFilename, mimetype, size, url, thumbnailUrl?, hasThumbnail, entityType, entityId, uploadedById?, createdAt }. `url` and `thumbnailUrl` are presigned MinIO GETs that expire after 2 hours.",
+      "item": [
+        {
+          "name": "Upload Files for Item",
+          "description": "Multipart POST. In Postman: Body → form-data → key='files', type='File', then attach one or more files. The endpoint accepts up to 10 files per request via FilesInterceptor('files', 10).\n\nThe collection-level Origin header doesn't apply here (better-auth isn't on this path), but it doesn't hurt to send it. Test script captures the first uploaded file's id into {{uploaded_file_id}}.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (Array.isArray(json) && json.length > 0 && json[0].id) {",
+                  "  pm.collectionVariables.set('uploaded_file_id', json[0].id);",
+                  "  console.log('Saved uploaded_file_id:', json[0].id);",
+                  "} else {",
+                  "  console.log('Unexpected response:', JSON.stringify(json));",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "src": [],
+                  "description": "Repeat this 'files' key for each additional file (up to 10)."
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{graphql_url}}/api/v1/items/{{created_item_id}}/files",
+              "host": ["{{graphql_url}}"],
+              "path": ["api", "v1", "items", "{{created_item_id}}", "files"]
+            }
+          }
+        },
+        {
+          "name": "List Files for Item",
+          "description": "GET every uploaded_file row scoped to (entityType='item', entityId=:itemId). Each entry includes a fresh presigned URL (and thumbnailUrl when applicable).",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{graphql_url}}/api/v1/items/{{created_item_id}}/files",
+              "host": ["{{graphql_url}}"],
+              "path": ["api", "v1", "items", "{{created_item_id}}", "files"]
+            }
+          }
+        },
+        {
+          "name": "Delete All Files for Item",
+          "description": "Bulk delete every file attached to the item — removes the MinIO objects (including thumbnails) and the DB rows. Returns 204 No Content.",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{graphql_url}}/api/v1/items/{{created_item_id}}/files",
+              "host": ["{{graphql_url}}"],
+              "path": ["api", "v1", "items", "{{created_item_id}}", "files"]
+            }
+          }
+        },
+        {
+          "name": "Delete Uploaded File",
+          "description": "Delete a single uploaded_file row by id (across any entity). Uses {{uploaded_file_id}} captured by Upload Files for Item.",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{graphql_url}}/api/v1/uploaded-files/{{uploaded_file_id}}",
+              "host": ["{{graphql_url}}"],
+              "path": ["api", "v1", "uploaded-files", "{{uploaded_file_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

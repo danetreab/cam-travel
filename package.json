@@ -1,0 +1,37 @@
+{
+  "name": "monobase",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types",
+    "db:generate": "bun --filter @repo/db db:generate",
+    "db:migrate": "bun --filter @repo/db db:migrate",
+    "db:push": "bun --filter @repo/db db:push",
+    "auth:generate": "bun --filter @repo/auth auth:generate"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.17.24",
+    "@types/pluralize": "^0.0.33",
+    "prettier": "^3.7.4",
+    "turbo": "^2.9.9",
+    "typescript": "5.9.2"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "packageManager": "bun@1.2.22",
+  "workspaces": [
+    "apps/*",
+    "apps/backend/*",
+    "packages/*"
+  ],
+  "dependencies": {
+    "@nestjs/config": "^4.0.4",
+    "graphql-subscriptions": "^3.0.0",
+    "lodash": "^4.18.1",
+    "pluralize": "^8.0.0"
+  }
+}

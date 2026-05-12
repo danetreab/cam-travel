@@ -107,11 +107,14 @@ export function ExploreView() {
 
   useEffect(() => {
     if (!selected) return
+    // The list is off-screen on mobile while the map is showing; calling
+    // scrollIntoView on a translated element can scroll the page itself.
+    if (!isDesktop && mobileView !== "list") return
     const el = listRef.current?.querySelector<HTMLElement>(
       `[data-attr-id="${selected.id}"]`,
     )
     el?.scrollIntoView({ behavior: "smooth", block: "nearest" })
-  }, [selected])
+  }, [selected, isDesktop, mobileView])
 
   const handleCameraChanged = (ev: MapCameraChangedEvent) => {
     const b = ev.detail.bounds

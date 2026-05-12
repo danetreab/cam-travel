@@ -22,6 +22,7 @@ import {
 import { AttractionMarker } from "./attraction-marker"
 import { AttractionListCard } from "./attraction-list-card"
 import { AttractionDetailDialog } from "./attraction-detail-dialog"
+import { Badge } from "@/components/ui/badge"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
 const DEFAULT_ZOOM = 7
@@ -97,7 +98,7 @@ export function ExploreView() {
             limit: limitForZoom(effectiveZoom),
             activityType: activityType ?? undefined,
           }
-        : {},
+        : {}
     ),
     enabled: effectiveBounds != null,
     placeholderData: keepPreviousData,
@@ -111,7 +112,7 @@ export function ExploreView() {
     // scrollIntoView on a translated element can scroll the page itself.
     if (!isDesktop && mobileView !== "list") return
     const el = listRef.current?.querySelector<HTMLElement>(
-      `[data-attr-id="${selected.id}"]`,
+      `[data-attr-id="${selected.id}"]`
     )
     el?.scrollIntoView({ behavior: "smooth", block: "nearest" })
   }, [selected, isDesktop, mobileView])
@@ -145,14 +146,14 @@ export function ExploreView() {
             : `${items.length} place${items.length === 1 ? "" : "s"} in view`}
         </h2>
         {isFetching && (
-          <span className="text-muted-foreground text-xs">Updating…</span>
+          <span className="text-xs text-muted-foreground">Updating…</span>
         )}
       </div>
 
       {error && (
-        <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
+        <Badge variant="destructive">
           Failed to load: {(error as Error).message}
-        </div>
+        </Badge>
       )}
 
       <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
@@ -162,8 +163,8 @@ export function ExploreView() {
           className={cn(
             "shrink-0 border px-3 py-1 text-xs font-medium transition-colors",
             activityType === null
-              ? "bg-foreground text-background border-foreground"
-              : "hover:bg-muted",
+              ? "border-foreground bg-foreground text-background"
+              : "hover:bg-muted"
           )}
         >
           All
@@ -178,8 +179,8 @@ export function ExploreView() {
               className={cn(
                 "shrink-0 border px-3 py-1 text-xs font-medium transition-colors",
                 active
-                  ? "bg-foreground text-background border-foreground"
-                  : "hover:bg-muted",
+                  ? "border-foreground bg-foreground text-background"
+                  : "hover:bg-muted"
               )}
             >
               {type}
@@ -201,7 +202,7 @@ export function ExploreView() {
           </div>
         ))}
         {!isFetching && effectiveBounds != null && items.length === 0 && (
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-muted-foreground">
             No attractions in this area. Try panning or zooming out.
           </p>
         )}
@@ -259,7 +260,7 @@ export function ExploreView() {
             try {
               window.localStorage.setItem(
                 LAYOUT_STORAGE_KEY,
-                JSON.stringify(layout),
+                JSON.stringify(layout)
               )
             } catch {
               // ignore quota / privacy-mode failures
@@ -317,8 +318,8 @@ export function ExploreView() {
       <aside
         ref={listRef}
         className={cn(
-          "bg-background absolute inset-0 overflow-y-auto p-4 transition-transform duration-300 ease-out",
-          mobileView === "list" ? "translate-y-0" : "translate-y-full",
+          "absolute inset-0 overflow-y-auto bg-background p-4 transition-transform duration-300 ease-out",
+          mobileView === "list" ? "translate-y-0" : "translate-y-full"
         )}
         aria-hidden={mobileView !== "list"}
       >
@@ -327,10 +328,8 @@ export function ExploreView() {
 
       <button
         type="button"
-        onClick={() =>
-          setMobileView((v) => (v === "map" ? "list" : "map"))
-        }
-        className="bg-foreground text-background absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-lg"
+        onClick={() => setMobileView((v) => (v === "map" ? "list" : "map"))}
+        className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background shadow-lg"
       >
         {mobileView === "map" ? (
           <>

@@ -26,6 +26,8 @@ Usage (from apps/py/):
     .venv/bin/python seed_attractions.py --province "Siem Reap"   # override province
 """
 
+from __future__ import annotations
+
 import csv
 import io
 import json

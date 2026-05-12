@@ -17,11 +17,17 @@ export class AttractionDto {
   @Field(() => String, { nullable: true })
   description?: string | null;
 
-  @Field(() => Float)
+  @FilterableField(() => Float)
+  @SortableField(() => Float)
   latitude!: number;
 
-  @Field(() => Float)
+  @FilterableField(() => Float)
+  @SortableField(() => Float)
   longitude!: number;
+
+  @FilterableField(() => String, { nullable: true })
+  @SortableField(() => String, { nullable: true })
+  province?: string | null;
 
   @FilterableField(() => String, { nullable: true })
   @SortableField(() => String, { nullable: true })

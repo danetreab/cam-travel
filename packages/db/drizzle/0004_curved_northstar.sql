@@ -1,0 +1,1 @@
+ALTER TABLE "attraction" ADD COLUMN "province" text;

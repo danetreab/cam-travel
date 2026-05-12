@@ -27,6 +27,7 @@ export type Attraction = {
   description: string | null;
   latitude: number;
   longitude: number;
+  province: string | null;
   activityType: string | null;
   durationMinutes: number | null;
   difficulty: number | null;
@@ -44,6 +45,7 @@ export type CreateAttractionValues = {
   latitude: number;
   longitude: number;
   googlePlaceId?: string | null;
+  province?: string;
   activityType?: string;
   durationMinutes?: number;
   difficulty?: number;
@@ -55,6 +57,7 @@ export type EditAttractionValues = {
   latitude?: number;
   longitude?: number;
   googlePlaceId?: string | null;
+  province?: string;
   activityType?: string;
   durationMinutes?: number;
   difficulty?: number;

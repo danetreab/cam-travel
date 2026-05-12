@@ -20,6 +20,7 @@ export const attraction = pgTable("attraction", {
   description: text("description"),
   latitude: real("latitude").notNull(),
   longitude: real("longitude").notNull(),
+  province: text("province"),
   activityType: text("activity_type"),
   durationMinutes: integer("duration_minutes"),
   difficulty: smallint("difficulty"),

@@ -15,6 +15,9 @@ export class UpdateAttractionInput {
   longitude?: number;
 
   @Field({ nullable: true })
+  province?: string;
+
+  @Field({ nullable: true })
   activityType?: string;
 
   @Field(() => Int, { nullable: true })

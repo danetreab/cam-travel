@@ -22,7 +22,10 @@
         "MINIO_USE_SSL",
         "MINIO_ACCESS_KEY",
         "MINIO_SECRET_KEY",
-        "MINIO_BUCKET"
+        "MINIO_BUCKET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "VITE_GOOGLE_CLIENT_ID"
       ]
     },
     "lint": {
@@ -51,7 +54,10 @@
         "MINIO_USE_SSL",
         "MINIO_ACCESS_KEY",
         "MINIO_SECRET_KEY",
-        "MINIO_BUCKET"
+        "MINIO_BUCKET",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "VITE_GOOGLE_CLIENT_ID"
       ]
     }
   }

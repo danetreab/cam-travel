@@ -1,7 +1,11 @@
-import { Image, Rate, Space, Table, Tag, Typography } from "antd";
+import { Image, Rate, Select, Space, Table, Tag, Typography } from "antd";
 import { StarFilled } from "@ant-design/icons";
-import { useList } from "@refinedev/core";
-import { CreateButton, List, EditButton, DeleteButton } from "@refinedev/antd";
+import {
+  List,
+  EditButton,
+  DeleteButton,
+  useTable,
+} from "@refinedev/antd";
 import type { ListProps } from "@refinedev/antd";
 import gql from "graphql-tag";
 import type { Attraction } from "../../types";
@@ -19,6 +23,7 @@ const ATTRACTIONS_LIST_QUERY = gql`
         description
         latitude
         longitude
+        province
         activityType
         durationMinutes
         difficulty
@@ -50,21 +55,64 @@ const ACTIVITY_COLORS: Record<string, string> = {
   other: "default",
 };
 
+// Cambodian provinces relevant for travel. Order roughly mirrors traveller
+// volume; "Other" intentionally absent — leave the filter cleared instead.
+const PROVINCES = [
+  "Phnom Penh",
+  "Siem Reap",
+  "Preah Sihanouk",
+  "Battambang",
+  "Kampot",
+  "Kep",
+  "Mondulkiri",
+  "Ratanakiri",
+  "Koh Kong",
+  "Pursat",
+  "Kampong Cham",
+  "Kratie",
+  "Stung Treng",
+  "Banteay Meanchey",
+];
+
 export const AttractionsList = (props: Partial<ListProps> = {}) => {
-  const { result, query } = useList<Attraction>({
+  const { tableProps, filters, setFilters } = useTable<Attraction>({
     resource: "attractions",
     pagination: { pageSize: 20 },
-    sorters: [{ field: "createdAt", order: "desc" }],
+    sorters: { initial: [{ field: "createdAt", order: "desc" }] },
     meta: { gqlQuery: ATTRACTIONS_LIST_QUERY },
   });
 
+  const provinceFilter = (filters ?? []).find(
+    (f) => "field" in f && f.field === "province",
+  );
+  const selectedProvince =
+    provinceFilter && "value" in provinceFilter
+      ? (provinceFilter.value as string | undefined)
+      : undefined;
+
   return (
     <List {...props}>
+      <Space style={{ marginBottom: 16 }}>
+        <Typography.Text>Province:</Typography.Text>
+        <Select
+          allowClear
+          placeholder="All provinces"
+          style={{ width: 220 }}
+          value={selectedProvince}
+          options={PROVINCES.map((p) => ({ label: p, value: p }))}
+          onChange={(value) =>
+            setFilters(
+              value
+                ? [{ field: "province", operator: "eq", value }]
+                : [{ field: "province", operator: "eq", value: undefined }],
+              "replace",
+            )
+          }
+        />
+      </Space>
       <Table<Attraction>
+        {...tableProps}
         rowKey="id"
-        dataSource={(result?.data ?? []) as Attraction[]}
-        loading={query.isLoading}
-        pagination={{ pageSize: 20, total: result?.total ?? 0 }}
         columns={[
           {
             title: "Photo",
@@ -80,7 +128,7 @@ export const AttractionsList = (props: Partial<ListProps> = {}) => {
                 return <Typography.Text type="secondary">—</Typography.Text>;
               const [first, ...rest] = all;
               return (
-                <Image.PreviewGroup items={rest}>
+                <Image.PreviewGroup items={all.map((url) => ({ src: url }))}>
                   <Image
                     src={first}
                     width={48}
@@ -92,6 +140,12 @@ export const AttractionsList = (props: Partial<ListProps> = {}) => {
             },
           },
           { title: "Name", dataIndex: "name" },
+          {
+            title: "Province",
+            dataIndex: "province",
+            render: (v: string | null) =>
+              v ?? <Typography.Text type="secondary">—</Typography.Text>,
+          },
           {
             title: "Type",
             dataIndex: "activityType",

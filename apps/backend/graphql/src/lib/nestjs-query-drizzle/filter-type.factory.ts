@@ -1,10 +1,11 @@
 import type { Type } from '@nestjs/common';
-import { Field, ID, InputType } from '@nestjs/graphql';
+import { Field, Float, ID, Int, InputType } from '@nestjs/graphql';
 import { deriveEntityName } from './util';
 import {
   BooleanFieldComparison,
   DateFieldComparison,
   IDFilterComparison,
+  IntFieldComparison,
   NumberFieldComparison,
   StringFieldComparison,
 } from './comparisons';
@@ -47,6 +48,8 @@ function pickComparisonInput(meta: FilterableFieldMeta, idFieldName: string): Ty
   if (t === ID) return IDFilterComparison;
   if (t === String) return StringFieldComparison;
   if (t === Number) return NumberFieldComparison;
+  if (t === Float) return NumberFieldComparison;
+  if (t === Int) return IntFieldComparison;
   if (t === Boolean) return BooleanFieldComparison;
   if (t === Date) return DateFieldComparison;
   // For custom scalars / enums, callers should pass an explicit type thunk that

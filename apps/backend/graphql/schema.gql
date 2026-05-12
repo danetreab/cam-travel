@@ -89,6 +89,7 @@ type Attraction {
   description: String
   latitude: Float!
   longitude: Float!
+  province: String
   activityType: String
   durationMinutes: Int
   difficulty: Int
@@ -236,9 +237,22 @@ input ItemFilter {
   or: [ItemFilter!]
   id: IDFilterComparison
   name: StringFieldComparison
-  price: StringFieldComparison
+  price: NumberFieldComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+}
+
+input NumberFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Float
+  neq: Float
+  gt: Float
+  gte: Float
+  lt: Float
+  lte: Float
+  in: [Float!]
+  notIn: [Float!]
 }
 
 input ItemSort {
@@ -260,11 +274,27 @@ input AttractionFilter {
   or: [AttractionFilter!]
   id: IDFilterComparison
   name: StringFieldComparison
+  latitude: NumberFieldComparison
+  longitude: NumberFieldComparison
+  province: StringFieldComparison
   activityType: StringFieldComparison
-  durationMinutes: StringFieldComparison
-  difficulty: StringFieldComparison
+  durationMinutes: IntFieldComparison
+  difficulty: IntFieldComparison
   createdAt: DateFieldComparison
   updatedAt: DateFieldComparison
+}
+
+input IntFieldComparison {
+  is: Boolean
+  isNot: Boolean
+  eq: Int
+  neq: Int
+  gt: Int
+  gte: Int
+  lt: Int
+  lte: Int
+  in: [Int!]
+  notIn: [Int!]
 }
 
 input AttractionSort {
@@ -276,6 +306,9 @@ input AttractionSort {
 enum AttractionSortFields {
   id
   name
+  latitude
+  longitude
+  province
   activityType
   durationMinutes
   difficulty
@@ -365,6 +398,7 @@ input CreateAttractionInput {
   description: String
   latitude: Float!
   longitude: Float!
+  province: String
   activityType: String
   durationMinutes: Int
   difficulty: Int
@@ -385,6 +419,7 @@ input UpdateAttractionInput {
   description: String
   latitude: Float
   longitude: Float
+  province: String
   activityType: String
   durationMinutes: Int
   difficulty: Int

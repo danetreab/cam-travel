@@ -6,10 +6,16 @@ import {
   type MapCameraChangedEvent,
 } from "@vis.gl/react-google-maps"
 import type { Layout } from "react-resizable-panels"
-import { ListIcon, MapTrifoldIcon } from "@phosphor-icons/react"
+import {
+  CrosshairIcon,
+  ListIcon,
+  MapTrifoldIcon,
+  SpinnerIcon,
+} from "@phosphor-icons/react"
 
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { useUserLocation } from "@/hooks/use-user-location"
 import {
   attractionsListQueryOptions,
   attractionsTopPerProvinceQueryOptions,
@@ -24,8 +30,11 @@ import {
 } from "@/components/ui/resizable"
 import { AttractionMarker } from "./attraction-marker"
 import { AttractionListCard } from "./attraction-list-card"
+import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
 import { AttractionDetailDialog } from "./attraction-detail-dialog"
+import { UserLocationMarker } from "./user-location-marker"
 import { Badge } from "@/components/ui/badge"
+import { toast } from "sonner"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
 const DEFAULT_ZOOM = 7
@@ -124,11 +133,32 @@ export function ExploreView() {
     placeholderData: keepPreviousData,
   })
 
-  const { data, isFetching, error } = usePerProvince
+  const { data, isFetching, isLoading, error } = usePerProvince
     ? perProvinceQuery
     : boundsQuery
 
   const items = data?.items ?? []
+
+  const userLocation = useUserLocation()
+
+  const handleLocateMe = () => {
+    userLocation.locate()
+  }
+
+  // Surface geolocation errors as a toast and pan the map when we get a fix.
+  useEffect(() => {
+    if (userLocation.status === "granted" && userLocation.position && map) {
+      map.panTo(userLocation.position)
+      const current = map.getZoom() ?? FOCUS_ZOOM
+      if (current < 13) map.setZoom(13)
+    }
+  }, [userLocation.status, userLocation.position, map])
+
+  useEffect(() => {
+    if (userLocation.error && userLocation.status !== "loading") {
+      toast.error(userLocation.error)
+    }
+  }, [userLocation.error, userLocation.status])
 
   useEffect(() => {
     if (!selected) return
@@ -167,10 +197,15 @@ export function ExploreView() {
         <h2 className="text-sm font-semibold tracking-tight">
           {effectiveBounds == null
             ? "Move the map to explore"
-            : `${items.length} place${items.length === 1 ? "" : "s"} in view`}
+            : isLoading
+              ? "Finding places…"
+              : `${items.length} place${items.length === 1 ? "" : "s"} in view`}
         </h2>
         {isFetching && (
-          <span className="text-xs text-muted-foreground">Updating…</span>
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+            <SpinnerIcon className="size-3 animate-spin" />
+            Updating…
+          </span>
         )}
       </div>
 
@@ -214,17 +249,21 @@ export function ExploreView() {
       </div>
 
       <div className="flex flex-col gap-2">
-        {items.map((a) => (
-          <div key={a.id} data-attr-id={a.id}>
-            <AttractionListCard
-              attraction={a}
-              active={hoveredId === a.id || selected?.id === a.id}
-              onClick={() => handleCardClick(a)}
-              onHover={() => setHoveredId(a.id)}
-              onLeave={() => setHoveredId(null)}
-            />
-          </div>
-        ))}
+        {isLoading && items.length === 0
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <AttractionListCardSkeleton key={i} />
+            ))
+          : items.map((a) => (
+              <div key={a.id} data-attr-id={a.id}>
+                <AttractionListCard
+                  attraction={a}
+                  active={hoveredId === a.id || selected?.id === a.id}
+                  onClick={() => handleCardClick(a)}
+                  onHover={() => setHoveredId(a.id)}
+                  onLeave={() => setHoveredId(null)}
+                />
+              </div>
+            ))}
         {!isFetching && effectiveBounds != null && items.length === 0 && (
           <p className="text-sm text-muted-foreground">
             No attractions in this area. Try panning or zooming out.
@@ -252,7 +291,40 @@ export function ExploreView() {
           onClick={() => setSelected(a)}
         />
       ))}
+      {userLocation.position && (
+        <UserLocationMarker position={userLocation.position} />
+      )}
     </Map>
+  )
+
+  const locateMeButton = (
+    <button
+      type="button"
+      onClick={handleLocateMe}
+      disabled={userLocation.status === "loading"}
+      aria-label="Show my location"
+      title="Show my location"
+      className={cn(
+        "flex h-11 w-11 items-center justify-center rounded-full border bg-white shadow-md transition-colors",
+        "hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60",
+        userLocation.status === "granted" && "text-blue-600",
+      )}
+    >
+      {userLocation.status === "loading" ? (
+        <SpinnerIcon className="h-5 w-5 animate-spin" />
+      ) : (
+        <CrosshairIcon className="h-5 w-5" weight="bold" />
+      )}
+    </button>
+  )
+
+  const mapFetchingOverlay = isFetching && (
+    <div className="pointer-events-none absolute top-4 left-1/2 z-10 -translate-x-1/2">
+      <div className="flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur">
+        <SpinnerIcon className="size-3.5 animate-spin" />
+        Updating…
+      </div>
+    </div>
   )
 
   const searchAsIMoveLabel = (
@@ -311,6 +383,10 @@ export function ExploreView() {
           <ResizablePanel id={MAP_PANEL_ID} defaultSize="64%" minSize="30%">
             <div className="relative h-full">
               {mapElement}
+              {mapFetchingOverlay}
+              <div className="absolute right-4 bottom-6 z-10">
+                {locateMeButton}
+              </div>
               <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
                 {searchAsIMoveLabel}
               </div>
@@ -333,10 +409,16 @@ export function ExploreView() {
     <div className="relative h-[calc(100svh-3.5rem)] overflow-hidden">
       <div className="absolute inset-0">{mapElement}</div>
 
+      {mobileView === "map" && mapFetchingOverlay}
+
       {mobileView === "map" && (
         <div className="pointer-events-none absolute top-4 right-4 left-4 flex justify-center">
           <div className="pointer-events-auto">{searchAsIMoveLabel}</div>
         </div>
+      )}
+
+      {mobileView === "map" && (
+        <div className="absolute right-4 bottom-24 z-10">{locateMeButton}</div>
       )}
 
       <aside

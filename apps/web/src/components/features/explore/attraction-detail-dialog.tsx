@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { ExternalLink, Star } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import {
@@ -86,11 +87,26 @@ function AttractionMeta({ attraction }: { attraction: Attraction }) {
   )
 }
 
-function AttractionBody({ attraction }: { attraction: Attraction }) {
+function AttractionBody({
+  attraction,
+  galleryArmed,
+}: {
+  attraction: Attraction
+  galleryArmed: boolean
+}) {
   const sections = buildSections(attraction.files, attraction.name)
   return (
     <>
-      <div className="mt-2">
+      {/*
+        On mobile, the bottom sheet animates up under the user's finger after
+        the pin tap. Without this guard the synthesized click lands on the
+        hero image (wrapped in PhotoView) and opens the lightbox instead of
+        showing details. Block pointer events until the open animation has
+        settled.
+      */}
+      <div
+        className={`mt-2 ${galleryArmed ? "" : "pointer-events-none"}`}
+      >
         {sections.length === 0 ? (
           <div className="bg-muted text-muted-foreground flex h-72 items-center justify-center text-sm">
             No photos or videos yet
@@ -128,6 +144,23 @@ export function AttractionDetailDialog({
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const open = attraction != null
 
+  // Arm the gallery only after the open animation has settled. Without this,
+  // tapping a pin on mobile lands the synthesized click on the freshly-rendered
+  // hero image and immediately opens the photo lightbox.
+  const [galleryArmed, setGalleryArmed] = useState(false)
+  useEffect(() => {
+    if (!open) {
+      setGalleryArmed(false)
+      return
+    }
+    if (isDesktop) {
+      setGalleryArmed(true)
+      return
+    }
+    const t = window.setTimeout(() => setGalleryArmed(true), 400)
+    return () => window.clearTimeout(t)
+  }, [open, isDesktop])
+
   if (!isDesktop) {
     return (
       <Sheet open={open} onOpenChange={onOpenChange}>
@@ -145,7 +178,10 @@ export function AttractionDetailDialog({
                   <AttractionMeta attraction={attraction} />
                 </SheetDescription>
               </SheetHeader>
-              <AttractionBody attraction={attraction} />
+              <AttractionBody
+                attraction={attraction}
+                galleryArmed={galleryArmed}
+              />
             </>
           )}
         </SheetContent>
@@ -164,7 +200,10 @@ export function AttractionDetailDialog({
                 <AttractionMeta attraction={attraction} />
               </DialogDescription>
             </DialogHeader>
-            <AttractionBody attraction={attraction} />
+            <AttractionBody
+              attraction={attraction}
+              galleryArmed={galleryArmed}
+            />
           </>
         )}
       </DialogContent>

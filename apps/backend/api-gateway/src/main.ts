@@ -36,8 +36,8 @@ async function bootstrap() {
   );
 
   // Multipart file upload endpoints live on the graphql service. They can't
-  // be sent over the Redis/TCP microservice transport (which is JSON-only),
-  // so we HTTP-proxy them. The session cookie rides along via the shared
+  // be sent over the TCP microservice transport (which is JSON-only), so we
+  // HTTP-proxy them. The session cookie rides along via the shared
   // parent-domain cookie set by auth.
   const graphqlHttpUrl =
     process.env.GRAPHQL_HTTP_URL ?? "http://localhost:3002";
@@ -55,8 +55,9 @@ async function bootstrap() {
     }),
   );
 
-  // /graphql is no longer HTTP-proxied. It's handled by GraphqlController,
-  // which forwards the query to the graphql service over Redis transport.
+  // /graphql/v1 is no longer HTTP-proxied. It's handled by GraphqlController,
+  // which forwards the query to the graphql service over the TCP microservice
+  // transport.
 
   await app.listen(process.env.PORT ?? 3000);
 }

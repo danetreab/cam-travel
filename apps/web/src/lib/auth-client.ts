@@ -2,7 +2,7 @@ import { createAuthClient } from "better-auth/react"
 import { envClient } from "@/env"
 
 export const authClient = createAuthClient({
-  baseURL: envClient.VITE_API_URL,
+  baseURL: envClient.VITE_AUTH_URL,
   fetchOptions: {
     credentials: "include",
   },

@@ -51,10 +51,12 @@ RUN bun --filter @repo/db build
 # the ARG/ENV lines below receive them and expose them to the Vite build.
 FROM source AS build-dashboard
 ARG VITE_API_URL
+ARG VITE_AUTH_URL
 ARG VITE_GRAPHQL_WS_URL
 ARG VITE_GOOGLE_MAPS_API_KEY
 ARG VITE_GOOGLE_MAPS_ID
 ENV VITE_API_URL=$VITE_API_URL \
+    VITE_AUTH_URL=$VITE_AUTH_URL \
     VITE_GRAPHQL_WS_URL=$VITE_GRAPHQL_WS_URL \
     VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY \
     VITE_GOOGLE_MAPS_ID=$VITE_GOOGLE_MAPS_ID
@@ -62,10 +64,12 @@ RUN bun --filter @repo/dashboard build
 
 FROM source AS build-web
 ARG VITE_API_URL
+ARG VITE_AUTH_URL
 ARG VITE_GRAPHQL_HTTP_URL
 ARG VITE_GOOGLE_CLIENT_ID
 ARG VITE_PUBLIC_MAP_KEY
 ENV VITE_API_URL=$VITE_API_URL \
+    VITE_AUTH_URL=$VITE_AUTH_URL \
     VITE_GRAPHQL_HTTP_URL=$VITE_GRAPHQL_HTTP_URL \
     VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID \
     VITE_PUBLIC_MAP_KEY=$VITE_PUBLIC_MAP_KEY
@@ -91,12 +95,16 @@ CMD ["nginx", "-g", "daemon off;"]
 
 FROM oven/bun:1.2.22-alpine AS web
 WORKDIR /app
-COPY --from=build-web /repo/apps/web/.output /app/.output
-ENV NODE_ENV=production
-ENV PORT=3000
-ENV HOST=0.0.0.0
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOST=0.0.0.0
+# `curl` is for container healthchecks (Coolify/Traefik probes).
+RUN apk add --no-cache curl
+COPY --from=build-web --chown=bun:bun /repo/apps/web/.output /app/.output
+COPY --from=build-web --chown=bun:bun /repo/apps/web/package.json /app/package.json
+USER bun
 EXPOSE 3000
-CMD ["bun", "run", ".output/server/index.mjs"]
+CMD ["bun", "run", "start"]
 
 FROM oven/bun:1.2.22-alpine AS auth
 WORKDIR /app

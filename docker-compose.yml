@@ -39,6 +39,10 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       CORS_ORIGINS: ${CORS_ORIGINS}
+      # Scopes the session cookie to a parent domain so siblings (api,
+      # graphql, web, dashboard) all see it. Coolify must expose `auth` on
+      # its own public domain — typically a sibling like cam-travel-dev-auth.
+      AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN}
     expose:
       - "3001"
     restart: unless-stopped
@@ -89,9 +93,10 @@ services:
   # --- frontends ------------------------------------------------------------
   # VITE_* values are baked into the bundle at BUILD time via `args:` below.
   # In Coolify these come from variables flagged "Available at Buildtime".
-  # The web service additionally validates a couple of VITE_* at runtime
-  # (apps/web/src/env.ts envServer), so those are duplicated under
-  # `environment:` from Coolify "Available at Runtime" variables.
+  # VITE_AUTH_URL points at the auth service's own public domain — auth no
+  # longer rides through the api-gateway, so the browser talks to it
+  # directly. Cross-subdomain cookies (AUTH_COOKIE_DOMAIN) keep the session
+  # cookie visible to the gateway for downstream GraphQL/REST calls.
   web:
     build:
       context: .
@@ -99,12 +104,10 @@ services:
       target: web
       args:
         VITE_API_URL: ${WEB_VITE_API_URL}
+        VITE_AUTH_URL: ${WEB_VITE_AUTH_URL}
         VITE_GRAPHQL_HTTP_URL: ${WEB_VITE_GRAPHQL_HTTP_URL}
         VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
         VITE_PUBLIC_MAP_KEY: ${VITE_PUBLIC_MAP_KEY}
-    environment:
-      VITE_API_URL: ${WEB_VITE_API_URL}
-      VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
     expose:
       - "3000"
     restart: unless-stopped
@@ -116,6 +119,7 @@ services:
       target: dashboard
       args:
         VITE_API_URL: ${DASH_VITE_API_URL}
+        VITE_AUTH_URL: ${DASH_VITE_AUTH_URL}
         VITE_GRAPHQL_WS_URL: ${DASH_VITE_GRAPHQL_WS_URL}
         VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
         VITE_GOOGLE_MAPS_ID: ${VITE_GOOGLE_MAPS_ID}

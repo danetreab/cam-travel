@@ -6,6 +6,12 @@ import { redis } from "../redis";
 
 const { db } = createDb(process.env.DATABASE_URL!);
 
+// AUTH_COOKIE_DOMAIN scopes the session cookie to a parent domain (e.g.
+// ".rikrey.com") so the gateway/graphql/web/dashboard subdomains all see it.
+// Leave it unset locally — cookies then stay on the auth service host as
+// usual, which is fine because each local service runs on its own port.
+const cookieDomain = process.env.AUTH_COOKIE_DOMAIN;
+
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg", schema }),
   secondaryStorage: {
@@ -33,4 +39,14 @@ export const auth = betterAuth({
   },
   plugins: [admin()],
   trustedOrigins: ["*"],
+  ...(cookieDomain
+    ? {
+        advanced: {
+          crossSubDomainCookies: {
+            enabled: true,
+            domain: cookieDomain,
+          },
+        },
+      }
+    : {}),
 });

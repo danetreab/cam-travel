@@ -17,26 +17,15 @@ async function bootstrap() {
     .filter(Boolean);
   app.enableCors({ origin: corsOrigins, credentials: true });
 
-  // Auth still goes over HTTP — better-auth requires HTTP semantics
-  // (cookies, OAuth redirects). Proxy /api/auth/* straight through.
-  //
-  // No `xfwd: true`: http-proxy-middleware *appends* to existing
-  // X-Forwarded-* headers, so behind Traefik we'd get
-  // `X-Forwarded-Proto: https,http` and better-auth would build an
-  // invalid URL. Traefik already sets the forwarded headers correctly;
-  // we just pass them through.
-  app.use(
-    createProxyMiddleware({
-      pathFilter: "/api/auth/**",
-      target: process.env.AUTH_SERVICE_URL ?? "http://localhost:3001",
-      changeOrigin: true,
-    }),
-  );
+  // /api/auth/** is no longer proxied here. The browser talks to the auth
+  // service directly on its own Coolify domain, and better-auth's
+  // crossSubDomainCookies setting keeps the session cookie visible to both
+  // hostnames so the gateway's AuthGuard still sees authenticated requests.
 
   // Multipart file upload endpoints live on the graphql service. They can't
   // be sent over the Redis/TCP microservice transport (which is JSON-only),
-  // so we HTTP-proxy them like /api/auth/*. Browser requests stay same-origin
-  // and the better-auth session cookie still applies.
+  // so we HTTP-proxy them. The session cookie rides along via the shared
+  // parent-domain cookie set by auth.
   const graphqlHttpUrl =
     process.env.GRAPHQL_HTTP_URL ?? "http://localhost:3002";
   app.use(

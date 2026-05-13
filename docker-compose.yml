@@ -31,6 +31,7 @@ services:
       BETTER_AUTH_URL: ${BETTER_AUTH_URL}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      CORS_ORIGINS: ${CORS_ORIGINS}
     expose:
       - "3001"
     restart: unless-stopped

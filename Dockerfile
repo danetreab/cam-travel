@@ -1,0 +1,108 @@
+# syntax=docker/dockerfile:1.7
+# Single Dockerfile for all five services. Pick a service via build `target:`.
+#
+# Stage graph:
+#   deps      → shared `bun install` (runs once across the whole compose build)
+#   source    → deps + repo source
+#   build-db  → @repo/db built once; reused by every backend service
+#   build-*   → per-service build outputs
+#   <svc>     → per-service runtime image (this is the target compose picks)
+
+# ============================================================================
+# Shared install
+# ============================================================================
+FROM oven/bun:1.2.22-alpine AS deps
+WORKDIR /repo
+# sharp (via @repo/graphql) needs vips at install time on alpine. Putting it
+# in the shared stage keeps the install layer identical for every service.
+RUN apk add --no-cache vips-dev build-base python3
+
+COPY package.json bun.lock turbo.json ./
+COPY apps/dashboard/package.json apps/dashboard/
+COPY apps/web/package.json apps/web/
+COPY apps/backend/api-gateway/package.json apps/backend/api-gateway/
+COPY apps/backend/auth/package.json apps/backend/auth/
+COPY apps/backend/graphql/package.json apps/backend/graphql/
+COPY packages/db/package.json packages/db/
+COPY packages/eslint-config/package.json packages/eslint-config/
+COPY packages/typescript-config/package.json packages/typescript-config/
+
+RUN --mount=type=cache,target=/root/.bun/install/cache \
+    bun install --frozen-lockfile
+
+FROM deps AS source
+COPY . .
+
+# ============================================================================
+# Shared @repo/db build (every backend service depends on it)
+# ============================================================================
+FROM source AS build-db
+RUN bun --filter @repo/db build
+
+# ============================================================================
+# Per-service build stages
+# ============================================================================
+# VITE_* build-time env vars come from Coolify's "Available at Buildtime"
+# setting on each variable — no ARG/ENV plumbing needed here.
+FROM source AS build-dashboard
+RUN bun --filter @repo/dashboard build
+
+FROM source AS build-web
+RUN bun --filter web build
+
+FROM build-db AS build-auth
+RUN bun --filter @repo/auth build
+
+FROM build-db AS build-graphql
+RUN bun --filter @repo/graphql build
+
+FROM build-db AS build-api-gateway
+RUN bun --filter @repo/api-gateway build
+
+# ============================================================================
+# Runtime stages — compose `target:` selects one of these
+# ============================================================================
+FROM nginx:1.27-alpine AS dashboard
+COPY --from=build-dashboard /repo/apps/dashboard/dist /usr/share/nginx/html
+COPY apps/dashboard/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+FROM oven/bun:1.2.22-alpine AS web
+WORKDIR /app
+COPY --from=build-web /repo/apps/web/.output /app/.output
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOST=0.0.0.0
+EXPOSE 3000
+CMD ["bun", "run", ".output/server/index.mjs"]
+
+FROM oven/bun:1.2.22-alpine AS auth
+WORKDIR /app
+COPY --from=build-auth /repo /app
+WORKDIR /app/apps/backend/auth
+ENV NODE_ENV=production
+ENV PORT=3001
+EXPOSE 3001
+CMD ["bun", "run", "dist/main.js"]
+
+FROM oven/bun:1.2.22-alpine AS graphql
+RUN apk add --no-cache vips
+WORKDIR /app
+COPY --from=build-graphql /repo /app
+WORKDIR /app/apps/backend/graphql
+ENV NODE_ENV=production
+ENV PORT=3002
+ENV GRAPHQL_TCP_HOST=0.0.0.0
+ENV GRAPHQL_TCP_PORT=4002
+EXPOSE 3002 4002
+CMD ["bun", "run", "dist/main.js"]
+
+FROM oven/bun:1.2.22-alpine AS api-gateway
+WORKDIR /app
+COPY --from=build-api-gateway /repo /app
+WORKDIR /app/apps/backend/api-gateway
+ENV NODE_ENV=production
+ENV PORT=3000
+EXPOSE 3000
+CMD ["bun", "run", "dist/main.js"]

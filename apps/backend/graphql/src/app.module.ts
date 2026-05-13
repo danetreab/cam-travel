@@ -4,6 +4,7 @@ import { ApolloDriver, type ApolloDriverConfig } from "@nestjs/apollo";
 import { GraphQLModule } from "@nestjs/graphql";
 import type { Request, Response } from "express";
 import { DbModule } from "./db/db.module";
+import { RedisModule } from "./cache/redis.module";
 import { PostsModule } from "./posts/posts.module";
 import { GraphqlMicroserviceController } from "./transport/graphql-microservice.controller";
 import { UsersModule } from "./admin/users/users.module";
@@ -14,6 +15,7 @@ import { UploadsModule } from "./uploads/uploads.module";
 @Module({
   imports: [
     DbModule,
+    RedisModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), "schema.gql"),

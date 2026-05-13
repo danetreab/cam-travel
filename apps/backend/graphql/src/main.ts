@@ -9,14 +9,15 @@ async function bootstrap() {
 
   // The dashboard connects to /graphql directly (over WS) for subscriptions —
   // browser origin needs to be allowed.
-  app.enableCors({
-    origin: [
-      "http://localhost:5173",
-      "http://localhost:5174",
-      "http://localhost:3000",
-    ],
-    credentials: true,
-  });
+  // Comma-separated list, e.g. "https://example.com,https://admin.example.com".
+  const corsOrigins = (
+    process.env.CORS_ORIGINS ??
+    "http://localhost:5173,http://localhost:5174,http://localhost:3000"
+  )
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean);
+  app.enableCors({ origin: corsOrigins, credentials: true });
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,

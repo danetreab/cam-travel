@@ -7,10 +7,15 @@ import { AppModule } from "./app.module";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.enableCors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
-    credentials: true,
-  });
+  // Comma-separated list, e.g. "https://example.com,https://admin.example.com".
+  // Falls back to dev origins if unset.
+  const corsOrigins = (
+    process.env.CORS_ORIGINS ?? "http://localhost:5173,http://localhost:5174"
+  )
+    .split(",")
+    .map((o) => o.trim())
+    .filter(Boolean);
+  app.enableCors({ origin: corsOrigins, credentials: true });
 
   // Auth still goes over HTTP — better-auth requires HTTP semantics
   // (cookies, OAuth redirects). Proxy /api/auth/* straight through.

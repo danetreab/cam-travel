@@ -1,0 +1,106 @@
+# Coolify-friendly compose stack for cam-travel.
+#
+# Coolify provides:
+#   - public domains + auto HTTPS (Traefik) per service
+#   - env var injection (set values in the Coolify UI; ${VAR} below substitutes)
+#   - container networking
+#
+# So this file:
+#   - has no published host ports (Coolify routes via its internal proxy)
+#   - uses `expose:` to advertise the container port Coolify should route to
+#   - reads every secret/url from environment vars (defined in Coolify)
+#
+# Two ways to use it:
+#   1. Single "Docker Compose" deployment in Coolify pointing at this file.
+#   2. Five separate Coolify "Application" deployments, one per Dockerfile —
+#      ignore this compose file in that case.
+
+name: cam-travel
+
+services:
+  # --- backend services -----------------------------------------------------
+  auth:
+    build:
+      context: .
+      dockerfile: apps/backend/auth/Dockerfile
+    environment:
+      PORT: "3001"
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+    expose:
+      - "3001"
+    restart: unless-stopped
+
+  graphql:
+    build:
+      context: .
+      dockerfile: apps/backend/graphql/Dockerfile
+    environment:
+      PORT: "3002"
+      GRAPHQL_TCP_HOST: "0.0.0.0"
+      GRAPHQL_TCP_PORT: "4002"
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      MINIO_ENDPOINT: ${MINIO_ENDPOINT}
+      MINIO_PORT: ${MINIO_PORT}
+      MINIO_USE_SSL: ${MINIO_USE_SSL}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET: ${MINIO_BUCKET}
+      GOOGLE_PLACES_API_KEY: ${GOOGLE_PLACES_API_KEY}
+      PUBLIC_API_URL: ${PUBLIC_API_URL}
+    expose:
+      - "3002"
+      - "4002"
+    restart: unless-stopped
+    depends_on: [auth]
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: apps/backend/api-gateway/Dockerfile
+    environment:
+      PORT: "3000"
+      AUTH_SERVICE_URL: "http://auth:3001"
+      GRAPHQL_HTTP_URL: "http://graphql:3002"
+      GRAPHQL_TCP_HOST: "graphql"
+      GRAPHQL_TCP_PORT: "4002"
+      CORS_ORIGINS: ${CORS_ORIGINS}
+    expose:
+      - "3000"
+    restart: unless-stopped
+    depends_on: [auth, graphql]
+
+  # --- frontends ------------------------------------------------------------
+  # VITE_* values are baked into the bundle at BUILD time, so they go through
+  # build args. In Coolify these are set under "Build Arguments" for the app.
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_API_URL: ${WEB_VITE_API_URL}
+        VITE_GRAPHQL_HTTP_URL: ${WEB_VITE_GRAPHQL_HTTP_URL}
+        VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
+        VITE_PUBLIC_MAP_KEY: ${VITE_PUBLIC_MAP_KEY}
+    expose:
+      - "3000"
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: apps/dashboard/Dockerfile
+      args:
+        VITE_API_URL: ${DASH_VITE_API_URL}
+        VITE_GRAPHQL_WS_URL: ${DASH_VITE_GRAPHQL_WS_URL}
+        VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
+        VITE_GOOGLE_MAPS_ID: ${VITE_GOOGLE_MAPS_ID}
+    expose:
+      - "80"
+    restart: unless-stopped

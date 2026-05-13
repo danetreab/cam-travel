@@ -1,0 +1,36 @@
+**/node_modules
+**/dist
+**/.output
+**/.turbo
+**/.next
+**/.cache
+**/.vite
+**/build
+
+# Local env files (each container gets envs via docker-compose env_file)
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.production.local
+**/.env.test.local
+
+# VCS / editor / OS
+.git
+.gitignore
+.github
+.vscode
+.idea
+.DS_Store
+
+# Tests / coverage
+**/coverage
+**/*.test.ts
+**/*.spec.ts
+
+# Python pipeline (not deployed)
+apps/py
+
+# Docs / config that don't affect the build
+README.md
+DEPLOY.md
+*.log

@@ -17,9 +17,6 @@ import { authProvider } from "./auth-provider";
 import { ColorModeProvider, useColorMode } from "./contexts/color-mode";
 import { Header } from "./components/header";
 import { dataProvider, liveProvider, restDataProvider } from "./data-provider";
-import { ItemsCreate } from "./pages/items/create";
-import { ItemsEdit } from "./pages/items/edit";
-import { ItemsList } from "./pages/items/list";
 import { AttractionsCreate } from "./pages/attractions/create";
 import { AttractionsEdit } from "./pages/attractions/edit";
 import { AttractionsList } from "./pages/attractions/list";
@@ -50,13 +47,6 @@ function AppInner() {
                 name: "users",
                 list: "/users",
                 meta: { label: "Users", canDelete: false },
-              },
-              {
-                name: "items",
-                list: "/items",
-                create: "/items/create",
-                edit: "/items/edit/:id",
-                meta: { label: "Items" },
               },
               {
                 name: "attractions",
@@ -92,9 +82,6 @@ function AppInner() {
               >
                 <Route index element={<NavigateToResource resource="users" />} />
                 <Route path="/users" element={<UsersList />} />
-                <Route path="/items" element={<ItemsList />} />
-                <Route path="/items/create" element={<ItemsCreate />} />
-                <Route path="/items/edit/:id" element={<ItemsEdit />} />
                 <Route path="/attractions" element={<AttractionsList />} />
                 <Route path="/attractions/create" element={<AttractionsCreate />} />
                 <Route path="/attractions/edit/:id" element={<AttractionsEdit />} />

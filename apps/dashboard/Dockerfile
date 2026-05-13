@@ -16,7 +16,7 @@ ENV VITE_API_URL=$VITE_API_URL \
 
 COPY . .
 RUN bun install --frozen-lockfile
-RUN bun --filter dashboard build
+RUN bun --filter @repo/dashboard build
 
 # --- runtime: nginx serves the static SPA ----------------------------------
 FROM nginx:1.27-alpine

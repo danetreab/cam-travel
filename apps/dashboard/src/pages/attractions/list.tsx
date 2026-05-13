@@ -1,4 +1,4 @@
-import { Image, Rate, Select, Space, Table, Tag, Typography } from "antd";
+import { Image, Select, Space, Table, Tag, Typography } from "antd";
 import { StarFilled } from "@ant-design/icons";
 import {
   List,
@@ -20,22 +20,14 @@ const ATTRACTIONS_LIST_QUERY = gql`
       nodes {
         id
         name
-        description
-        latitude
-        longitude
         province
         activityType
-        durationMinutes
-        difficulty
         cachedRating
         cachedUserRatingsTotal
-        createdAt
-        updatedAt
         files {
           id
           thumbnailUrl
           hasThumbnail
-          mimetype
         }
         photos {
           url
@@ -126,7 +118,7 @@ export const AttractionsList = (props: Partial<ListProps> = {}) => {
               const all = [...fileImages, ...photoUrls];
               if (all.length === 0)
                 return <Typography.Text type="secondary">—</Typography.Text>;
-              const [first, ...rest] = all;
+              const [first] = all;
               return (
                 <Image.PreviewGroup items={all.map((url) => ({ src: url }))}>
                   <Image
@@ -151,21 +143,6 @@ export const AttractionsList = (props: Partial<ListProps> = {}) => {
             dataIndex: "activityType",
             render: (v: string | null) =>
               v ? <Tag color={ACTIVITY_COLORS[v] ?? "default"}>{v}</Tag> : "—",
-          },
-          {
-            title: "Difficulty",
-            dataIndex: "difficulty",
-            render: (v: number | null) =>
-              v ? (
-                <Rate disabled value={v} count={5} style={{ fontSize: 14 }} />
-              ) : (
-                "—"
-              ),
-          },
-          {
-            title: "Duration",
-            dataIndex: "durationMinutes",
-            render: (v: number | null) => (v ? `${v} min` : "—"),
           },
           {
             title: "Rating",

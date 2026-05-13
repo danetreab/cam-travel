@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import { useQuery, keepPreviousData } from "@tanstack/react-query"
 import {
+  ColorScheme,
   Map,
   useMap,
   type MapCameraChangedEvent,
 } from "@vis.gl/react-google-maps"
+import { useTheme } from "next-themes"
 import type { Layout } from "react-resizable-panels"
 import {
   CrosshairIcon,
@@ -34,6 +36,7 @@ import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
 import { AttractionDetailDialog } from "./attraction-detail-dialog"
 import { UserLocationMarker } from "./user-location-marker"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
@@ -85,6 +88,9 @@ function readStoredLayout(): Layout | undefined {
 
 export function ExploreView() {
   const map = useMap()
+  const { resolvedTheme } = useTheme()
+  const mapColorScheme =
+    resolvedTheme === "dark" ? ColorScheme.DARK : ColorScheme.LIGHT
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const [mobileView, setMobileView] = useState<"map" | "list">("map")
   const [defaultLayout] = useState<Layout | undefined>(readStoredLayout)
@@ -279,8 +285,9 @@ export function ExploreView() {
       defaultCenter={DEFAULT_CENTER}
       defaultZoom={DEFAULT_ZOOM}
       gestureHandling="greedy"
-      disableDefaultUI={false}
+      disableDefaultUI
       onCameraChanged={handleCameraChanged}
+      colorScheme={mapColorScheme}
       className="h-full w-full"
     >
       {items.map((a) => (
@@ -320,7 +327,7 @@ export function ExploreView() {
 
   const mapFetchingOverlay = isFetching && (
     <div className="pointer-events-none absolute top-4 left-1/2 z-10 -translate-x-1/2">
-      <div className="flex items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur">
+      <div className="bg-background/95 text-foreground flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur">
         <SpinnerIcon className="size-3.5 animate-spin" />
         Updating…
       </div>
@@ -328,19 +335,17 @@ export function ExploreView() {
   )
 
   const searchAsIMoveLabel = (
-    <label className="flex cursor-pointer items-center gap-2 rounded-full border bg-white px-4 py-2 text-xs font-medium shadow-md select-none">
-      <input
-        type="checkbox"
+    <label className="bg-background text-foreground flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium shadow-md select-none">
+      <Checkbox
         checked={searchOnMove}
-        onChange={(e) => {
-          const next = e.target.checked
+        onCheckedChange={(checked) => {
+          const next = checked === true
           setSearchOnMove(next)
           if (!next && bounds) {
             setFrozenBounds(bounds)
             setFrozenZoom(zoom)
           }
         }}
-        className="align-middle"
       />
       Search as I move the map
     </label>

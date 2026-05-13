@@ -19,12 +19,17 @@ async function bootstrap() {
 
   // Auth still goes over HTTP — better-auth requires HTTP semantics
   // (cookies, OAuth redirects). Proxy /api/auth/* straight through.
+  //
+  // No `xfwd: true`: http-proxy-middleware *appends* to existing
+  // X-Forwarded-* headers, so behind Traefik we'd get
+  // `X-Forwarded-Proto: https,http` and better-auth would build an
+  // invalid URL. Traefik already sets the forwarded headers correctly;
+  // we just pass them through.
   app.use(
     createProxyMiddleware({
       pathFilter: "/api/auth/**",
       target: process.env.AUTH_SERVICE_URL ?? "http://localhost:3001",
       changeOrigin: true,
-      xfwd: true,
     }),
   );
 
@@ -45,7 +50,6 @@ async function bootstrap() {
       ],
       target: graphqlHttpUrl,
       changeOrigin: true,
-      xfwd: true,
     }),
   );
 

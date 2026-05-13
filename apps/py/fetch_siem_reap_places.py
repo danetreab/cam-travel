@@ -27,7 +27,7 @@ import sys
 import time
 import requests
 
-API_KEY = "AIzaSyBfINhAQsM-LooaTt7pE9FWbSQz4AOK0eQ"
+API_KEY = "AIzaSyAA7KX1zegLnNZDvsLPez59_3SlzdyhJqI"
 if not API_KEY:
     sys.exit("ERROR: set GOOGLE_PLACES_API_KEY environment variable")
 

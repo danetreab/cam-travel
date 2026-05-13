@@ -87,14 +87,24 @@ services:
     depends_on: [auth, graphql]
 
   # --- frontends ------------------------------------------------------------
-  # VITE_* values are baked into the bundle at BUILD time. They are configured
-  # in Coolify per-variable with "Available at Buildtime" enabled — Coolify
-  # injects them into the build, so no `args:` block is needed here.
+  # VITE_* values are baked into the bundle at BUILD time via `args:` below.
+  # In Coolify these come from variables flagged "Available at Buildtime".
+  # The web service additionally validates a couple of VITE_* at runtime
+  # (apps/web/src/env.ts envServer), so those are duplicated under
+  # `environment:` from Coolify "Available at Runtime" variables.
   web:
     build:
       context: .
       dockerfile: Dockerfile
       target: web
+      args:
+        VITE_API_URL: ${WEB_VITE_API_URL}
+        VITE_GRAPHQL_HTTP_URL: ${WEB_VITE_GRAPHQL_HTTP_URL}
+        VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
+        VITE_PUBLIC_MAP_KEY: ${VITE_PUBLIC_MAP_KEY}
+    environment:
+      VITE_API_URL: ${WEB_VITE_API_URL}
+      VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID}
     expose:
       - "3000"
     restart: unless-stopped
@@ -104,6 +114,11 @@ services:
       context: .
       dockerfile: Dockerfile
       target: dashboard
+      args:
+        VITE_API_URL: ${DASH_VITE_API_URL}
+        VITE_GRAPHQL_WS_URL: ${DASH_VITE_GRAPHQL_WS_URL}
+        VITE_GOOGLE_MAPS_API_KEY: ${VITE_GOOGLE_MAPS_API_KEY}
+        VITE_GOOGLE_MAPS_ID: ${VITE_GOOGLE_MAPS_ID}
     expose:
       - "80"
     restart: unless-stopped

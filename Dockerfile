@@ -42,12 +42,29 @@ RUN bun --filter @repo/db build
 # ============================================================================
 # Per-service build stages
 # ============================================================================
-# VITE_* build-time env vars come from Coolify's "Available at Buildtime"
-# setting on each variable — no ARG/ENV plumbing needed here.
+# VITE_* values are baked into the client bundle at build time. Coolify
+# passes them as --build-arg (see "Available at Buildtime" in its UI), and
+# the ARG/ENV lines below receive them and expose them to the Vite build.
 FROM source AS build-dashboard
+ARG VITE_API_URL
+ARG VITE_GRAPHQL_WS_URL
+ARG VITE_GOOGLE_MAPS_API_KEY
+ARG VITE_GOOGLE_MAPS_ID
+ENV VITE_API_URL=$VITE_API_URL \
+    VITE_GRAPHQL_WS_URL=$VITE_GRAPHQL_WS_URL \
+    VITE_GOOGLE_MAPS_API_KEY=$VITE_GOOGLE_MAPS_API_KEY \
+    VITE_GOOGLE_MAPS_ID=$VITE_GOOGLE_MAPS_ID
 RUN bun --filter @repo/dashboard build
 
 FROM source AS build-web
+ARG VITE_API_URL
+ARG VITE_GRAPHQL_HTTP_URL
+ARG VITE_GOOGLE_CLIENT_ID
+ARG VITE_PUBLIC_MAP_KEY
+ENV VITE_API_URL=$VITE_API_URL \
+    VITE_GRAPHQL_HTTP_URL=$VITE_GRAPHQL_HTTP_URL \
+    VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID \
+    VITE_PUBLIC_MAP_KEY=$VITE_PUBLIC_MAP_KEY
 RUN bun --filter web build
 
 FROM build-db AS build-auth

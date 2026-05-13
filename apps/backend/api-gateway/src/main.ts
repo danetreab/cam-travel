@@ -17,10 +17,23 @@ async function bootstrap() {
     .filter(Boolean);
   app.enableCors({ origin: corsOrigins, credentials: true });
 
-  // /api/auth/** is no longer proxied here. The browser talks to the auth
-  // service directly on its own Coolify domain, and better-auth's
-  // crossSubDomainCookies setting keeps the session cookie visible to both
-  // hostnames so the gateway's AuthGuard still sees authenticated requests.
+  // /api/auth/** proxies to the auth service over Docker-internal networking.
+  // The frontends only know about this gateway — they never call auth
+  // directly. better-auth on the auth service must have BETTER_AUTH_URL set
+  // to this gateway's public URL so it sets cookies and computes OAuth
+  // callback URLs against the domain the browser actually sees.
+  const authServiceUrl =
+    process.env.AUTH_SERVICE_URL ?? "http://localhost:3001";
+  app.use(
+    createProxyMiddleware({
+      // Predicate form rather than an array literal: http-proxy-middleware v3
+      // rejects mixed string + glob arrays and silently drops requests when
+      // the matcher throws — the symptom was a 404 on the OAuth callback.
+      pathFilter: (pathname) => pathname.startsWith("/api/auth"),
+      target: authServiceUrl,
+      changeOrigin: true,
+    }),
+  );
 
   // Multipart file upload endpoints live on the graphql service. They can't
   // be sent over the Redis/TCP microservice transport (which is JSON-only),

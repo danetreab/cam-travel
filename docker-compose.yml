@@ -39,13 +39,19 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: ${REDIS_URL}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      # BETTER_AUTH_URL must be the gateway's public URL, not auth's own
+      # hostname. Browsers reach auth only via the gateway's /api/auth/**
+      # proxy, so cookies and OAuth callback URLs must be computed against
+      # the gateway domain or the browser will reject Set-Cookie / Google
+      # will reject the redirect URI.
       BETTER_AUTH_URL: ${BETTER_AUTH_URL}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       CORS_ORIGINS: ${CORS_ORIGINS}
-      # Scopes the session cookie to a parent domain so siblings (api,
-      # graphql, web, dashboard) all see it. Coolify must expose `auth` on
-      # its own public domain — typically a sibling like cam-travel-dev-auth.
+      # Scopes the session cookie to a parent domain so the gateway and the
+      # web/dashboard subdomains all see it. The auth service itself does
+      # not need a public Coolify domain anymore — traffic comes in through
+      # the gateway's internal /api/auth proxy.
       AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN}
     expose:
       - "3001"
@@ -106,10 +112,14 @@ services:
   # --- frontends ------------------------------------------------------------
   # VITE_* values are baked into the bundle at BUILD time via `args:` below.
   # In Coolify these come from variables flagged "Available at Buildtime".
-  # VITE_AUTH_URL points at the auth service's own public domain — auth no
-  # longer rides through the api-gateway, so the browser talks to it
-  # directly. Cross-subdomain cookies (AUTH_COOKIE_DOMAIN) keep the session
-  # cookie visible to the gateway for downstream GraphQL/REST calls.
+  #
+  # All browser traffic — including auth — goes through the api-gateway. So
+  # VITE_AUTH_URL, VITE_API_URL, VITE_GRAPHQL_HTTP_URL should all point at
+  # the gateway's public host (e.g. https://cam-travel-dev-api.rikrey.com).
+  # The auth service has no public domain; only the gateway routes to it via
+  # the /api/auth/** proxy on the Docker-internal network. AUTH_COOKIE_DOMAIN
+  # remains useful because web/dashboard live on sibling subdomains and need
+  # the session cookie visible on both their origin and the gateway's.
   web:
     build:
       context: .

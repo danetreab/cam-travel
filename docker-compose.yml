@@ -85,6 +85,15 @@ services:
       GRAPHQL_TCP_HOST: "graphql"
       GRAPHQL_TCP_PORT: "4002"
       CORS_ORIGINS: ${CORS_ORIGINS}
+      # The gateway runs its own better-auth instance for the AuthGuard, so
+      # it needs the same DB/Redis + secret as the auth service. Without
+      # these, AuthGuard.canActivate() hangs on Redis retries when a session
+      # cookie is present (manifests as a "pending" /graphql/v1 request).
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL}
+      AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN}
     expose:
       - "3000"
     restart: unless-stopped

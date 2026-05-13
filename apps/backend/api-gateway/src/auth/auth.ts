@@ -6,6 +6,10 @@ import { redis } from "../redis";
 
 const { db } = createDb(process.env.DATABASE_URL!);
 
+// Must match the auth service's cookie-scope config so the gateway reads the
+// same cookie name/format that auth set. See apps/backend/auth/src/auth/auth.ts.
+const cookieDomain = process.env.AUTH_COOKIE_DOMAIN;
+
 // The gateway is the single auth checkpoint for browser traffic. It validates
 // sessions via better-auth, reading from Redis (secondaryStorage) first and
 // falling back to Postgres. Internal services (graphql) trust the gateway.
@@ -27,4 +31,14 @@ export const auth = betterAuth({
   emailAndPassword: { enabled: true },
   plugins: [admin()],
   trustedOrigins: ["*"],
+  ...(cookieDomain
+    ? {
+        advanced: {
+          crossSubDomainCookies: {
+            enabled: true,
+            domain: cookieDomain,
+          },
+        },
+      }
+    : {}),
 });

@@ -10,7 +10,10 @@ import { ListIcon, MapTrifoldIcon } from "@phosphor-icons/react"
 
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
 import { useMediaQuery } from "@/hooks/use-media-query"
-import { attractionsListQueryOptions } from "@/queries/attractions.query"
+import {
+  attractionsListQueryOptions,
+  attractionsTopPerProvinceQueryOptions,
+} from "@/queries/attractions.query"
 import type { MapBounds } from "@/api/attractions.api"
 import type { Attraction } from "@/types/attraction"
 import { cn } from "@/lib/utils"
@@ -29,18 +32,20 @@ const DEFAULT_ZOOM = 7
 const MAP_ID = "DEMO_MAP_ID"
 const BOUNDS_DEBOUNCE_MS = 400
 
-// Airbnb-style: cap how many pins we fetch by zoom level. Combined with the
-// backend's popularity sort, low zoom returns the top places only instead of
-// every pin in the viewport. Country-level zooms stay sparse on purpose —
-// otherwise the most-reviewed places all cluster into one city and the rest
-// of the map looks empty.
+// Airbnb-style: cap how many pins we fetch by zoom level.
+//
+// At low zoom (country/region view) we switch to the top-per-province query
+// so all 25 provinces stay represented instead of pins clustering into one
+// city. At higher zoom we use the bounds-filtered list.
+const PER_PROVINCE_ZOOM_THRESHOLD = 8
+
 function limitForZoom(zoom: number): number {
-  if (zoom <= 6) return 10
-  if (zoom <= 8) return 20
   if (zoom <= 10) return 50
   if (zoom <= 12) return 120
   return 250
 }
+
+const PER_PROVINCE_COUNT = 20
 
 const FOCUS_ZOOM = 15
 
@@ -90,7 +95,9 @@ export function ExploreView() {
   const effectiveBounds = searchOnMove ? debouncedBounds : frozenBounds
   const effectiveZoom = searchOnMove ? debouncedZoom : frozenZoom
 
-  const { data, isFetching, error } = useQuery({
+  const usePerProvince = effectiveZoom <= PER_PROVINCE_ZOOM_THRESHOLD
+
+  const boundsQuery = useQuery({
     ...attractionsListQueryOptions(
       effectiveBounds
         ? {
@@ -100,9 +107,26 @@ export function ExploreView() {
           }
         : {}
     ),
-    enabled: effectiveBounds != null,
+    enabled: effectiveBounds != null && !usePerProvince,
     placeholderData: keepPreviousData,
   })
+
+  // At country/region zoom, fetch top-N per province so every province stays
+  // represented on the map. The backend handles the partitioning via a window
+  // function — one round-trip, no client-side fan-out.
+  const perProvinceQuery = useQuery({
+    ...attractionsTopPerProvinceQueryOptions({
+      perProvince: PER_PROVINCE_COUNT,
+      bounds: effectiveBounds ?? undefined,
+      activityType: activityType ?? undefined,
+    }),
+    enabled: effectiveBounds != null && usePerProvince,
+    placeholderData: keepPreviousData,
+  })
+
+  const { data, isFetching, error } = usePerProvince
+    ? perProvinceQuery
+    : boundsQuery
 
   const items = data?.items ?? []
 

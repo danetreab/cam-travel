@@ -141,6 +141,7 @@ type Query {
   item(id: ID!): Item
   attractions(filter: AttractionFilter! = {}, paging: OffsetPaging! = {limit: 10, offset: 0}, sorting: [AttractionSort!]! = []): AttractionConnection!
   attraction(id: ID!): Attraction
+  attractionsTopPerProvince(input: AttractionsTopPerProvinceInput!): [Attraction!]!
 }
 
 input UserFilter {
@@ -316,6 +317,19 @@ enum AttractionSortFields {
   cachedUserRatingsTotal
   createdAt
   updatedAt
+}
+
+input AttractionsTopPerProvinceInput {
+  perProvince: Int! = 20
+  bounds: AttractionBoundsInput
+  activityType: String
+}
+
+input AttractionBoundsInput {
+  south: Float!
+  west: Float!
+  north: Float!
+  east: Float!
 }
 
 type Mutation {

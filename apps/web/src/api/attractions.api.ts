@@ -74,6 +74,54 @@ export interface ListAttractionsParams {
   bounds?: MapBounds
 }
 
+const ATTRACTIONS_TOP_PER_PROVINCE = `
+  query AttractionsTopPerProvince($input: AttractionsTopPerProvinceInput!) {
+    attractionsTopPerProvince(input: $input) {
+      id
+      name
+      description
+      latitude
+      longitude
+      province
+      activityType
+      cachedRating
+      cachedUserRatingsTotal
+      files {
+        id
+        url
+        thumbnailUrl
+        hasThumbnail
+        mimetype
+      }
+    }
+  }
+`
+
+export interface ListTopPerProvinceParams {
+  perProvince?: number
+  bounds?: MapBounds
+  activityType?: string
+}
+
+export async function listTopPerProvince(
+  params: ListTopPerProvinceParams = {},
+): Promise<AttractionListResult> {
+  const input: Record<string, unknown> = {
+    perProvince: params.perProvince ?? 20,
+  }
+  if (params.bounds) input.bounds = params.bounds
+  if (params.activityType) input.activityType = params.activityType
+
+  const data = await gql<{ attractionsTopPerProvince: Attraction[] }>(
+    ATTRACTIONS_TOP_PER_PROVINCE,
+    { input },
+  )
+  return {
+    items: data.attractionsTopPerProvince,
+    totalCount: data.attractionsTopPerProvince.length,
+  }
+}
+
 export async function listAttractions(
   params: ListAttractionsParams = {},
 ): Promise<AttractionListResult> {

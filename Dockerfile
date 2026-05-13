@@ -102,11 +102,11 @@ ENV NODE_ENV=production \
 RUN apk add --no-cache curl
 # Follows the TanStack Start Bun hosting recipe: the bun-native `server.ts`
 # script consumes `./dist/client` (static assets) and `./dist/server/server.js`
-# (the SSR handler). No nitro `.output` layout.
-COPY --from=build-web --chown=bun:bun /repo/apps/web/dist /app/dist
-COPY --from=build-web --chown=bun:bun /repo/apps/web/server.ts /app/server.ts
-COPY --from=build-web --chown=bun:bun /repo/apps/web/package.json /app/package.json
-USER bun
+# (the SSR handler). tanstackStart externalizes runtime deps (h3-v2 et al.)
+# into the SSR bundle, so we copy the full /repo to keep node_modules
+# resolvable — same pattern the backend services use.
+COPY --from=build-web /repo /app
+WORKDIR /app/apps/web
 EXPOSE 3000
 CMD ["bun", "run", "server.ts"]
 

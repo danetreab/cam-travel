@@ -27,7 +27,11 @@ COPY packages/db/package.json packages/db/
 COPY packages/eslint-config/package.json packages/eslint-config/
 COPY packages/typescript-config/package.json packages/typescript-config/
 
-RUN --mount=type=cache,target=/root/.bun/install/cache \
+# sharing=locked: docker compose builds all targets in parallel and every
+# one mounts this same cache. Without locking, the parallel `bun install`
+# processes race when writing tarballs, leaving partially-written files
+# that subsequent readers reject with IntegrityCheckFailed.
+RUN --mount=type=cache,target=/root/.bun/install/cache,sharing=locked \
     bun install --frozen-lockfile
 
 FROM deps AS source

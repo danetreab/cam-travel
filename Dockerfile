@@ -100,11 +100,15 @@ ENV NODE_ENV=production \
     HOST=0.0.0.0
 # `curl` is for container healthchecks (Coolify/Traefik probes).
 RUN apk add --no-cache curl
-COPY --from=build-web --chown=bun:bun /repo/apps/web/.output /app/.output
+# Follows the TanStack Start Bun hosting recipe: the bun-native `server.ts`
+# script consumes `./dist/client` (static assets) and `./dist/server/server.js`
+# (the SSR handler). No nitro `.output` layout.
+COPY --from=build-web --chown=bun:bun /repo/apps/web/dist /app/dist
+COPY --from=build-web --chown=bun:bun /repo/apps/web/server.ts /app/server.ts
 COPY --from=build-web --chown=bun:bun /repo/apps/web/package.json /app/package.json
 USER bun
 EXPOSE 3000
-CMD ["bun", "run", "start"]
+CMD ["bun", "run", "server.ts"]
 
 FROM oven/bun:1.2.22-alpine AS auth
 WORKDIR /app

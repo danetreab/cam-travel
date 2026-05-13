@@ -2,6 +2,7 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
+  ServiceUnavailableException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { fromNodeHeaders } from "better-auth/node";
@@ -9,6 +10,7 @@ import type { Request } from "express";
 import { auth } from "./auth";
 
 const introspectionPattern = /__schema|__type\b/;
+const SESSION_LOOKUP_TIMEOUT_MS = 5000;
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -22,9 +24,24 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    const session = await auth.api.getSession({
-      headers: fromNodeHeaders(req.headers),
-    });
+    // Hard deadline on getSession. better-auth reads from Redis first; if the
+    // client is in offline/reconnecting mode the call can hang past the
+    // request-controller timeout and the browser sees a "pending" forever.
+    let session: Awaited<ReturnType<typeof auth.api.getSession>>;
+    try {
+      session = await Promise.race([
+        auth.api.getSession({ headers: fromNodeHeaders(req.headers) }),
+        new Promise<never>((_, reject) =>
+          setTimeout(
+            () => reject(new Error("session lookup timeout")),
+            SESSION_LOOKUP_TIMEOUT_MS,
+          ),
+        ),
+      ]);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      throw new ServiceUnavailableException(`session lookup failed: ${message}`);
+    }
 
     if (!session?.session) {
       throw new UnauthorizedException("No active session");

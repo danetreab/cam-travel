@@ -15,6 +15,9 @@ import { REDIS_CLIENT } from "./redis.tokens";
         const client = new Redis(url, {
           lazyConnect: true,
           maxRetriesPerRequest: 3,
+          connectTimeout: 5000,
+          commandTimeout: 3000,
+          enableReadyCheck: true,
         });
         const logger = new Logger("Redis");
         client.on("error", (err) =>

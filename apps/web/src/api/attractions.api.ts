@@ -4,6 +4,13 @@ import type { Attraction, AttractionListResult } from "@/types/attraction"
 // REST-shaped wrapper around the GraphQL HTTP endpoint. Callers get plain
 // async functions; the transport detail stays here. If a true REST surface
 // is added later, only this file changes.
+//
+// 10s ceiling on every call. Loader fetches that run during SSR cannot be
+// allowed to outlive the upstream proxy read timeout — if they do, the
+// connection closes mid-render and React surfaces it as an AbortError that
+// h3 turns into a 502 Bad Gateway.
+const GQL_TIMEOUT_MS = 10000
+
 async function gql<TData>(
   query: string,
   variables?: Record<string, unknown>,
@@ -13,6 +20,7 @@ async function gql<TData>(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query, variables }),
     credentials: "include",
+    signal: AbortSignal.timeout(GQL_TIMEOUT_MS),
   })
   if (!res.ok) {
     throw new Error(`Network error ${res.status} fetching ${envClient.VITE_GRAPHQL_HTTP_URL}`)

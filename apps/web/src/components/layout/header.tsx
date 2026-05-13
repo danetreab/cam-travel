@@ -7,6 +7,7 @@ import {
   TranslateIcon,
 } from "@phosphor-icons/react"
 import { Link } from "@tanstack/react-router"
+import { Compass } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -63,10 +64,8 @@ export function Header() {
           to="/"
           className="flex items-center gap-2 text-base font-semibold tracking-tight"
         >
-          <span aria-hidden className="text-lg">
-            🇰🇭
-          </span>
-          Cam Travel
+          <Compass aria-hidden className="size-6" />
+          Domnaer
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">

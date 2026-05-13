@@ -31,7 +31,7 @@ export function LoginForm({
       <div className="flex flex-col items-center gap-2 text-center">
         <h1 className="text-xl font-bold">Welcome</h1>
         <p className="text-muted-foreground text-sm">
-          Sign in to continue to Cam Travel
+          Sign in to continue to Domnaer
         </p>
       </div>
       <Button onClick={handleLoginWithGoogle} variant="outline" type="button">

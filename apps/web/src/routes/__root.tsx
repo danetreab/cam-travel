@@ -27,7 +27,7 @@ export const Route = createRootRouteWithContext<{
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "Cam Travel",
+        title: "Domnaer",
       },
     ],
     links: [

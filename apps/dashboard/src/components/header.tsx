@@ -2,14 +2,15 @@ import { Avatar, Layout, Space, Switch, Typography, theme } from "antd";
 import { MoonOutlined, SunOutlined } from "@ant-design/icons";
 import { useGetIdentity } from "@refinedev/core";
 import type { RefineThemedLayoutHeaderProps } from "@refinedev/antd";
-import { useColorMode } from "../contexts/color-mode";
+import { useTheme } from "next-themes";
 
 type Identity = { name?: string; avatar?: string };
 
 export const Header = ({ sticky }: RefineThemedLayoutHeaderProps) => {
   const { token } = theme.useToken();
   const { data: user } = useGetIdentity<Identity>();
-  const { mode, toggle } = useColorMode();
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   return (
     <Layout.Header
@@ -25,8 +26,8 @@ export const Header = ({ sticky }: RefineThemedLayoutHeaderProps) => {
     >
       <Space size="middle">
         <Switch
-          checked={mode === "dark"}
-          onChange={toggle}
+          checked={isDark}
+          onChange={(checked) => setTheme(checked ? "dark" : "light")}
           checkedChildren={<MoonOutlined />}
           unCheckedChildren={<SunOutlined />}
         />

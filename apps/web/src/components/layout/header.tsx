@@ -70,7 +70,7 @@ export function Header() {
           className="flex items-center gap-2 text-base font-semibold tracking-tight"
         >
           <Compass aria-hidden className="size-6" />
-          Domnaer
+          ដំណើរ
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">

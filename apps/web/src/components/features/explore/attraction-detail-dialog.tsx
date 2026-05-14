@@ -62,7 +62,16 @@ function buildSections(
 
 interface AttractionDetailDialogProps {
   attraction: Attraction | null
+  isLoading?: boolean
   onOpenChange: (open: boolean) => void
+}
+
+function AttractionLoading() {
+  return (
+    <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
+      Loading…
+    </div>
+  )
 }
 
 function AttractionMeta({ attraction }: { attraction: Attraction }) {
@@ -221,12 +230,16 @@ function AttractionActions({
 
 export function AttractionDetailDialog({
   attraction,
+  isLoading = false,
   onOpenChange,
 }: AttractionDetailDialogProps) {
   // Keep the breakpoint in sync with ExploreView so the same "mobile" rules
   // apply: tablets and up get the centered dialog, phones get a bottom sheet.
   const isDesktop = useMediaQuery("(min-width: 768px)")
-  const open = attraction != null
+  // Stay open while the route is mounted, even before data arrives — the
+  // direct-link case (e.g. shared URL) hits the modal route with no cached
+  // data, and closing the dialog while it loads would be jarring.
+  const open = attraction != null || isLoading
 
   // Arm the gallery only after the open animation has settled. Without this,
   // tapping a pin on mobile lands the synthesized click on the freshly-rendered
@@ -252,7 +265,7 @@ export function AttractionDetailDialog({
           side="bottom"
           className="max-h-[92svh] overflow-y-auto p-6 pt-8"
         >
-          {attraction && (
+          {attraction ? (
             <>
               <SheetHeader className="p-0">
                 <SheetTitle className="text-xl normal-case tracking-normal">
@@ -268,6 +281,8 @@ export function AttractionDetailDialog({
               />
               <AttractionActions attraction={attraction} variant="sticky" />
             </>
+          ) : (
+            <AttractionLoading />
           )}
         </SheetContent>
       </Sheet>
@@ -277,7 +292,7 @@ export function AttractionDetailDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[92vh] w-[92vw] max-w-5xl overflow-y-auto sm:max-w-5xl">
-        {attraction && (
+        {attraction ? (
           <>
             <DialogHeader>
               <DialogTitle className="text-xl">{attraction.name}</DialogTitle>
@@ -291,6 +306,8 @@ export function AttractionDetailDialog({
             />
             <AttractionActions attraction={attraction} variant="inline" />
           </>
+        ) : (
+          <AttractionLoading />
         )}
       </DialogContent>
     </Dialog>

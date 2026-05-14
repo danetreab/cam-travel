@@ -153,7 +153,7 @@ export function SavedView() {
 
   if (isDesktop) {
     return (
-      <div className="h-[calc(100svh-3.5rem)]">
+      <div className="h-svh md:h-[calc(100svh-3.5rem)]">
         <ResizablePanelGroup orientation="horizontal" className="h-full">
           <ResizablePanel
             id="saved-sidebar"
@@ -185,7 +185,7 @@ export function SavedView() {
   }
 
   return (
-    <div className="relative h-[calc(100svh-3.5rem)] overflow-hidden">
+    <div className="relative h-svh overflow-hidden md:h-[calc(100svh-3.5rem)]">
       <div className="absolute inset-0">{mapElement}</div>
 
       <aside

@@ -28,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { authClient, signOutRedirect } from "@/lib/auth-client"
+import { MobileMenu } from "./mobile-menu"
 
 function initials(name: string | null | undefined) {
   if (!name) return "?"
@@ -58,8 +59,10 @@ export function Header() {
   const activeLanguage = i18n.resolvedLanguage ?? i18n.language ?? "en"
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background">
-      <div className="flex h-14 items-center justify-between gap-4 px-4">
+    <>
+      <MobileMenu user={user} />
+      <header className="sticky top-0 z-40 hidden border-b bg-background md:block">
+        <div className="flex h-14 items-center justify-between gap-4 px-4">
         <Link
           to="/"
           className="flex items-center gap-2 text-base font-semibold tracking-tight"
@@ -159,6 +162,7 @@ export function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </header>
+      </header>
+    </>
   )
 }

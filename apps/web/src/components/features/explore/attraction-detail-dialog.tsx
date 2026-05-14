@@ -122,20 +122,37 @@ function AttractionBody({
           {attraction.description}
         </p>
       )}
-
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <SaveAttractionButton attractionId={attraction.id} />
-        <a
-          href={`https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`}
-          target="_blank"
-          rel="noreferrer"
-          className="text-primary inline-flex items-center gap-1 text-sm underline"
-        >
-          Open in Google Maps
-          <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-        </a>
-      </div>
     </>
+  )
+}
+
+function AttractionActions({
+  attraction,
+  variant,
+}: {
+  attraction: Attraction
+  variant: "inline" | "sticky"
+}) {
+  const wrapperClass =
+    variant === "sticky"
+      ? // Pin to the bottom of the scrolling sheet so the SAVE button stays
+        // reachable on tall mobile galleries. Negative -mx-6 cancels the
+        // SheetContent's px-6 so the bar spans full width with its own bg.
+        "bg-popover sticky bottom-0 -mx-6 mt-4 flex items-center justify-between gap-3 border-t px-6 py-3 pb-[env(safe-area-inset-bottom,0.75rem)]"
+      : "mt-4 flex flex-wrap items-center gap-3"
+  return (
+    <div className={wrapperClass}>
+      <SaveAttractionButton attractionId={attraction.id} />
+      <a
+        href={`https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`}
+        target="_blank"
+        rel="noreferrer"
+        className="text-primary inline-flex items-center gap-1 text-sm underline"
+      >
+        Open in Google Maps
+        <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+      </a>
+    </div>
   )
 }
 
@@ -186,6 +203,7 @@ export function AttractionDetailDialog({
                 attraction={attraction}
                 galleryArmed={galleryArmed}
               />
+              <AttractionActions attraction={attraction} variant="sticky" />
             </>
           )}
         </SheetContent>
@@ -208,6 +226,7 @@ export function AttractionDetailDialog({
               attraction={attraction}
               galleryArmed={galleryArmed}
             />
+            <AttractionActions attraction={attraction} variant="inline" />
           </>
         )}
       </DialogContent>

@@ -36,7 +36,6 @@ import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
 import { AttractionDetailDialog } from "./attraction-detail-dialog"
 import { UserLocationMarker } from "./user-location-marker"
 import { Badge } from "@/components/ui/badge"
-import { Checkbox } from "@/components/ui/checkbox"
 import { toast } from "sonner"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
@@ -96,7 +95,6 @@ export function ExploreView() {
   const [defaultLayout] = useState<Layout | undefined>(readStoredLayout)
   const [bounds, setBounds] = useState<MapBounds | null>(null)
   const [zoom, setZoom] = useState<number>(DEFAULT_ZOOM)
-  const [searchOnMove, setSearchOnMove] = useState(true)
   const [activityType, setActivityType] = useState<string | null>(null)
   const debouncedBounds = useDebouncedValue(bounds, BOUNDS_DEBOUNCE_MS)
   const debouncedZoom = useDebouncedValue(zoom, BOUNDS_DEBOUNCE_MS)
@@ -104,25 +102,19 @@ export function ExploreView() {
   const [selected, setSelected] = useState<Attraction | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
-  // When "search as I move" is off, freeze the bounds/zoom passed to the query.
-  const [frozenBounds, setFrozenBounds] = useState<MapBounds | null>(null)
-  const [frozenZoom, setFrozenZoom] = useState<number>(DEFAULT_ZOOM)
-  const effectiveBounds = searchOnMove ? debouncedBounds : frozenBounds
-  const effectiveZoom = searchOnMove ? debouncedZoom : frozenZoom
-
-  const usePerProvince = effectiveZoom <= PER_PROVINCE_ZOOM_THRESHOLD
+  const usePerProvince = debouncedZoom <= PER_PROVINCE_ZOOM_THRESHOLD
 
   const boundsQuery = useQuery({
     ...attractionsListQueryOptions(
-      effectiveBounds
+      debouncedBounds
         ? {
-            bounds: effectiveBounds,
-            limit: limitForZoom(effectiveZoom),
+            bounds: debouncedBounds,
+            limit: limitForZoom(debouncedZoom),
             activityType: activityType ?? undefined,
           }
         : {}
     ),
-    enabled: effectiveBounds != null && !usePerProvince,
+    enabled: debouncedBounds != null && !usePerProvince,
     placeholderData: keepPreviousData,
   })
 
@@ -132,10 +124,10 @@ export function ExploreView() {
   const perProvinceQuery = useQuery({
     ...attractionsTopPerProvinceQueryOptions({
       perProvince: PER_PROVINCE_COUNT,
-      bounds: effectiveBounds ?? undefined,
+      bounds: debouncedBounds ?? undefined,
       activityType: activityType ?? undefined,
     }),
-    enabled: effectiveBounds != null && usePerProvince,
+    enabled: debouncedBounds != null && usePerProvince,
     placeholderData: keepPreviousData,
   })
 
@@ -201,7 +193,7 @@ export function ExploreView() {
     <>
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold tracking-tight">
-          {effectiveBounds == null
+          {debouncedBounds == null
             ? "Move the map to explore"
             : isLoading
               ? "Finding places…"
@@ -270,7 +262,7 @@ export function ExploreView() {
                 />
               </div>
             ))}
-        {!isFetching && effectiveBounds != null && items.length === 0 && (
+        {!isFetching && debouncedBounds != null && items.length === 0 && (
           <p className="text-sm text-muted-foreground">
             No attractions in this area. Try panning or zooming out.
           </p>
@@ -312,9 +304,9 @@ export function ExploreView() {
       aria-label="Show my location"
       title="Show my location"
       className={cn(
-        "flex h-11 w-11 items-center justify-center rounded-full border bg-white shadow-md transition-colors",
+        "bg-background text-foreground flex h-11 w-11 items-center justify-center rounded-full border shadow-md transition-colors",
         "hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60",
-        userLocation.status === "granted" && "text-blue-600",
+        userLocation.status === "granted" && "text-blue-600 dark:text-blue-400",
       )}
     >
       {userLocation.status === "loading" ? (
@@ -334,26 +326,9 @@ export function ExploreView() {
     </div>
   )
 
-  const searchAsIMoveLabel = (
-    <label className="bg-background text-foreground flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-xs font-medium shadow-md select-none">
-      <Checkbox
-        checked={searchOnMove}
-        onCheckedChange={(checked) => {
-          const next = checked === true
-          setSearchOnMove(next)
-          if (!next && bounds) {
-            setFrozenBounds(bounds)
-            setFrozenZoom(zoom)
-          }
-        }}
-      />
-      Search as I move the map
-    </label>
-  )
-
   if (isDesktop) {
     return (
-      <div className="h-[calc(100svh-3.5rem)]">
+      <div className="h-svh md:h-[calc(100svh-3.5rem)]">
         <ResizablePanelGroup
           orientation="horizontal"
           defaultLayout={defaultLayout}
@@ -392,9 +367,6 @@ export function ExploreView() {
               <div className="absolute right-4 bottom-6 z-10">
                 {locateMeButton}
               </div>
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-                {searchAsIMoveLabel}
-              </div>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
@@ -411,16 +383,10 @@ export function ExploreView() {
   // Airbnb-style pill button at the bottom. Keep the map mounted underneath
   // so its viewport state survives toggling and Google Maps doesn't reload.
   return (
-    <div className="relative h-[calc(100svh-3.5rem)] overflow-hidden">
+    <div className="relative h-svh overflow-hidden md:h-[calc(100svh-3.5rem)]">
       <div className="absolute inset-0">{mapElement}</div>
 
       {mobileView === "map" && mapFetchingOverlay}
-
-      {mobileView === "map" && (
-        <div className="pointer-events-none absolute top-4 right-4 left-4 flex justify-center">
-          <div className="pointer-events-auto">{searchAsIMoveLabel}</div>
-        </div>
-      )}
 
       {mobileView === "map" && (
         <div className="absolute right-4 bottom-24 z-10">{locateMeButton}</div>

@@ -18,6 +18,7 @@ import {
 import Gallery from "@/components/ui/gallery"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import type { Attraction, AttractionFile } from "@/types/attraction"
+import { SaveAttractionButton } from "./save-attraction-button"
 
 type GalleryItem = { src: string; alt: string; kind: "image" | "video" }
 type GallerySection = { type?: "grid"; images: GalleryItem[] }
@@ -122,15 +123,18 @@ function AttractionBody({
         </p>
       )}
 
-      <a
-        href={`https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`}
-        target="_blank"
-        rel="noreferrer"
-        className="text-primary mt-4 inline-flex items-center gap-1 text-sm underline"
-      >
-        Open in Google Maps
-        <ExternalLink className="h-3.5 w-3.5" aria-hidden />
-      </a>
+      <div className="mt-4 flex flex-wrap items-center gap-3">
+        <SaveAttractionButton attractionId={attraction.id} />
+        <a
+          href={`https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`}
+          target="_blank"
+          rel="noreferrer"
+          className="text-primary inline-flex items-center gap-1 text-sm underline"
+        >
+          Open in Google Maps
+          <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+        </a>
+      </div>
     </>
   )
 }

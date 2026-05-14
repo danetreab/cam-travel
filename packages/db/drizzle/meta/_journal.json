@@ -36,6 +36,13 @@
       "when": 1778481576642,
       "tag": "0004_curved_northstar",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1778693608690,
+      "tag": "0005_optimal_the_leader",
+      "breakpoints": true
     }
   ]
 }

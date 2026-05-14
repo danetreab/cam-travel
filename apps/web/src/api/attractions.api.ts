@@ -130,6 +130,80 @@ export async function listTopPerProvince(
   }
 }
 
+const MY_SAVED_ATTRACTIONS = `
+  query MySavedAttractions {
+    mySavedAttractions {
+      id
+      name
+      description
+      latitude
+      longitude
+      province
+      activityType
+      cachedRating
+      cachedUserRatingsTotal
+      files {
+        id
+        url
+        thumbnailUrl
+        hasThumbnail
+        mimetype
+      }
+    }
+  }
+`
+
+const MY_SAVED_ATTRACTION_IDS = `
+  query MySavedAttractionIds {
+    mySavedAttractionIds
+  }
+`
+
+const SAVE_ATTRACTION = `
+  mutation SaveAttraction($attractionId: ID!) {
+    saveAttraction(attractionId: $attractionId) {
+      id
+    }
+  }
+`
+
+const UNSAVE_ATTRACTION = `
+  mutation UnsaveAttraction($attractionId: ID!) {
+    unsaveAttraction(attractionId: $attractionId)
+  }
+`
+
+export async function listMySavedAttractions(): Promise<AttractionListResult> {
+  const data = await gql<{ mySavedAttractions: Attraction[] }>(
+    MY_SAVED_ATTRACTIONS,
+  )
+  return {
+    items: data.mySavedAttractions,
+    totalCount: data.mySavedAttractions.length,
+  }
+}
+
+export async function listMySavedAttractionIds(): Promise<string[]> {
+  const data = await gql<{ mySavedAttractionIds: string[] }>(
+    MY_SAVED_ATTRACTION_IDS,
+  )
+  return data.mySavedAttractionIds
+}
+
+export async function saveAttraction(attractionId: string): Promise<string> {
+  const data = await gql<{ saveAttraction: { id: string } }>(SAVE_ATTRACTION, {
+    attractionId,
+  })
+  return data.saveAttraction.id
+}
+
+export async function unsaveAttraction(attractionId: string): Promise<string> {
+  const data = await gql<{ unsaveAttraction: string }>(UNSAVE_ATTRACTION, {
+    attractionId,
+  })
+  return data.unsaveAttraction
+}
+
 export async function listAttractions(
   params: ListAttractionsParams = {},
 ): Promise<AttractionListResult> {

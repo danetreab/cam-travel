@@ -10,6 +10,7 @@ import { GraphqlMicroserviceController } from "./transport/graphql-microservice.
 import { UsersModule } from "./admin/users/users.module";
 import { ItemsModule } from "./admin/items/items.module";
 import { AttractionsModule } from "./admin/attractions/attractions.module";
+import { SavedAttractionsModule } from "./admin/saved-attractions/saved-attractions.module";
 import { UploadsModule } from "./uploads/uploads.module";
 
 @Module({
@@ -39,6 +40,7 @@ import { UploadsModule } from "./uploads/uploads.module";
     UsersModule,
     ItemsModule,
     AttractionsModule,
+    SavedAttractionsModule,
     UploadsModule,
   ],
   controllers: [GraphqlMicroserviceController],

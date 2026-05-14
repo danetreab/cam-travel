@@ -76,6 +76,9 @@ export const AttractionsList = (props: Partial<ListProps> = {}) => {
     syncWithLocation: true,
     pagination: { pageSize: 20 },
     sorters: { initial: [{ field: "createdAt", order: "desc" }] },
+    filters: {
+      initial: [{ field: "name", operator: "contains", value: undefined }],
+    },
     meta: { gqlQuery: ATTRACTIONS_LIST_QUERY },
   });
 
@@ -112,7 +115,7 @@ export const AttractionsList = (props: Partial<ListProps> = {}) => {
                   src={first}
                   width={48}
                   height={48}
-                  style={{ objectFit: "cover", borderRadius: 4 }}
+                  style={{ objectFit: "cover" }}
                 />
               </Image.PreviewGroup>
             );

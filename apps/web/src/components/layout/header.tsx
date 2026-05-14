@@ -75,6 +75,12 @@ export function Header() {
           >
             Explore
           </Link>
+          <Link
+            to="/saved"
+            className={buttonVariants({ variant: "ghost", size: "sm" })}
+          >
+            Saved
+          </Link>
         </nav>
 
         <DropdownMenu>

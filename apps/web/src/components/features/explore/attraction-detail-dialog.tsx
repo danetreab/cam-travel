@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
-import { ExternalLink, Star } from "lucide-react"
+import { ExternalLink, Share2, Star } from "lucide-react"
+import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -126,6 +128,31 @@ function AttractionBody({
   )
 }
 
+async function shareAttraction(attraction: Attraction) {
+  const url =
+    typeof window !== "undefined"
+      ? `${window.location.origin}/attraction/${attraction.id}`
+      : `/attraction/${attraction.id}`
+  // Use Web Share on platforms that support it (mostly mobile + Safari) so
+  // the user picks their own target (Messages, AirDrop, etc.); fall back to
+  // clipboard with a toast confirmation everywhere else.
+  if (typeof navigator !== "undefined" && "share" in navigator) {
+    try {
+      await navigator.share({ title: attraction.name, url })
+      return
+    } catch (err) {
+      // User-cancelled share — silent. Anything else falls through to copy.
+      if (err instanceof Error && err.name === "AbortError") return
+    }
+  }
+  try {
+    await navigator.clipboard.writeText(url)
+    toast.success("Link copied")
+  } catch {
+    toast.error("Could not copy link")
+  }
+}
+
 function AttractionActions({
   attraction,
   variant,
@@ -133,18 +160,54 @@ function AttractionActions({
   attraction: Attraction
   variant: "inline" | "sticky"
 }) {
-  const wrapperClass =
-    variant === "sticky"
-      ? // Pin to the bottom of the scrolling sheet so the SAVE button stays
-        // reachable on tall mobile galleries. Negative -mx-6 cancels the
-        // SheetContent's px-6 so the bar spans full width with its own bg.
-        "bg-popover sticky bottom-0 -mx-6 mt-4 flex items-center justify-between gap-3 border-t px-6 py-3 pb-[env(safe-area-inset-bottom,0.75rem)]"
-      : "mt-4 flex flex-wrap items-center gap-3"
+  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
+
+  if (variant === "sticky") {
+    // Mobile sticky bar: three equal-weight buttons (Save, Share, Maps) so
+    // they share the touch surface. Pinned to the bottom of the scrolling
+    // sheet; negative -mx-6 cancels SheetContent's px-6 so the bar spans
+    // full width with its own bg. Safe-area inset keeps it clear of the iOS
+    // home indicator.
+    return (
+      <div className="bg-popover sticky bottom-0 -mx-6 mt-4 flex items-stretch gap-2 border-t px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="flex-1 [&>button]:w-full">
+          <SaveAttractionButton attractionId={attraction.id} />
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex-1"
+          onClick={() => shareAttraction(attraction)}
+        >
+          <Share2 className="size-4" aria-hidden />
+          Share
+        </Button>
+        <Button
+          variant="default"
+          size="sm"
+          className="flex-1"
+          render={<a href={mapsHref} target="_blank" rel="noreferrer" />}
+        >
+          <ExternalLink className="size-4" aria-hidden />
+          Maps
+        </Button>
+      </div>
+    )
+  }
+
   return (
-    <div className={wrapperClass}>
+    <div className="mt-4 flex flex-wrap items-center gap-3">
       <SaveAttractionButton attractionId={attraction.id} />
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => shareAttraction(attraction)}
+      >
+        <Share2 className="size-4" aria-hidden />
+        Share
+      </Button>
       <a
-        href={`https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`}
+        href={mapsHref}
         target="_blank"
         rel="noreferrer"
         className="text-primary inline-flex items-center gap-1 text-sm underline"
@@ -213,7 +276,7 @@ export function AttractionDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto">
+      <DialogContent className="max-h-[92vh] w-[92vw] max-w-5xl overflow-y-auto sm:max-w-5xl">
         {attraction && (
           <>
             <DialogHeader>

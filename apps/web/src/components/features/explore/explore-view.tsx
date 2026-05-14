@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useQuery, keepPreviousData } from "@tanstack/react-query"
+import { useNavigate, useRouterState } from "@tanstack/react-router"
 import {
   ColorScheme,
   Map,
@@ -33,7 +34,6 @@ import {
 import { AttractionMarker } from "./attraction-marker"
 import { AttractionListCard } from "./attraction-list-card"
 import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
-import { AttractionDetailDialog } from "./attraction-detail-dialog"
 import { UserLocationMarker } from "./user-location-marker"
 import { Badge } from "@/components/ui/badge"
 import { toast } from "sonner"
@@ -57,6 +57,12 @@ function limitForZoom(zoom: number): number {
 }
 
 const PER_PROVINCE_COUNT = 4
+
+// Hard cap for the country/region zoom path. The per-province SQL can emit
+// more rows than the user can usefully scan — province strings in the data
+// have variants/duplicates, so 4 × distinct_provinces blows past 100. Cap to
+// keep marker render + sidebar list snappy on first paint.
+const COUNTRY_VIEW_CAP = 100
 
 const FOCUS_ZOOM = 15
 
@@ -99,7 +105,18 @@ export function ExploreView() {
   const debouncedBounds = useDebouncedValue(bounds, BOUNDS_DEBOUNCE_MS)
   const debouncedZoom = useDebouncedValue(zoom, BOUNDS_DEBOUNCE_MS)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const [selected, setSelected] = useState<Attraction | null>(null)
+  const navigate = useNavigate()
+  // Selection lives in the URL (`/attraction/$attractionId`). Reading the
+  // param from the child match keeps marker/list highlighting in sync with
+  // the modal route without duplicating state.
+  const selectedId = useRouterState({
+    select: (s) => {
+      const m = s.matches.find(
+        (m) => m.routeId === "/_authed/_explore/attraction/$attractionId"
+      )
+      return (m?.params as { attractionId?: string } | undefined)?.attractionId
+    },
+  })
   const listRef = useRef<HTMLDivElement>(null)
 
   const usePerProvince = debouncedZoom <= PER_PROVINCE_ZOOM_THRESHOLD
@@ -135,7 +152,19 @@ export function ExploreView() {
     ? perProvinceQuery
     : boundsQuery
 
-  const items = data?.items ?? []
+  const rawItems = data?.items ?? []
+  // At country/region zoom, keep the most-popular ~100 across all provinces.
+  // The per-province SQL already caps to N per province; this trims the long
+  // tail of low-traffic provinces so the first paint is fast without losing
+  // the marquee places.
+  const items = usePerProvince
+    ? [...rawItems]
+        .sort(
+          (a, b) =>
+            (b.cachedUserRatingsTotal ?? 0) - (a.cachedUserRatingsTotal ?? 0),
+        )
+        .slice(0, COUNTRY_VIEW_CAP)
+    : rawItems
 
   const userLocation = useUserLocation()
 
@@ -159,15 +188,15 @@ export function ExploreView() {
   }, [userLocation.error, userLocation.status])
 
   useEffect(() => {
-    if (!selected) return
+    if (!selectedId) return
     // The list is off-screen on mobile while the map is showing; calling
     // scrollIntoView on a translated element can scroll the page itself.
     if (!isDesktop && mobileView !== "list") return
     const el = listRef.current?.querySelector<HTMLElement>(
-      `[data-attr-id="${selected.id}"]`
+      `[data-attr-id="${selectedId}"]`
     )
     el?.scrollIntoView({ behavior: "smooth", block: "nearest" })
-  }, [selected, isDesktop, mobileView])
+  }, [selectedId, isDesktop, mobileView])
 
   const handleCameraChanged = (ev: MapCameraChangedEvent) => {
     const b = ev.detail.bounds
@@ -179,8 +208,15 @@ export function ExploreView() {
     }
   }
 
+  const openAttraction = (a: Attraction) => {
+    navigate({
+      to: "/attraction/$attractionId",
+      params: { attractionId: a.id },
+    })
+  }
+
   const handleCardClick = (a: Attraction) => {
-    setSelected(a)
+    openAttraction(a)
     if (map) {
       map.panTo({ lat: a.latitude, lng: a.longitude })
       // Never zoom out — if user is already closer in, keep their zoom.
@@ -255,7 +291,7 @@ export function ExploreView() {
               <div key={a.id} data-attr-id={a.id}>
                 <AttractionListCard
                   attraction={a}
-                  active={hoveredId === a.id || selected?.id === a.id}
+                  active={hoveredId === a.id || selectedId === a.id}
                   onClick={() => handleCardClick(a)}
                   onHover={() => setHoveredId(a.id)}
                   onLeave={() => setHoveredId(null)}
@@ -286,8 +322,8 @@ export function ExploreView() {
         <AttractionMarker
           key={a.id}
           attraction={a}
-          active={hoveredId === a.id || selected?.id === a.id}
-          onClick={() => setSelected(a)}
+          active={hoveredId === a.id || selectedId === a.id}
+          onClick={() => openAttraction(a)}
         />
       ))}
       {userLocation.position && (
@@ -370,11 +406,6 @@ export function ExploreView() {
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
-
-        <AttractionDetailDialog
-          attraction={selected}
-          onOpenChange={(open) => !open && setSelected(null)}
-        />
       </div>
     )
   }
@@ -420,11 +451,6 @@ export function ExploreView() {
           </>
         )}
       </button>
-
-      <AttractionDetailDialog
-        attraction={selected}
-        onOpenChange={(open) => !open && setSelected(null)}
-      />
     </div>
   )
 }

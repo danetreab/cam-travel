@@ -204,6 +204,39 @@ export async function unsaveAttraction(attractionId: string): Promise<string> {
   return data.unsaveAttraction
 }
 
+const ATTRACTION_BY_ID = `
+  query AttractionById($id: ID!) {
+    attractions(filter: { id: { eq: $id } }, paging: { limit: 1 }) {
+      nodes {
+        id
+        name
+        description
+        latitude
+        longitude
+        province
+        activityType
+        cachedRating
+        cachedUserRatingsTotal
+        files {
+          id
+          url
+          thumbnailUrl
+          hasThumbnail
+          mimetype
+        }
+      }
+    }
+  }
+`
+
+export async function getAttractionById(id: string): Promise<Attraction | null> {
+  const data = await gql<{ attractions: { nodes: Attraction[] } }>(
+    ATTRACTION_BY_ID,
+    { id },
+  )
+  return data.attractions.nodes[0] ?? null
+}
+
 export async function listAttractions(
   params: ListAttractionsParams = {},
 ): Promise<AttractionListResult> {

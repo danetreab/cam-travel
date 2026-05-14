@@ -172,13 +172,17 @@ function AttractionActions({
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
 
   if (variant === "sticky") {
-    // Mobile sticky bar: three equal-weight buttons (Save, Share, Maps) so
-    // they share the touch surface. Pinned to the bottom of the scrolling
-    // sheet; negative -mx-6 cancels SheetContent's px-6 so the bar spans
-    // full width with its own bg. Safe-area inset keeps it clear of the iOS
-    // home indicator.
+    // Mobile action bar: three equal-weight buttons (Save, Share, Maps) at
+    // the end of the sheet content. We intentionally don't `sticky bottom-0`
+    // here — mobile browsers already render their own URL/tab bar at the
+    // bottom, and stacking another floating bar on top of the gallery was
+    // visually noisy. The buttons live inline at the end of the scroll, so
+    // the user reaches them by scrolling past the photos.
+    // Negative -mx-6 cancels SheetContent's px-6 so the bar spans full width
+    // with its own bg; safe-area inset keeps it clear of the iOS home
+    // indicator.
     return (
-      <div className="bg-popover sticky bottom-0 -mx-6 mt-4 flex items-stretch gap-2 border-t px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div className="bg-popover -mx-6 mt-4 flex items-stretch gap-2 border-t px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
         <div className="flex-1 [&>button]:w-full">
           <SaveAttractionButton attractionId={attraction.id} />
         </div>

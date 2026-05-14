@@ -56,7 +56,7 @@ function limitForZoom(zoom: number): number {
   return 250
 }
 
-const PER_PROVINCE_COUNT = 20
+const PER_PROVINCE_COUNT = 4
 
 const FOCUS_ZOOM = 15
 

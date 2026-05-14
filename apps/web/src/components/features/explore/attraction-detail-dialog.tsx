@@ -99,7 +99,7 @@ function AttractionMeta({ attraction }: { attraction: Attraction }) {
   )
 }
 
-function AttractionBody({
+function AttractionGallery({
   attraction,
   galleryArmed,
 }: {
@@ -108,32 +108,29 @@ function AttractionBody({
 }) {
   const sections = buildSections(attraction.files, attraction.name)
   return (
-    <>
-      {/*
-        On mobile, the bottom sheet animates up under the user's finger after
-        the pin tap. Without this guard the synthesized click lands on the
-        hero image (wrapped in PhotoView) and opens the lightbox instead of
-        showing details. Block pointer events until the open animation has
-        settled.
-      */}
-      <div
-        className={`mt-2 ${galleryArmed ? "" : "pointer-events-none"}`}
-      >
-        {sections.length === 0 ? (
-          <div className="bg-muted text-muted-foreground flex h-72 items-center justify-center text-sm">
-            No photos or videos yet
-          </div>
-        ) : (
-          <Gallery sections={sections} />
-        )}
-      </div>
-
-      {attraction.description && (
-        <p className="text-muted-foreground mt-4 text-sm leading-relaxed">
-          {attraction.description}
-        </p>
+    // On mobile, the bottom sheet animates up under the user's finger after
+    // the pin tap. Without this guard the synthesized click lands on the
+    // hero image (wrapped in PhotoView) and opens the lightbox instead of
+    // showing details. Block pointer events until the open animation has
+    // settled.
+    <div className={`mt-2 ${galleryArmed ? "" : "pointer-events-none"}`}>
+      {sections.length === 0 ? (
+        <div className="bg-muted text-muted-foreground flex h-72 items-center justify-center text-sm">
+          No photos or videos yet
+        </div>
+      ) : (
+        <Gallery sections={sections} />
       )}
-    </>
+    </div>
+  )
+}
+
+function AttractionDescription({ attraction }: { attraction: Attraction }) {
+  if (!attraction.description) return null
+  return (
+    <p className="text-muted-foreground mt-4 text-sm leading-relaxed">
+      {attraction.description}
+    </p>
   )
 }
 
@@ -172,17 +169,12 @@ function AttractionActions({
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
 
   if (variant === "sticky") {
-    // Mobile action bar: three equal-weight buttons (Save, Share, Maps) at
-    // the end of the sheet content. We intentionally don't `sticky bottom-0`
-    // here — mobile browsers already render their own URL/tab bar at the
-    // bottom, and stacking another floating bar on top of the gallery was
-    // visually noisy. The buttons live inline at the end of the scroll, so
-    // the user reaches them by scrolling past the photos.
-    // Negative -mx-6 cancels SheetContent's px-6 so the bar spans full width
-    // with its own bg; safe-area inset keeps it clear of the iOS home
-    // indicator.
+    // Mobile: three equal-weight buttons (Save, Share, Maps) sitting directly
+    // below the gallery. Not a sticky footer — mobile browsers already render
+    // their own URL/tab bar at the bottom, and an extra floating bar on top
+    // of the photos was visually noisy.
     return (
-      <div className="bg-popover -mx-6 mt-4 flex items-stretch gap-2 border-t px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+      <div className="mt-3 flex items-stretch gap-2">
         <div className="flex-1 [&>button]:w-full">
           <SaveAttractionButton attractionId={attraction.id} />
         </div>
@@ -279,11 +271,12 @@ export function AttractionDetailDialog({
                   <AttractionMeta attraction={attraction} />
                 </SheetDescription>
               </SheetHeader>
-              <AttractionBody
+              <AttractionGallery
                 attraction={attraction}
                 galleryArmed={galleryArmed}
               />
               <AttractionActions attraction={attraction} variant="sticky" />
+              <AttractionDescription attraction={attraction} />
             </>
           ) : (
             <AttractionLoading />
@@ -304,10 +297,11 @@ export function AttractionDetailDialog({
                 <AttractionMeta attraction={attraction} />
               </DialogDescription>
             </DialogHeader>
-            <AttractionBody
+            <AttractionGallery
               attraction={attraction}
               galleryArmed={galleryArmed}
             />
+            <AttractionDescription attraction={attraction} />
             <AttractionActions attraction={attraction} variant="inline" />
           </>
         ) : (

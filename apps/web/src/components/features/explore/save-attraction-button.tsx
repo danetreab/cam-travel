@@ -15,9 +15,11 @@ interface SaveAttractionButtonProps {
   attractionId: string
 }
 
-export function SaveAttractionButton({
-  attractionId,
-}: SaveAttractionButtonProps) {
+// Shared save state + toggle for any view that wants to render its own UI on
+// top of it (the regular button below, plus the iOS-style tab in the mobile
+// drawer footer). Returns `signedIn` so callers can decide between toggling
+// the save and prompting sign-in.
+export function useSaveAttraction(attractionId: string) {
   const queryClient = useQueryClient()
   const auth = useQuery(authQueryOptions())
   const signedIn = !!auth.data?.session
@@ -55,33 +57,36 @@ export function SaveAttractionButton({
 
   const loginDialog = useLoginDialog()
 
-  if (!signedIn) {
-    return (
-      <Button
-        variant="outline"
-        size="sm"
-        onClick={() =>
-          toast("Sign in to save", {
-            action: {
-              label: "Sign in",
-              onClick: () => loginDialog.open(),
-            },
-          })
-        }
-      >
-        <Bookmark className="size-4" fill="none" aria-hidden />
-        Save
-      </Button>
-    )
+  const promptSignIn = () =>
+    toast("Sign in to save", {
+      action: { label: "Sign in", onClick: () => loginDialog.open() },
+    })
+
+  const toggle = () => {
+    if (!signedIn) return promptSignIn()
+    mutation.mutate(!saved)
   }
+
+  return {
+    signedIn,
+    saved,
+    isPending: mutation.isPending,
+    toggle,
+  }
+}
+
+export function SaveAttractionButton({
+  attractionId,
+}: SaveAttractionButtonProps) {
+  const { signedIn, saved, isPending, toggle } = useSaveAttraction(attractionId)
 
   return (
     <Button
       variant={saved ? "default" : "outline"}
       size="sm"
-      onClick={() => mutation.mutate(!saved)}
-      disabled={mutation.isPending}
-      aria-pressed={saved}
+      onClick={toggle}
+      disabled={isPending}
+      aria-pressed={signedIn ? saved : undefined}
     >
       <Bookmark
         className="size-4"

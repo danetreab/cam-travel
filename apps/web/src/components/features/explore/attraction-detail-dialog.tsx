@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ExternalLink, Share2, Star } from "lucide-react"
+import { Bookmark, ExternalLink, Share2, Star, X } from "lucide-react"
 import { toast } from "sonner"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -11,16 +11,20 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet"
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "@/components/ui/drawer"
 import Gallery from "@/components/ui/gallery"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { cn } from "@/lib/utils"
 import type { Attraction, AttractionFile } from "@/types/attraction"
-import { SaveAttractionButton } from "./save-attraction-button"
+import {
+  SaveAttractionButton,
+  useSaveAttraction,
+} from "./save-attraction-button"
 
 type GalleryItem = { src: string; alt: string; kind: "image" | "video" }
 type GallerySection = { type?: "grid"; images: GalleryItem[] }
@@ -99,6 +103,115 @@ function AttractionMeta({ attraction }: { attraction: Attraction }) {
   )
 }
 
+// Single tab inside the iOS-style bottom bar. Vertical icon + label, full
+// hit-area, subtle active/pressed styling. `as` lets a tab render as a link
+// (Google Maps) or a button (Save / Share / Close).
+function TabBarTab({
+  icon,
+  label,
+  active = false,
+  disabled = false,
+  onClick,
+  href,
+  className,
+}: {
+  icon: React.ReactNode
+  label: string
+  active?: boolean
+  disabled?: boolean
+  onClick?: () => void
+  href?: string
+  className?: string
+}) {
+  const inner = (
+    <>
+      <span aria-hidden className="flex h-6 w-6 items-center justify-center">
+        {icon}
+      </span>
+      <span className="text-[10px] leading-none tracking-wide">{label}</span>
+    </>
+  )
+
+  const base = cn(
+    "flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors",
+    active ? "text-primary" : "text-muted-foreground",
+    !disabled && "active:bg-muted/40",
+    disabled && "opacity-50",
+    className,
+  )
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className={base}
+        aria-label={label}
+      >
+        {inner}
+      </a>
+    )
+  }
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={base}
+      aria-label={label}
+      aria-pressed={active || undefined}
+    >
+      {inner}
+    </button>
+  )
+}
+
+function AttractionTabBar({
+  attraction,
+  onClose,
+}: {
+  attraction: Attraction
+  onClose: () => void
+}) {
+  const save = useSaveAttraction(attraction.id)
+  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
+
+  return (
+    <div className="border-t bg-popover/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] supports-backdrop-filter:bg-popover/80 supports-backdrop-filter:backdrop-blur">
+      <div className="mx-auto flex max-w-md items-stretch">
+        <TabBarTab
+          icon={
+            <Bookmark
+              className="size-5"
+              fill={save.saved ? "currentColor" : "none"}
+            />
+          }
+          label={save.saved ? "Saved" : "Save"}
+          active={save.saved}
+          disabled={save.isPending}
+          onClick={save.toggle}
+        />
+        <TabBarTab
+          icon={<Share2 className="size-5" />}
+          label="Share"
+          onClick={() => shareAttraction(attraction)}
+        />
+        <TabBarTab
+          icon={<ExternalLink className="size-5" />}
+          label="Maps"
+          href={mapsHref}
+        />
+        <TabBarTab
+          icon={<X className="size-5" />}
+          label="Close"
+          onClick={onClose}
+        />
+      </div>
+    </div>
+  )
+}
+
 function AttractionGallery({
   attraction,
   galleryArmed,
@@ -169,35 +282,9 @@ function AttractionActions({
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
 
   if (variant === "sticky") {
-    // Mobile: three equal-weight buttons (Save, Share, Maps) sitting directly
-    // below the gallery. Not a sticky footer — mobile browsers already render
-    // their own URL/tab bar at the bottom, and an extra floating bar on top
-    // of the photos was visually noisy.
-    return (
-      <div className="mt-3 flex items-stretch gap-2">
-        <div className="flex-1 [&>button]:w-full">
-          <SaveAttractionButton attractionId={attraction.id} />
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1"
-          onClick={() => shareAttraction(attraction)}
-        >
-          <Share2 className="size-4" aria-hidden />
-          Share
-        </Button>
-        <Button
-          variant="default"
-          size="sm"
-          className="flex-1"
-          render={<a href={mapsHref} target="_blank" rel="noreferrer" />}
-        >
-          <ExternalLink className="size-4" aria-hidden />
-          Maps
-        </Button>
-      </div>
-    )
+    // Handled by AttractionTabBar below — the drawer pins it to the bottom
+    // and pairs it with a Close tab outside this component.
+    return null
   }
 
   return (
@@ -256,33 +343,43 @@ export function AttractionDetailDialog({
 
   if (!isDesktop) {
     return (
-      <Sheet open={open} onOpenChange={onOpenChange}>
-        <SheetContent
-          side="bottom"
-          className="max-h-[92svh] overflow-y-auto p-6 pt-8"
-        >
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        {/*
+          The vaul drawer ships with a drag-handle and rounded top. The body
+          is a flex column: the top wrapper scrolls (title, gallery,
+          description) while the iOS-style tab bar stays pinned at the
+          bottom, like a native bottom navigation.
+        */}
+        <DrawerContent className="max-h-[92svh]">
           {attraction ? (
-            <>
-              <SheetHeader className="p-0">
-                <SheetTitle className="text-xl normal-case tracking-normal">
-                  {attraction.name}
-                </SheetTitle>
-                <SheetDescription>
-                  <AttractionMeta attraction={attraction} />
-                </SheetDescription>
-              </SheetHeader>
-              <AttractionGallery
+            <div className="flex min-h-0 flex-1 flex-col">
+              <div className="min-h-0 flex-1 overflow-y-auto px-6 pb-4">
+                <DrawerHeader className="p-0 text-left">
+                  <DrawerTitle className="text-xl normal-case tracking-normal">
+                    {attraction.name}
+                  </DrawerTitle>
+                  <DrawerDescription>
+                    <AttractionMeta attraction={attraction} />
+                  </DrawerDescription>
+                </DrawerHeader>
+                <AttractionGallery
+                  attraction={attraction}
+                  galleryArmed={galleryArmed}
+                />
+                <AttractionDescription attraction={attraction} />
+              </div>
+              <AttractionTabBar
                 attraction={attraction}
-                galleryArmed={galleryArmed}
+                onClose={() => onOpenChange(false)}
               />
-              <AttractionActions attraction={attraction} variant="sticky" />
-              <AttractionDescription attraction={attraction} />
-            </>
+            </div>
           ) : (
-            <AttractionLoading />
+            <div className="px-6 pb-6">
+              <AttractionLoading />
+            </div>
           )}
-        </SheetContent>
-      </Sheet>
+        </DrawerContent>
+      </Drawer>
     )
   }
 

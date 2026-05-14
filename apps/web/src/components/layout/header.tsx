@@ -13,7 +13,8 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { buttonVariants } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { useLoginDialog } from "@/components/features/login/login-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -52,6 +53,7 @@ export function Header() {
   const { t, i18n } = useTranslation()
   const { theme, setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const loginDialog = useLoginDialog()
 
   useEffect(() => setMounted(true), [])
 
@@ -78,14 +80,25 @@ export function Header() {
           >
             Explore
           </Link>
-          <Link
-            to="/saved"
-            className={buttonVariants({ variant: "ghost", size: "sm" })}
-          >
-            Saved
-          </Link>
+          {user && (
+            <Link
+              to="/saved"
+              className={buttonVariants({ variant: "ghost", size: "sm" })}
+            >
+              Saved
+            </Link>
+          )}
         </nav>
 
+        {!user ? (
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => loginDialog.open()}
+          >
+            Sign in
+          </Button>
+        ) : (
         <DropdownMenu>
           <DropdownMenuTrigger
             className="rounded-full focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
@@ -161,6 +174,7 @@ export function Header() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        )}
       </div>
       </header>
     </>

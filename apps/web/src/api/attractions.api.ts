@@ -11,14 +11,25 @@ import type { Attraction, AttractionListResult } from "@/types/attraction"
 // h3 turns into a 502 Bad Gateway.
 const GQL_TIMEOUT_MS = 10000
 
+// The first identifier after `query`/`mutation`/`subscription`. The gateway's
+// AuthGuard consults this name to decide whether a request is in the guest
+// allowlist, so it must be sent on every call — not just when the server is
+// running multiple operations.
+const OPERATION_NAME_RE = /\b(?:query|mutation|subscription)\s+(\w+)/
+
+function extractOperationName(query: string): string | undefined {
+  return query.match(OPERATION_NAME_RE)?.[1]
+}
+
 async function gql<TData>(
   query: string,
   variables?: Record<string, unknown>,
 ): Promise<TData> {
+  const operationName = extractOperationName(query)
   const res = await fetch(envClient.VITE_GRAPHQL_HTTP_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, variables }),
+    body: JSON.stringify({ query, variables, operationName }),
     credentials: "include",
     signal: AbortSignal.timeout(GQL_TIMEOUT_MS),
   })

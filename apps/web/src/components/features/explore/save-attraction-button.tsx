@@ -4,6 +4,7 @@ import { toast } from "sonner"
 
 import { saveAttraction, unsaveAttraction } from "@/api/attractions.api"
 import { Button } from "@/components/ui/button"
+import { useLoginDialog } from "@/components/features/login/login-dialog"
 import { authQueryOptions } from "@/queries/auth.query"
 import {
   savedAttractionIdsQueryOptions,
@@ -14,7 +15,9 @@ interface SaveAttractionButtonProps {
   attractionId: string
 }
 
-export function SaveAttractionButton({ attractionId }: SaveAttractionButtonProps) {
+export function SaveAttractionButton({
+  attractionId,
+}: SaveAttractionButtonProps) {
   const queryClient = useQueryClient()
   const auth = useQuery(authQueryOptions())
   const signedIn = !!auth.data?.session
@@ -50,7 +53,27 @@ export function SaveAttractionButton({ attractionId }: SaveAttractionButtonProps
     },
   })
 
-  if (!signedIn) return null
+  const loginDialog = useLoginDialog()
+
+  if (!signedIn) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() =>
+          toast("Sign in to save", {
+            action: {
+              label: "Sign in",
+              onClick: () => loginDialog.open(),
+            },
+          })
+        }
+      >
+        <Bookmark className="size-4" fill="none" aria-hidden />
+        Save
+      </Button>
+    )
+  }
 
   return (
     <Button

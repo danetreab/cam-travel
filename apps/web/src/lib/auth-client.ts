@@ -14,6 +14,6 @@ export async function signOutRedirect() {
   } catch {
     // swallow — we still want to navigate away
   } finally {
-    window.location.href = "/login"
+    window.location.href = "/"
   }
 }

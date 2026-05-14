@@ -12,6 +12,7 @@ import { useTranslation } from "react-i18next"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { useLoginDialog } from "@/components/features/login/login-dialog"
 import {
   Sheet,
   SheetContent,
@@ -52,6 +53,7 @@ export function MobileMenu({ user }: MobileMenuProps) {
   const { t, i18n } = useTranslation()
   const { theme, setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const loginDialog = useLoginDialog()
 
   useEffect(() => setMounted(true), [])
 
@@ -72,18 +74,34 @@ export function MobileMenu({ user }: MobileMenuProps) {
 
       <SheetContent side="right" className="flex w-80 flex-col gap-0 p-0">
         <SheetHeader className="border-b p-4">
-          <SheetTitle className="flex items-center gap-3 text-left text-base normal-case tracking-normal">
-            <Avatar className="size-10">
-              <AvatarImage src={user?.image ?? undefined} alt={user?.name ?? ""} />
-              <AvatarFallback>{initials(user?.name)}</AvatarFallback>
-            </Avatar>
-            <span className="flex min-w-0 flex-col">
-              <span className="truncate text-sm font-medium">{user?.name}</span>
-              <span className="text-muted-foreground truncate text-xs">
-                {user?.email}
+          {user ? (
+            <SheetTitle className="flex items-center gap-3 text-left text-base normal-case tracking-normal">
+              <Avatar className="size-10">
+                <AvatarImage src={user?.image ?? undefined} alt={user?.name ?? ""} />
+                <AvatarFallback>{initials(user?.name)}</AvatarFallback>
+              </Avatar>
+              <span className="flex min-w-0 flex-col">
+                <span className="truncate text-sm font-medium">{user?.name}</span>
+                <span className="text-muted-foreground truncate text-xs">
+                  {user?.email}
+                </span>
               </span>
-            </span>
-          </SheetTitle>
+            </SheetTitle>
+          ) : (
+            <SheetTitle className="text-left text-base normal-case tracking-normal">
+              <Button
+                variant="default"
+                size="sm"
+                className="w-full justify-center"
+                onClick={() => {
+                  setOpen(false)
+                  loginDialog.open()
+                }}
+              >
+                Sign in
+              </Button>
+            </SheetTitle>
+          )}
         </SheetHeader>
 
         <nav className="flex flex-col gap-1 border-b p-3">
@@ -98,17 +116,19 @@ export function MobileMenu({ user }: MobileMenuProps) {
             <Compass className="size-4" />
             Explore
           </Link>
-          <Link
-            to="/saved"
-            onClick={() => setOpen(false)}
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }),
-              "justify-start gap-2",
-            )}
-          >
-            <Bookmark className="size-4" />
-            Saved
-          </Link>
+          {user && (
+            <Link
+              to="/saved"
+              onClick={() => setOpen(false)}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "justify-start gap-2",
+              )}
+            >
+              <Bookmark className="size-4" />
+              Saved
+            </Link>
+          )}
         </nav>
 
         <div className="border-b p-3">
@@ -149,20 +169,22 @@ export function MobileMenu({ user }: MobileMenuProps) {
           </div>
         </div>
 
-        <div className="mt-auto p-3">
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full justify-start gap-2"
-            onClick={() => {
-              setOpen(false)
-              signOutRedirect()
-            }}
-          >
-            <SignOutIcon weight="bold" className="size-4" />
-            {t("header.signOut")}
-          </Button>
-        </div>
+        {user && (
+          <div className="mt-auto p-3">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-start gap-2"
+              onClick={() => {
+                setOpen(false)
+                signOutRedirect()
+              }}
+            >
+              <SignOutIcon weight="bold" className="size-4" />
+              {t("header.signOut")}
+            </Button>
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   )

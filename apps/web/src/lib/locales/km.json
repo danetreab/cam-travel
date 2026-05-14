@@ -1,0 +1,19 @@
+{
+  "common": {
+    "welcome": "សូមស្វាគមន៍",
+    "loading": "កំពុងផ្ទុក...",
+    "save": "រក្សាទុក",
+    "cancel": "បោះបង់",
+    "delete": "លុប",
+    "edit": "កែសម្រួល",
+    "search": "ស្វែងរក"
+  },
+  "header": {
+    "signOut": "ចាកចេញ",
+    "theme": "រូបរាង",
+    "themeLight": "ភ្លឺ",
+    "themeDark": "ងងឹត",
+    "themeSystem": "ប្រព័ន្ធ",
+    "language": "ភាសា"
+  }
+}

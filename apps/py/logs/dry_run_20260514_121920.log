@@ -1,0 +1,2903 @@
+/Users/danet/Developers/cam-travel/apps/py/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Provinces: ['Banteay Meanchey', 'Battambang', 'Kampong Cham', 'Kampong Chhnang', 'Kampong Speu', 'Kampong Thom', 'Kampot', 'Kandal', 'Kep', 'Koh Kong', 'Kratie', 'Mondulkiri', 'Oddar Meanchey', 'Pailin', 'Preah Sihanouk', 'Preah Vihear', 'Pursat', 'Prey Veng', 'Ratanakiri', 'Siem Reap', 'Stung Treng', 'Svay Rieng', 'Takeo', 'Tboung Khmum']
+Mode: fetch=True photos=True seed=True dry_run=True
+DB:    152.42.162.231:5432/cam-travel
+MinIO: minio-dev.rikrey.com/cam-travel
+
+=== Banteay Meanchey ===
+  [Sisophon] 13.5859,102.974 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                   15 results, 15 new
+    historical_landmark      20 results, 18 new
+    park                     20 results, 20 new
+    art_gallery               3 results,  3 new
+    hindu_temple             20 results, 20 new
+    buddhist_temple          20 results, 20 new
+    church                   20 results, 20 new
+    mosque                   17 results, 17 new
+    zoo                       0 results,  0 new
+    aquarium                  1 results,  1 new
+    amusement_park            5 results,  5 new
+    stadium                   2 results,  2 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Banteay Chhmar temple] 14.0739,103.095 r=25000m
+    tourist_attraction       11 results, 11 new
+    museum                    0 results,  0 new
+    historical_landmark      20 results, 20 new
+    park                      5 results,  5 new
+    art_gallery               0 results,  0 new
+    hindu_temple             20 results, 17 new
+    buddhist_temple          20 results, 20 new
+    church                    9 results,  9 new
+    mosque                    1 results,  1 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                4 results,  4 new
+    shopping_mall             5 results,  5 new
+  [Poipet border] 13.658,102.556 r=25000m
+    tourist_attraction       20 results, 14 new
+    museum                    8 results,  2 new
+    historical_landmark      14 results, 11 new
+    park                     20 results, 13 new
+    art_gallery               2 results,  0 new
+    hindu_temple              8 results,  8 new
+    buddhist_temple          20 results, 12 new
+    church                   20 results,  7 new
+    mosque                    9 results,  1 new
+    zoo                       2 results,  2 new
+    aquarium                  0 results,  0 new
+    amusement_park            3 results,  0 new
+    stadium                   2 results,  1 new
+    night_club               20 results,  2 new
+    shopping_mall            20 results,  3 new
+  -> 45 API calls, 369 unique places
+  [rank] 26/369 -> banteay_meanchey_top50.csv
+  [1/26] SADOK KOK THOM HISTORICAL PARK                   +5 photos
+  [2/26] Banteay Chhmar Temple                            +5 photos
+  [3/26] ร้านเรารักกัน (บ้านตุ่น)                         +5 photos
+  [4/26] ศาลพญาวิมุตตยาลัย - ศาลองค์แม่พิมพ์              +5 photos
+  [5/26] Krong Poi Pet Mosque                             +5 photos
+  [6/26] Wat Khok Saphan Khao                             +5 photos
+  [7/26] Wat Chana Chaisri (Wat Ko)                       +5 photos
+  [8/26] Wat Lao Aoi                                      +5 photos
+  [9/26] Wat Luang Aran                                   +5 photos
+  [10/26] MAX CLUB POIPET                                  +5 photos
+  [11/26] F-Plus KTV                                       +5 photos
+  [12/26] Prasat Khao Noi                                  +5 photos
+  [13/26] Aranya Prathet District Central Stadium          +5 photos
+  [14/26] Prasat Mebon (Banteay Chhmar)                    +5 photos
+  [15/26] Banteay Meanchey Provincial Museum               +5 photos
+  [16/26] REC                                              +5 photos
+  [17/26] Kanchanapisek Rama 9 Park                        +5 photos
+  [18/26] Malai market                                     +5 photos
+  [19/26] E-paste                                          +5 photos
+  [20/26] Poipet Pass Hotel                                +5 photos
+  [21/26] កោះសាងស្នេហ៍                                     skip (5 photos)
+  [22/26] Suon Sne Jun Bot                                 +5 photos
+  [23/26] Tropicana Resort & Casino                        +5 photos
+  [24/26] การท่องเทียวอรัญประเทศ​                          +5 photos
+  [25/26] Star Vegas Casino                                +5 photos
+  [26/26] Golden Gate Plaza                                +5 photos
+  [seed] rolled back: {'inserted': 25, 'reused': 1, 'uploaded': 130, 'skipped': 0}
+
+=== Battambang ===
+  [Battambang town] 13.0957,103.2022 r=30000m
+    tourist_attraction       20 results, 20 new
+    museum                   18 results, 16 new
+    historical_landmark      20 results, 19 new
+    park                     20 results, 20 new
+    art_gallery               9 results,  7 new
+    hindu_temple              7 results,  5 new
+    buddhist_temple          20 results, 16 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       1 results,  1 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  2 new
+    stadium                   4 results,  4 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Banan / outlying] 13.004,103.086 r=30000m
+    tourist_attraction       20 results,  1 new
+    museum                   19 results,  1 new
+    historical_landmark      20 results,  5 new
+    park                     20 results,  2 new
+    art_gallery               9 results,  0 new
+    hindu_temple              7 results,  0 new
+    buddhist_temple          20 results,  0 new
+    church                   20 results,  1 new
+    mosque                   20 results,  4 new
+    zoo                       2 results,  1 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   4 results,  0 new
+    night_club               20 results,  0 new
+    shopping_mall            20 results,  2 new
+  [Phnom Sampeau] 13.0556,103.098 r=15000m
+    tourist_attraction       20 results,  7 new
+    museum                   14 results,  0 new
+    historical_landmark      17 results,  0 new
+    park                     20 results,  2 new
+    art_gallery               8 results,  0 new
+    hindu_temple              3 results,  0 new
+    buddhist_temple          20 results,  6 new
+    church                   20 results,  4 new
+    mosque                   16 results,  1 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   4 results,  0 new
+    night_club               20 results,  4 new
+    shopping_mall            20 results,  3 new
+  [Bamboo train / Ek Phnom] 13.162,103.174 r=15000m
+    tourist_attraction       20 results,  4 new
+    museum                   16 results,  0 new
+    historical_landmark      15 results,  1 new
+    park                     20 results,  5 new
+    art_gallery               8 results,  0 new
+    hindu_temple              4 results,  0 new
+    buddhist_temple          20 results,  1 new
+    church                   20 results,  0 new
+    mosque                   18 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   4 results,  0 new
+    night_club               20 results,  2 new
+    shopping_mall            20 results,  0 new
+  -> 60 API calls, 247 unique places
+  [rank] 32/247 -> battambang_top50.csv
+  [1/32] Phare Ponleu Selpak                              skip (5 photos)
+  [2/32] Romcheik 5 Artspace & Café                       skip (5 photos)
+  [3/32] Lazy Mango Homestay // Battambang Tuk Tuk Buddy  skip (5 photos)
+  [4/32] Banan Temple                                     skip (5 photos)
+  [5/32] Bat Cave Phnom Sampov                            skip (5 photos)
+  [6/32] Lok Ta Dambong Kra Nhoung                        skip (5 photos)
+  [7/32] Battambang Catholic Church                       skip (5 photos)
+  [8/32] Ek Phnom Temple                                  skip (5 photos)
+  [9/32] Samrong Krong Killing Field                      skip (5 photos)
+  [10/32] Wat Samrong Knong                                skip (5 photos)
+  [11/32] Independence Monument (Battambang)               skip (5 photos)
+  [12/32] Wat Kandal                                       skip (5 photos)
+  [13/32] វត្ត ពោធិ៍វាល                                    skip (5 photos)
+  [14/32] ភ្នំបាណន់                                        skip (5 photos)
+  [15/32] ក្រមុំជ្រឹងវត្តបាយដំរាំ                          +5 photos
+  [16/32] Ek Phnom Kun Khmer Arena                         skip (5 photos)
+  [17/32] Bats view                                        skip (5 photos)
+  [18/32] Cambodia Peace Gallery                           skip (5 photos)
+  [19/32] Phnom Sampow Pagoda                              skip (5 photos)
+  [20/32] Global House Battambang                          skip (5 photos)
+  [21/32] The Garden of SamDech Sar Kheng                  skip (5 photos)
+  [22/32] សួនជើងភ្នំបាណន់ ចំណតឡូរី                         skip (5 photos)
+  [23/32] Phsar Leu Market                                 skip (5 photos)
+  [24/32] កោះសាងស្នេហ៍                                     skip (5 photos)
+  [25/32] Baset Temple                                     skip (5 photos)
+  [26/32] Bamboo Train Ou Sra Lao                          skip (5 photos)
+  [27/32] Damrey Sor Pagoda                                skip (5 photos)
+  [28/32] Preah Noray Roundabout                           skip (5 photos)
+  [29/32] Ek Phnom Pagoda                                  skip (5 photos)
+  [30/32] National Museum                                  skip (5 photos)
+  [31/32] The Killing Cave                                 skip (5 photos)
+  [32/32] Mrs. Bun Roeung’s Ancient House                  skip (5 photos)
+  [seed] rolled back: {'inserted': 1, 'reused': 31, 'uploaded': 160, 'skipped': 0}
+
+=== Kampong Cham ===
+  [Kampong Cham] 11.9934,105.4636 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                   17 results, 16 new
+    historical_landmark      20 results, 18 new
+    park                     20 results, 19 new
+    art_gallery               1 results,  1 new
+    hindu_temple             20 results, 19 new
+    buddhist_temple          20 results, 19 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       1 results,  1 new
+    aquarium                  1 results,  1 new
+    amusement_park            3 results,  3 new
+    stadium                   9 results,  9 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Phnom Pros / Phnom Srei] 12.07,105.42 r=15000m
+    tourist_attraction       20 results, 11 new
+    museum                    3 results,  0 new
+    historical_landmark      10 results,  4 new
+    park                     20 results, 16 new
+    art_gallery               0 results,  0 new
+    hindu_temple              4 results,  3 new
+    buddhist_temple          20 results, 17 new
+    church                   20 results, 12 new
+    mosque                    7 results,  6 new
+    zoo                       0 results,  0 new
+    aquarium                  1 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   1 results,  0 new
+    night_club               16 results,  7 new
+    shopping_mall            20 results, 14 new
+  [Han Chey / Mekong] 12.086,105.466 r=20000m
+    tourist_attraction       20 results,  1 new
+    museum                    3 results,  0 new
+    historical_landmark      17 results,  4 new
+    park                     20 results,  3 new
+    art_gallery               1 results,  0 new
+    hindu_temple              8 results,  1 new
+    buddhist_temple          20 results,  2 new
+    church                   20 results,  0 new
+    mosque                   19 results, 10 new
+    zoo                       0 results,  0 new
+    aquarium                  1 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   2 results,  0 new
+    night_club               17 results,  1 new
+    shopping_mall            20 results,  1 new
+  -> 45 API calls, 319 unique places
+  [rank] 12/319 -> kampong_cham_top50.csv
+  [1/12] Nokor BaChey temple                              +5 photos
+  [2/12] Cheung Kok Ecotourism Village                    +5 photos
+  [3/12] Srey Santhor District                            +5 photos
+  [4/12] Kbal Hong Toekcha Resort                         +5 photos
+  [5/12] ក្រុងសួង                                         +5 photos
+  [6/12] Phnom Srei                                       +5 photos
+  [7/12] Phnom Bros Library                               +5 photos
+  [8/12] Kizuna Bridge Roundabout                         +5 photos
+  [9/12] Svay Antor Park                                  +5 photos
+  [10/12] រូបសំណាក់ ហ្លួងព្រះស្ដេចកន                       +5 photos
+  [11/12] Tour des Français                                +5 photos
+  [12/12] Kbal Toek Chha Resort                            +5 photos
+  [seed] rolled back: {'inserted': 12, 'reused': 0, 'uploaded': 60, 'skipped': 0}
+
+=== Kampong Chhnang ===
+  [Kampong Chhnang] 12.2505,104.666 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                   13 results, 13 new
+    historical_landmark      20 results, 20 new
+    park                     20 results, 20 new
+    art_gallery               1 results,  1 new
+    hindu_temple             20 results, 20 new
+    buddhist_temple          20 results, 20 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       4 results,  4 new
+    aquarium                  0 results,  0 new
+    amusement_park            6 results,  5 new
+    stadium                   5 results,  5 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Tonle Sap floating villages] 12.358,104.642 r=20000m
+    tourist_attraction       20 results, 13 new
+    museum                    4 results,  0 new
+    historical_landmark      20 results, 13 new
+    park                     20 results, 12 new
+    art_gallery               0 results,  0 new
+    hindu_temple              3 results,  0 new
+    buddhist_temple          20 results, 18 new
+    church                   20 results, 15 new
+    mosque                    5 results,  2 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   2 results,  0 new
+    night_club               13 results,  3 new
+    shopping_mall            18 results, 13 new
+  [Phnom Santuk approach] 12.09,104.78 r=25000m
+    tourist_attraction       20 results,  8 new
+    museum                    6 results,  0 new
+    historical_landmark      20 results, 12 new
+    park                     20 results, 11 new
+    art_gallery               0 results,  0 new
+    hindu_temple              7 results,  0 new
+    buddhist_temple          20 results, 11 new
+    church                   20 results,  4 new
+    mosque                   20 results,  6 new
+    zoo                       2 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            3 results,  0 new
+    stadium                   3 results,  0 new
+    night_club               18 results,  4 new
+    shopping_mall            20 results, 10 new
+  -> 45 API calls, 363 unique places
+  [rank] 7/363 -> kampong_chhnang_top50.csv
+  [1/7] Tmor Kral Waterfall                              +5 photos
+  [2/7] Tralaeng Kaeng Pagoda                            +5 photos
+  [3/7] Independence Monument - Kampong Chhnang Province +5 photos
+  [4/7] Wat Ta Sot - Chantappakjot Tanaram Khmer Pagoda  +5 photos
+  [5/7] Reachny LongVek                                  +5 photos
+  [6/7] Kongkea Resort                                   +5 photos
+  [7/7] រូបសំណាកឆ្នាំង                                   +5 photos
+  [seed] rolled back: {'inserted': 7, 'reused': 0, 'uploaded': 35, 'skipped': 0}
+
+=== Kampong Speu ===
+  [Kampong Speu] 11.453,104.5209 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                   20 results, 17 new
+    historical_landmark      20 results, 17 new
+    park                     20 results, 14 new
+    art_gallery              20 results, 20 new
+    hindu_temple             20 results, 20 new
+    buddhist_temple          20 results, 18 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                      19 results, 17 new
+    aquarium                  9 results,  9 new
+    amusement_park           20 results, 17 new
+    stadium                  17 results, 17 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Kirirom National Park] 11.3236,104.05 r=30000m
+    tourist_attraction       20 results, 20 new
+    museum                    1 results,  1 new
+    historical_landmark       2 results,  2 new
+    park                     20 results, 19 new
+    art_gallery               0 results,  0 new
+    hindu_temple              1 results,  1 new
+    buddhist_temple          17 results, 17 new
+    church                   11 results, 11 new
+    mosque                    1 results,  1 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  1 new
+    shopping_mall             5 results,  5 new
+  [Mount Aural area] 12.025,104.17 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                    2 results,  1 new
+    historical_landmark      20 results, 20 new
+    park                     20 results, 19 new
+    art_gallery               0 results,  0 new
+    hindu_temple              3 results,  2 new
+    buddhist_temple          20 results, 20 new
+    church                   20 results, 20 new
+    mosque                   13 results, 13 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            4 results,  4 new
+    stadium                   0 results,  0 new
+    night_club                5 results,  5 new
+    shopping_mall            20 results, 20 new
+  -> 45 API calls, 488 unique places
+  [rank] 50/488 -> kampong_speu_top50.csv
+  [1/50] LOVE - Phnom Penh                                skip (10 photos)
+  [2/50] SOSORO - Preah Srey Içanavarman Museum           skip (10 photos)
+  [3/50] Al-Serkal Mosque                                 skip (10 photos)
+  [4/50] Tuol Sleng Genocide Museum                       skip (10 photos)
+  [5/50] Morodok Techo National Stadium                   +5 photos
+  [6/50] PH Euro Park                                     skip (10 photos)
+  [7/50] Choeung Ek Genocidal Center                      +5 photos
+  [8/50] Statue of His Majesty Preah Bat Samdech Preah No skip (10 photos)
+  [9/50] Kol Tor Teung Pagoda                             +5 photos
+  [10/50] AEON Mall Sen Sok City                           skip (10 photos)
+  [11/50] Royal Palace Park                                skip (10 photos)
+  [12/50] Independence Monument                            skip (10 photos)
+  [13/50] Kirirom National Park                            +5 photos
+  [14/50] AEON MALL Mean Chey                              +5 photos
+  [15/50] Wat Ounalom Monastery                            skip (10 photos)
+  [16/50] Keat Farm - Organic Sheep Farm - គៀតហ្វាម - កសិដ +5 photos
+  [17/50] SUN & MOON, Riverside Hotel                      skip (9 photos)
+  [18/50] Ta Prohm Temple (Takeo)                          +5 photos
+  [19/50] Chew & Bash, Phnom Penh Island Club              skip (10 photos)
+  [20/50] MARA                                             skip (10 photos)
+  [21/50] Institut français du Cambodge (IFC)              skip (10 photos)
+  [22/50] Masjid al aala Prek Pra                          +5 photos
+  [23/50] Sra'Art Gallery                                  skip (5 photos)
+  [24/50] Phnom Tamao Wildlife Sanctuary                   +5 photos
+  [25/50] Queen of Peace Church                            skip (10 photos)
+  [26/50] Chreav Waterfall 7th floor                       +5 photos
+  [27/50] Maha Panna Vihara (វត្តបញ្ញាធំ)                  +5 photos
+  [28/50] Tmor Kral Waterfall                              skip (5 photos)
+  [29/50] International Christian Assembly (ICA Cambodia)  +5 photos
+  [30/50] Riverside                                        skip (5 photos)
+  [31/50] AEON MALL Mean Chey                              +5 photos
+  [32/50] Catholic Phnom Penh Pastoral Hall                +5 photos
+  [33/50] The Gallerist - Contemporary Art Gallery         skip (5 photos)
+  [34/50] 一号公馆KTV                                          skip (5 photos)
+  [35/50] Ministry of Economy and Finance of Cambodia      skip (10 photos)
+  [36/50] Visakha Stadium                                  +5 photos
+  [37/50] Saint Joseph Catholic Church                     skip (5 photos)
+  [38/50] គីរីរម្យ                                         +5 photos
+  [39/50] TŌKIO CLUB                                       skip (10 photos)
+  [40/50] Wat Sngoun Pich                                  +5 photos
+  [41/50] YES KTV                                          skip (5 photos)
+  [42/50] Korean Church of Phnom Penh                      skip (5 photos)
+  [43/50] Chambok Waterfall                                +5 photos
+  [44/50] Smart RSN Stadium                                skip (10 photos)
+  [45/50] Km 8 Mosque مسجد النورالنعيم                     +5 photos
+  [46/50] River Cloud-Stueng PorPok                        +5 photos
+  [47/50] Khmuonh Pagoda                                   +5 photos
+  [48/50] Koh Norea River Bank                             skip (5 photos)
+  [49/50] Church of Christ Our Peace                       +3 photos
+  [50/50] PPCFC RSN Stadium                                +5 photos
+  [1/26] insert SADOK KOK THOM HISTORICAL PARK             +5 (skip 0)
+  [2/26] insert Banteay Chhmar Temple                      +5 (skip 0)
+  [3/26] insert ร้านเรารักกัน (บ้านตุ่น)                   +5 (skip 0)
+  [4/26] insert ศาลพญาวิมุตตยาลัย - ศาลองค์แม่พิมพ์        +5 (skip 0)
+  [5/26] insert Krong Poi Pet Mosque                       +5 (skip 0)
+  [6/26] insert Wat Khok Saphan Khao                       +5 (skip 0)
+  [7/26] insert Wat Chana Chaisri (Wat Ko)                 +5 (skip 0)
+  [8/26] insert Wat Lao Aoi                                +5 (skip 0)
+  [9/26] insert Wat Luang Aran                             +5 (skip 0)
+  [10/26] insert MAX CLUB POIPET                            +5 (skip 0)
+  [11/26] insert F-Plus KTV                                 +5 (skip 0)
+  [12/26] insert Prasat Khao Noi                            +5 (skip 0)
+  [13/26] insert Aranya Prathet District Central Stadium    +5 (skip 0)
+  [14/26] insert Prasat Mebon (Banteay Chhmar)              +5 (skip 0)
+  [15/26] insert Banteay Meanchey Provincial Museum         +5 (skip 0)
+  [16/26] insert REC                                        +5 (skip 0)
+  [17/26] insert Kanchanapisek Rama 9 Park                  +5 (skip 0)
+  [18/26] insert Malai market                               +5 (skip 0)
+  [19/26] insert E-paste                                    +5 (skip 0)
+  [20/26] insert Poipet Pass Hotel                          +5 (skip 0)
+  [21/26] reuse កោះសាងស្នេហ៍                               +5 (skip 0)
+  [22/26] insert Suon Sne Jun Bot                           +5 (skip 0)
+  [23/26] insert Tropicana Resort & Casino                  +5 (skip 0)
+  [24/26] insert การท่องเทียวอรัญประเทศ​                    +5 (skip 0)
+  [25/26] insert Star Vegas Casino                          +5 (skip 0)
+  [26/26] insert Golden Gate Plaza                          +5 (skip 0)
+  [1/32] reuse Phare Ponleu Selpak                        +5 (skip 0)
+  [2/32] reuse Romcheik 5 Artspace & Café                 +5 (skip 0)
+  [3/32] reuse Lazy Mango Homestay // Battambang Tuk Tuk  +5 (skip 0)
+  [4/32] reuse Banan Temple                               +5 (skip 0)
+  [5/32] reuse Bat Cave Phnom Sampov                      +5 (skip 0)
+  [6/32] reuse Lok Ta Dambong Kra Nhoung                  +5 (skip 0)
+  [7/32] reuse Battambang Catholic Church                 +5 (skip 0)
+  [8/32] reuse Ek Phnom Temple                            +5 (skip 0)
+  [9/32] reuse Samrong Krong Killing Field                +5 (skip 0)
+  [10/32] reuse Wat Samrong Knong                          +5 (skip 0)
+  [11/32] reuse Independence Monument (Battambang)         +5 (skip 0)
+  [12/32] reuse Wat Kandal                                 +5 (skip 0)
+  [13/32] reuse វត្ត ពោធិ៍វាល                              +5 (skip 0)
+  [14/32] reuse ភ្នំបាណន់                                  +5 (skip 0)
+  [15/32] insert ក្រមុំជ្រឹងវត្តបាយដំរាំ                    +5 (skip 0)
+  [16/32] reuse Ek Phnom Kun Khmer Arena                   +5 (skip 0)
+  [17/32] reuse Bats view                                  +5 (skip 0)
+  [18/32] reuse Cambodia Peace Gallery                     +5 (skip 0)
+  [19/32] reuse Phnom Sampow Pagoda                        +5 (skip 0)
+  [20/32] reuse Global House Battambang                    +5 (skip 0)
+  [21/32] reuse The Garden of SamDech Sar Kheng            +5 (skip 0)
+  [22/32] reuse សួនជើងភ្នំបាណន់ ចំណតឡូរី                   +5 (skip 0)
+  [23/32] reuse Phsar Leu Market                           +5 (skip 0)
+  [24/32] reuse កោះសាងស្នេហ៍                               +5 (skip 0)
+  [25/32] reuse Baset Temple                               +5 (skip 0)
+  [26/32] reuse Bamboo Train Ou Sra Lao                    +5 (skip 0)
+  [27/32] reuse Damrey Sor Pagoda                          +5 (skip 0)
+  [28/32] reuse Preah Noray Roundabout                     +5 (skip 0)
+  [29/32] reuse Ek Phnom Pagoda                            +5 (skip 0)
+  [30/32] reuse National Museum                            +5 (skip 0)
+  [31/32] reuse The Killing Cave                           +5 (skip 0)
+  [32/32] reuse Mrs. Bun Roeung’s Ancient House            +5 (skip 0)
+  [1/12] insert Nokor BaChey temple                        +5 (skip 0)
+  [2/12] insert Cheung Kok Ecotourism Village              +5 (skip 0)
+  [3/12] insert Srey Santhor District                      +5 (skip 0)
+  [4/12] insert Kbal Hong Toekcha Resort                   +5 (skip 0)
+  [5/12] insert ក្រុងសួង                                   +5 (skip 0)
+  [6/12] insert Phnom Srei                                 +5 (skip 0)
+  [7/12] insert Phnom Bros Library                         +5 (skip 0)
+  [8/12] insert Kizuna Bridge Roundabout                   +5 (skip 0)
+  [9/12] insert Svay Antor Park                            +5 (skip 0)
+  [10/12] insert រូបសំណាក់ ហ្លួងព្រះស្ដេចកន                 +5 (skip 0)
+  [11/12] insert Tour des Français                          +5 (skip 0)
+  [12/12] insert Kbal Toek Chha Resort                      +5 (skip 0)
+  [1/7] insert Tmor Kral Waterfall                        +5 (skip 0)
+  [2/7] insert Tralaeng Kaeng Pagoda                      +5 (skip 0)
+  [3/7] insert Independence Monument - Kampong Chhnang Pr +5 (skip 0)
+  [4/7] insert Wat Ta Sot - Chantappakjot Tanaram Khmer P +5 (skip 0)
+  [5/7] insert Reachny LongVek                            +5 (skip 0)
+  [6/7] insert Kongkea Resort                             +5 (skip 0)
+  [7/7] insert រូបសំណាកឆ្នាំង                             +5 (skip 0)
+  [1/50] reuse LOVE - Phnom Penh                          +10 (skip 0)
+  [2/50] reuse SOSORO - Preah Srey Içanavarman Museum     +10 (skip 0)
+  [3/50] reuse Al-Serkal Mosque                           +10 (skip 0)
+  [4/50] reuse Tuol Sleng Genocide Museum                 +10 (skip 0)
+  [5/50] insert Morodok Techo National Stadium             +5 (skip 0)
+  [6/50] reuse PH Euro Park                               +10 (skip 0)
+  [7/50] insert Choeung Ek Genocidal Center                +5 (skip 0)
+  [8/50] reuse Statue of His Majesty Preah Bat Samdech Pr +10 (skip 0)
+  [9/50] insert Kol Tor Teung Pagoda                       +5 (skip 0)
+  [10/50] reuse AEON Mall Sen Sok City                     +10 (skip 0)
+  [11/50] reuse Royal Palace Park                          +10 (skip 0)
+  [12/50] reuse Independence Monument                      +10 (skip 0)
+  [13/50] insert Kirirom National Park                      +5 (skip 0)
+  [14/50] insert AEON MALL Mean Chey                        +5 (skip 0)
+  [15/50] reuse Wat Ounalom Monastery                      +10 (skip 0)
+  [16/50] insert Keat Farm - Organic Sheep Farm - គៀតហ្វាម  +5 (skip 0)
+  [17/50] reuse SUN & MOON, Riverside Hotel                +9 (skip 0)
+  [18/50] insert Ta Prohm Temple (Takeo)                    +5 (skip 0)
+  [19/50] reuse Chew & Bash, Phnom Penh Island Club        +10 (skip 0)
+  [20/50] reuse MARA                                       +10 (skip 0)
+  [21/50] reuse Institut français du Cambodge (IFC)        +10 (skip 0)
+  [22/50] insert Masjid al aala Prek Pra                    +5 (skip 0)
+  [23/50] insert Sra'Art Gallery                            +5 (skip 0)
+  [24/50] insert Phnom Tamao Wildlife Sanctuary             +5 (skip 0)
+  [25/50] reuse Queen of Peace Church                      +10 (skip 0)
+  [26/50] insert Chreav Waterfall 7th floor                 +5 (skip 0)
+  [27/50] insert Maha Panna Vihara (វត្តបញ្ញាធំ)            +5 (skip 0)
+  [28/50] insert Tmor Kral Waterfall                        +5 (skip 0)
+  [29/50] insert International Christian Assembly (ICA Camb +5 (skip 0)
+  [30/50] insert Riverside                                  +5 (skip 0)
+  [31/50] insert AEON MALL Mean Chey                        +5 (skip 0)
+  [seed] rolled back: {'inserted': 33, 'reused': 17, 'uploaded': 339, 'skipped': 0}
+
+=== Kampong Thom ===
+  [Kampong Thom] 12.7111,104.8887 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                    7 results,  7 new
+    historical_landmark      20 results, 20 new
+    park                     20 results, 20 new
+    art_gallery               1 results,  1 new
+    hindu_temple             20 results, 20 new
+    buddhist_temple          20 results, 20 new
+    church                   20 results, 20 new
+    mosque                    8 results,  8 new
+    zoo                       3 results,  2 new
+    aquarium                  0 results,  0 new
+    amusement_park            5 results,  5 new
+    stadium                   1 results,  1 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Sambor Prei Kuk] 12.873,105.047 r=30000m
+    tourist_attraction       20 results,  9 new
+    museum                    3 results,  0 new
+    historical_landmark      14 results,  5 new
+    park                     20 results, 13 new
+    art_gallery               0 results,  0 new
+    hindu_temple             20 results,  8 new
+    buddhist_temple          20 results, 12 new
+    church                   20 results,  8 new
+    mosque                    1 results,  0 new
+    zoo                       2 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                9 results,  0 new
+    shopping_mall            18 results, 14 new
+  [Prasat Andet / Stoung] 12.59,104.68 r=25000m
+    tourist_attraction        8 results,  7 new
+    museum                    0 results,  0 new
+    historical_landmark       2 results,  1 new
+    park                      5 results,  2 new
+    art_gallery               0 results,  0 new
+    hindu_temple              3 results,  2 new
+    buddhist_temple          12 results, 12 new
+    church                   12 results,  9 new
+    mosque                    1 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  0 new
+    shopping_mall             2 results,  1 new
+  -> 45 API calls, 287 unique places
+  [rank] 4/287 -> kampong_thom_top50.csv
+  [1/4] Sambor Prei Kuk Ticket Booth                     +5 photos
+  [2/4] Sampow Trailok Traileak                          +5 photos
+  [3/4] Kampong Thom Museum                              +5 photos
+  [4/4] Phnom Santuk                                     +5 photos
+  [seed] rolled back: {'inserted': 4, 'reused': 0, 'uploaded': 20, 'skipped': 0}
+
+=== Kampot ===
+  [Kampot town] 10.6104,104.181 r=30000m
+    tourist_attraction       20 results, 20 new
+    museum                    5 results,  5 new
+    historical_landmark      20 results, 20 new
+    park                     20 results, 18 new
+    art_gallery               1 results,  1 new
+    hindu_temple              4 results,  4 new
+    buddhist_temple          20 results, 19 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            3 results,  3 new
+    stadium                   5 results,  5 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Bokor National Park] 10.651,104.027 r=30000m
+    tourist_attraction       20 results,  5 new
+    museum                    4 results,  1 new
+    historical_landmark      20 results,  8 new
+    park                     20 results,  6 new
+    art_gallery               1 results,  0 new
+    hindu_temple              3 results,  0 new
+    buddhist_temple          20 results,  6 new
+    church                   20 results,  5 new
+    mosque                   20 results,  6 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            3 results,  0 new
+    stadium                   4 results,  0 new
+    night_club               20 results,  7 new
+    shopping_mall            20 results,  4 new
+  [Pepper farms / La Plantation] 10.636,104.247 r=15000m
+    tourist_attraction       20 results,  7 new
+    museum                    3 results,  0 new
+    historical_landmark      20 results,  9 new
+    park                     20 results,  8 new
+    art_gallery               1 results,  0 new
+    hindu_temple              3 results,  0 new
+    buddhist_temple          20 results,  5 new
+    church                   20 results,  5 new
+    mosque                   20 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   3 results,  0 new
+    night_club               12 results,  0 new
+    shopping_mall            20 results,  2 new
+  [Phnom Chhnork caves] 10.657,104.305 r=10000m
+    tourist_attraction       18 results, 14 new
+    museum                    0 results,  0 new
+    historical_landmark      12 results,  2 new
+    park                     11 results,  9 new
+    art_gallery               0 results,  0 new
+    hindu_temple              1 results,  0 new
+    buddhist_temple          10 results,  3 new
+    church                    5 results,  1 new
+    mosque                   12 results,  5 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  0 new
+    shopping_mall             4 results,  3 new
+  -> 60 API calls, 296 unique places
+  [rank] 39/296 -> kampot_top50.csv
+  [1/39] Sothy's Pepper Farm                              skip (5 photos)
+  [2/39] Ciao                                             skip (5 photos)
+  [3/39] Krong Kampot                                     skip (5 photos)
+  [4/39] Paris Kep Restaurant                             skip (5 photos)
+  [5/39] Seahorse Statue                                  skip (5 photos)
+  [6/39] Wat Sampov Pram                                  skip (5 photos)
+  [7/39] ផ្សិតប្រវត្តិសាស្ត្រ - Historical Mushroom       skip (5 photos)
+  [8/39] Wat Traeuy Kaoh                                  skip (5 photos)
+  [9/39] Good Time Relax Resort                           skip (5 photos)
+  [10/39] Yin Paradise Memorial Park (Kampot)              skip (5 photos)
+  [11/39] ភ្នំបូកគោ ខេត្ត កំពត                             skip (5 photos)
+  [12/39] River Park - Activity ឧទ្យានដងព្រែក              skip (5 photos)
+  [13/39] "Lok Yeay Mao" Monument                          skip (5 photos)
+  [14/39] Kampot Beach                                     skip (5 photos)
+  [15/39] Bokor Catholic Church                            skip (5 photos)
+  [16/39] Trapeang Sangkae Fishery Community               skip (5 photos)
+  [17/39] Vipassana Dhura Kep                              skip (5 photos)
+  [18/39] Farm Link                                        +5 photos
+  [19/39] Kep Lodge                                        skip (5 photos)
+  [20/39] Phnom Kbal Romeas                                +5 photos
+  [21/39] Kampot River beach                               skip (5 photos)
+  [22/39] ផ្លូវថ្មីកាត់ទៅកែប                               skip (5 photos)
+  [23/39] ទឹកធ្លាក់ព្រៃនប់                                 skip (5 photos)
+  [24/39] Anlong Thom Waterfall                            skip (5 photos)
+  [25/39] Beetle Waterfall                                 skip (5 photos)
+  [26/39] Trau Nam Cape                                    skip (5 photos)
+  [27/39] Lotus Pond                                       skip (5 photos)
+  [28/39] Sdech Korn Statue                                skip (5 photos)
+  [29/39] Green Cathedral                                  skip (5 photos)
+  [30/39] Royal Kampot KTV                                 skip (5 photos)
+  [31/39] Preah Monivong Bokor National Park               skip (5 photos)
+  [32/39] Bokor Hill Station                               skip (5 photos)
+  [33/39] Kep National Park                                skip (5 photos)
+  [34/39] Veal Pouch Waterfall                             skip (5 photos)
+  [35/39] Krong Kep Blue Crab Statue                       skip (5 photos)
+  [36/39] Veal Renh Roundabout                             skip (5 photos)
+  [37/39] Teuk Chhou Rapids                                skip (5 photos)
+  [38/39] Phnom Chhngok Cave                               skip (5 photos)
+  [39/39] White Lady Statue                                skip (5 photos)
+  [seed] rolled back: {'inserted': 3, 'reused': 36, 'uploaded': 195, 'skipped': 0}
+
+=== Kandal ===
+  [Ta Khmau] 11.487,104.941 r=40000m
+    tourist_attraction       20 results, 20 new
+    museum                   20 results, 17 new
+    historical_landmark      20 results, 18 new
+    park                     20 results, 14 new
+    art_gallery              20 results, 20 new
+    hindu_temple             20 results, 20 new
+    buddhist_temple          20 results, 18 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                      19 results, 17 new
+    aquarium                  9 results,  9 new
+    amusement_park           20 results, 17 new
+    stadium                  20 results, 20 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Koh Dach silk island] 11.628,104.945 r=10000m
+    tourist_attraction       20 results,  6 new
+    museum                   20 results,  8 new
+    historical_landmark      20 results,  6 new
+    park                     20 results,  8 new
+    art_gallery              20 results,  8 new
+    hindu_temple              2 results,  0 new
+    buddhist_temple          20 results, 10 new
+    church                   20 results, 10 new
+    mosque                   20 results,  8 new
+    zoo                       3 results,  0 new
+    aquarium                  3 results,  0 new
+    amusement_park           10 results,  0 new
+    stadium                  11 results,  0 new
+    night_club               20 results,  5 new
+    shopping_mall            20 results,  7 new
+  [Phnom Tamao area] 11.295,104.79 r=20000m
+    tourist_attraction       20 results, 18 new
+    museum                    9 results,  8 new
+    historical_landmark      19 results, 18 new
+    park                     20 results, 17 new
+    art_gallery               1 results,  1 new
+    hindu_temple             12 results,  5 new
+    buddhist_temple          20 results, 18 new
+    church                   20 results, 20 new
+    mosque                   14 results, 14 new
+    zoo                       6 results,  0 new
+    aquarium                  1 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   1 results,  0 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  -> 45 API calls, 505 unique places
+  [rank] 50/505 -> kandal_top50.csv
+  [1/50] LOVE - Phnom Penh                                skip (10 photos)
+  [2/50] SOSORO - Preah Srey Içanavarman Museum           skip (10 photos)
+  [3/50] Al-Serkal Mosque                                 skip (10 photos)
+  [4/50] Tuol Sleng Genocide Museum                       skip (10 photos)
+  [5/50] PH Euro Park                                     skip (10 photos)
+  [6/50] Morodok Techo National Stadium                   skip (5 photos)
+  [7/50] Choeung Ek Genocidal Center                      skip (5 photos)
+  [8/50] Statue of His Majesty Preah Bat Samdech Preah No skip (10 photos)
+  [9/50] AEON Mall Sen Sok City                           skip (10 photos)
+  [10/50] Royal Palace Park                                skip (10 photos)
+  [11/50] Independence Monument                            skip (10 photos)
+  [12/50] Kol Tor Teung Pagoda                             skip (5 photos)
+  [13/50] AEON MALL Mean Chey                              skip (5 photos)
+  [14/50] KTI Airport Viewpoint                            +5 photos
+  [15/50] Wat Ounalom Monastery                            skip (10 photos)
+  [16/50] SUN & MOON, Riverside Hotel                      skip (9 photos)
+  [17/50] Ta Prohm Temple (Takeo)                          skip (5 photos)
+  [18/50] Plaza Premium First Phnom Penh                   +5 photos
+  [19/50] MARA                                             skip (10 photos)
+  [20/50] Chew & Bash, Phnom Penh Island Club              skip (10 photos)
+  [21/50] Mongkol Serei Kien Khleang Pagoda                skip (10 photos)
+  [22/50] Institut français du Cambodge (IFC)              skip (10 photos)
+  [23/50] Phnom Tamao Wildlife Sanctuary                   skip (5 photos)
+  [24/50] Masjid al aala Prek Pra                          skip (5 photos)
+  [25/50] Sra'Art Gallery                                  skip (5 photos)
+  [26/50] Queen of Peace Church                            skip (10 photos)
+  [27/50] Maha Panna Vihara (វត្តបញ្ញាធំ)                  skip (5 photos)
+  [28/50] Techo Cultural Park                              +5 photos
+  [29/50] AEON MALL Mean Chey                              skip (5 photos)
+  [30/50] Riverside                                        skip (5 photos)
+  [31/50] International Christian Assembly (ICA Cambodia)  skip (5 photos)
+  [32/50] Catholic Phnom Penh Pastoral Hall                skip (5 photos)
+  [33/50] The Gallerist - Contemporary Art Gallery         skip (5 photos)
+  [34/50] Ministry of Economy and Finance of Cambodia      skip (10 photos)
+  [35/50] Visakha Stadium                                  skip (5 photos)
+  [36/50] Chip Mong Tower                                  skip (10 photos)
+  [37/50] 一号公馆KTV                                          skip (5 photos)
+  [38/50] TŌKIO CLUB                                       skip (10 photos)
+  [39/50] Central X Club                                   skip (5 photos)
+  [40/50] Saint Joseph Catholic Church                     skip (5 photos)
+  [41/50] Wat Sngoun Pich                                  skip (5 photos)
+  [42/50] YES KTV                                          skip (5 photos)
+  [43/50] Smart RSN Stadium                                skip (10 photos)
+  [44/50] Korean Church of Phnom Penh                      skip (5 photos)
+  [45/50] AEON Mall Phnom Penh                             skip (10 photos)
+  [46/50] Wat Phnom Daun Penh                              skip (10 photos)
+  [47/50] Km 8 Mosque مسجد النورالنعيم                     skip (5 photos)
+  [48/50] Wat Botum Park                                   skip (10 photos)
+  [49/50] Sisowath Riverside Park                          skip (10 photos)
+  [50/50] Phnom Phreah Reach Throap/ Phnom Oudong/Cambodia +5 photos
+  [32/50] insert Catholic Phnom Penh Pastoral Hall          +5 (skip 0)
+  [33/50] insert The Gallerist - Contemporary Art Gallery   +5 (skip 0)
+  [34/50] insert 一号公馆KTV                                    +5 (skip 0)
+  [35/50] reuse Ministry of Economy and Finance of Cambodi +10 (skip 0)
+  [36/50] insert Visakha Stadium                            +5 (skip 0)
+  [37/50] insert Saint Joseph Catholic Church               +5 (skip 0)
+  [38/50] insert គីរីរម្យ                                   +5 (skip 0)
+  [39/50] insert TŌKIO CLUB                                 +10 (skip 0)
+  [40/50] insert Wat Sngoun Pich                            +5 (skip 0)
+  [41/50] insert YES KTV                                    +5 (skip 0)
+  [42/50] insert Korean Church of Phnom Penh                +5 (skip 0)
+  [43/50] insert Chambok Waterfall                          +5 (skip 0)
+  [44/50] reuse Smart RSN Stadium                          +10 (skip 0)
+  [45/50] insert Km 8 Mosque مسجد النورالنعيم               +5 (skip 0)
+  [46/50] insert River Cloud-Stueng PorPok                  +5 (skip 0)
+  [47/50] insert Khmuonh Pagoda                             +5 (skip 0)
+  [48/50] insert Koh Norea River Bank                       +5 (skip 0)
+  [49/50] insert Church of Christ Our Peace                 +5 (skip 0)
+  [50/50] insert PPCFC RSN Stadium                          +5 (skip 0)
+  [1/4] insert Sambor Prei Kuk Ticket Booth               +5 (skip 0)
+  [2/4] insert Sampow Trailok Traileak                    +5 (skip 0)
+  [3/4] insert Kampong Thom Museum                        +5 (skip 0)
+  [4/4] insert Phnom Santuk                               +5 (skip 0)
+  [1/39] reuse Sothy's Pepper Farm                        +5 (skip 0)
+  [2/39] reuse Ciao                                       +5 (skip 0)
+  [3/39] reuse Krong Kampot                               +5 (skip 0)
+  [4/39] reuse Paris Kep Restaurant                       +5 (skip 0)
+  [5/39] reuse Seahorse Statue                            +5 (skip 0)
+  [6/39] reuse Wat Sampov Pram                            +5 (skip 0)
+  [7/39] reuse ផ្សិតប្រវត្តិសាស្ត្រ - Historical Mushroom +5 (skip 0)
+  [8/39] reuse Wat Traeuy Kaoh                            +5 (skip 0)
+  [9/39] reuse Good Time Relax Resort                     +5 (skip 0)
+  [10/39] reuse Yin Paradise Memorial Park (Kampot)        +5 (skip 0)
+  [11/39] reuse ភ្នំបូកគោ ខេត្ត កំពត                       +5 (skip 0)
+  [12/39] reuse River Park - Activity ឧទ្យានដងព្រែក        +5 (skip 0)
+  [13/39] reuse "Lok Yeay Mao" Monument                    +5 (skip 0)
+  [14/39] reuse Kampot Beach                               +5 (skip 0)
+  [15/39] reuse Bokor Catholic Church                      +5 (skip 0)
+  [16/39] reuse Trapeang Sangkae Fishery Community         +5 (skip 0)
+  [17/39] reuse Vipassana Dhura Kep                        +5 (skip 0)
+  [18/39] insert Farm Link                                  +5 (skip 0)
+  [19/39] reuse Kep Lodge                                  +5 (skip 0)
+  [20/39] insert Phnom Kbal Romeas                          +5 (skip 0)
+  [21/39] reuse Kampot River beach                         +5 (skip 0)
+  [22/39] reuse ផ្លូវថ្មីកាត់ទៅកែប                         +5 (skip 0)
+  [23/39] reuse ទឹកធ្លាក់ព្រៃនប់                           +5 (skip 0)
+  [24/39] reuse Anlong Thom Waterfall                      +5 (skip 0)
+  [25/39] reuse Beetle Waterfall                           +5 (skip 0)
+  [26/39] insert Trau Nam Cape                              +5 (skip 0)
+  [27/39] reuse Lotus Pond                                 +5 (skip 0)
+  [28/39] reuse Sdech Korn Statue                          +5 (skip 0)
+  [29/39] reuse Green Cathedral                            +5 (skip 0)
+  [30/39] reuse Royal Kampot KTV                           +5 (skip 0)
+  [31/39] reuse Preah Monivong Bokor National Park         +5 (skip 0)
+  [32/39] reuse Bokor Hill Station                         +5 (skip 0)
+  [33/39] reuse Kep National Park                          +5 (skip 0)
+  [34/39] reuse Veal Pouch Waterfall                       +5 (skip 0)
+  [35/39] reuse Krong Kep Blue Crab Statue                 +5 (skip 0)
+  [36/39] reuse Veal Renh Roundabout                       +5 (skip 0)
+  [37/39] reuse Teuk Chhou Rapids                          +5 (skip 0)
+  [38/39] reuse Phnom Chhngok Cave                         +5 (skip 0)
+  [39/39] reuse White Lady Statue                          +5 (skip 0)
+  [1/50] reuse LOVE - Phnom Penh                          +10 (skip 0)
+  [2/50] reuse SOSORO - Preah Srey Içanavarman Museum     +10 (skip 0)
+  [3/50] reuse Al-Serkal Mosque                           +10 (skip 0)
+  [4/50] reuse Tuol Sleng Genocide Museum                 +10 (skip 0)
+  [5/50] reuse PH Euro Park                               +10 (skip 0)
+  [6/50] insert Morodok Techo National Stadium             +5 (skip 0)
+  [7/50] insert Choeung Ek Genocidal Center                +5 (skip 0)
+  [8/50] reuse Statue of His Majesty Preah Bat Samdech Pr +10 (skip 0)
+  [9/50] reuse AEON Mall Sen Sok City                     +10 (skip 0)
+  [10/50] reuse Royal Palace Park                          +10 (skip 0)
+  [11/50] reuse Independence Monument                      +10 (skip 0)
+  [12/50] insert Kol Tor Teung Pagoda                       +5 (skip 0)
+  [13/50] insert AEON MALL Mean Chey                        +5 (skip 0)
+  [14/50] insert KTI Airport Viewpoint                      +5 (skip 0)
+  [15/50] reuse Wat Ounalom Monastery                      +10 (skip 0)
+  [16/50] reuse SUN & MOON, Riverside Hotel                +9 (skip 0)
+  [17/50] insert Ta Prohm Temple (Takeo)                    +5 (skip 0)
+  [18/50] insert Plaza Premium First Phnom Penh             +5 (skip 0)
+  [19/50] reuse MARA                                       +10 (skip 0)
+  [20/50] reuse Chew & Bash, Phnom Penh Island Club        +10 (skip 0)
+  [21/50] reuse Mongkol Serei Kien Khleang Pagoda          +10 (skip 0)
+  [22/50] reuse Institut français du Cambodge (IFC)        +10 (skip 0)
+  [23/50] insert Phnom Tamao Wildlife Sanctuary             +5 (skip 0)
+  [24/50] insert Masjid al aala Prek Pra                    +5 (skip 0)
+  [25/50] insert Sra'Art Gallery                            +5 (skip 0)
+  [26/50] reuse Queen of Peace Church                      +10 (skip 0)
+  [27/50] insert Maha Panna Vihara (វត្តបញ្ញាធំ)            +5 (skip 0)
+  [28/50] insert Techo Cultural Park                        +5 (skip 0)
+  [29/50] insert AEON MALL Mean Chey                        +5 (skip 0)
+  [30/50] insert Riverside                                  +5 (skip 0)
+  [31/50] insert International Christian Assembly (ICA Camb +5 (skip 0)
+  [32/50] insert Catholic Phnom Penh Pastoral Hall          +5 (skip 0)
+  [33/50] insert The Gallerist - Contemporary Art Gallery   +5 (skip 0)
+  [34/50] reuse Ministry of Economy and Finance of Cambodi +10 (skip 0)
+  [35/50] insert Visakha Stadium                            +5 (skip 0)
+  [36/50] reuse Chip Mong Tower                            +10 (skip 0)
+  [37/50] insert 一号公馆KTV                                    +5 (skip 0)
+  [38/50] insert TŌKIO CLUB                                 +10 (skip 0)
+  [39/50] insert Central X Club                             +5 (skip 0)
+  [40/50] insert Saint Joseph Catholic Church               +5 (skip 0)
+  [41/50] insert Wat Sngoun Pich                            +5 (skip 0)
+  [42/50] insert YES KTV                                    +5 (skip 0)
+  [43/50] reuse Smart RSN Stadium                          +10 (skip 0)
+  [44/50] insert Korean Church of Phnom Penh                +5 (skip 0)
+  [45/50] reuse AEON Mall Phnom Penh                       +10 (skip 0)
+  [46/50] reuse Wat Phnom Daun Penh                        +10 (skip 0)
+  [47/50] insert Km 8 Mosque مسجد النورالنعيم               +5 (skip 0)
+  [48/50] reuse Wat Botum Park                             +10 (skip 0)
+  [49/50] reuse Sisowath Riverside Park                    +10 (skip 0)
+  [seed] rolled back: {'inserted': 27, 'reused': 23, 'uploaded': 369, 'skipped': 0}
+
+=== Kep ===
+  [Kep town] 10.483,104.3163 r=20000m
+    tourist_attraction       20 results, 20 new
+    museum                    3 results,  3 new
+    historical_landmark      20 results, 19 new
+    park                     20 results, 18 new
+    art_gallery               0 results,  0 new
+    hindu_temple              1 results,  1 new
+    buddhist_temple          20 results, 20 new
+    church                   20 results, 20 new
+    mosque                   19 results, 19 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   2 results,  2 new
+    night_club               15 results, 15 new
+    shopping_mall            19 results, 19 new
+  [Kep National Park] 10.497,104.33 r=8000m
+    tourist_attraction       20 results, 13 new
+    museum                    2 results,  0 new
+    historical_landmark      15 results,  4 new
+    park                     20 results, 11 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           9 results,  6 new
+    church                    7 results,  0 new
+    mosque                    2 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                6 results,  0 new
+    shopping_mall             6 results,  0 new
+  [Rabbit Island / Koh Tonsay] 10.453,104.376 r=8000m
+    tourist_attraction       20 results, 11 new
+    museum                    1 results,  0 new
+    historical_landmark       5 results,  0 new
+    park                     12 results,  4 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           0 results,  0 new
+    church                    5 results,  0 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                2 results,  0 new
+    shopping_mall             1 results,  0 new
+  -> 45 API calls, 205 unique places
+  [rank] 29/205 -> kep_top50.csv
+  [1/29] Sothy's Pepper Farm                              skip (5 photos)
+  [2/29] Light Mountain Embankment                        +5 photos
+  [3/29] Paris Kep Restaurant                             skip (5 photos)
+  [4/29] Landscape Tower                                  +5 photos
+  [5/29] Núi Nai Lighthouse                               +5 photos
+  [6/29] Núi Tà Pang                                      +5 photos
+  [7/29] Trapeang Sangkae Fishery Community               skip (5 photos)
+  [8/29] Vipassana Dhura Kep                              skip (5 photos)
+  [9/29] Kep Lodge                                        skip (5 photos)
+  [10/29] Kampot River beach                               skip (5 photos)
+  [11/29] ភ្នំទឹកធំ                                        +5 photos
+  [12/29] ឆ្នេរអង្កោល(កែប)                                 +5 photos
+  [13/29] Pagoda Xa Xia                                    +5 photos
+  [14/29] Cột mốc 314                                      +5 photos
+  [15/29] Kampong Trach Mountain Park                      +5 photos
+  [16/29] Núi Đá Dựng                                      +5 photos
+  [17/29] Kampong Trach Cave                               +5 photos
+  [18/29] Lotus Pond                                       skip (5 photos)
+  [19/29] Hà Tiên Vegas Entertainment Resort               +5 photos
+  [20/29] Sdech Korn Statue                                skip (5 photos)
+  [21/29] Border Post Cambodia–Viet Nam 313                +5 photos
+  [22/29] Kep National Park                                skip (5 photos)
+  [23/29] Pantai Kep                                       +5 photos
+  [24/29] Krong Kep Blue Crab Statue                       skip (5 photos)
+  [25/29] Phnom Chhngok Cave                               skip (5 photos)
+  [26/29] White Lady Statue                                skip (5 photos)
+  [27/29] Khu Du lịch Mũi Nai                              +5 photos
+  [28/29] Bãi xe khu du lịch Thạch Động                    +5 photos
+  [29/29] Bãi tắm Mũi Nai                                  +5 photos
+  [seed] rolled back: {'inserted': 17, 'reused': 12, 'uploaded': 145, 'skipped': 0}
+
+=== Koh Kong ===
+  [Koh Kong town] 11.6153,102.9836 r=40000m
+    tourist_attraction       20 results, 20 new
+    museum                    3 results,  3 new
+    historical_landmark       3 results,  3 new
+    park                     20 results, 19 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          20 results, 20 new
+    church                    9 results,  9 new
+    mosque                    7 results,  7 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   3 results,  3 new
+    night_club               18 results, 18 new
+    shopping_mall            20 results, 20 new
+  [Cardamom mountains] 11.73,103.45 r=50000m
+    tourist_attraction       20 results, 12 new
+    museum                    1 results,  1 new
+    historical_landmark       7 results,  7 new
+    park                     20 results,  9 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          11 results,  5 new
+    church                    3 results,  3 new
+    mosque                    1 results,  0 new
+    zoo                       2 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                2 results,  1 new
+    shopping_mall             1 results,  1 new
+  [Tatai waterfall / river] 11.567,103.134 r=20000m
+    tourist_attraction       20 results,  8 new
+    museum                    0 results,  0 new
+    historical_landmark       2 results,  0 new
+    park                     20 results,  8 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          13 results,  1 new
+    church                    7 results,  0 new
+    mosque                    7 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   1 results,  0 new
+    night_club               11 results,  0 new
+    shopping_mall            11 results,  2 new
+  [Areng valley] 11.53,103.51 r=40000m
+    tourist_attraction       20 results, 11 new
+    museum                    1 results,  0 new
+    historical_landmark       3 results,  0 new
+    park                     20 results, 10 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           4 results,  2 new
+    church                    3 results,  0 new
+    mosque                    4 results,  4 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  0 new
+    shopping_mall             3 results,  2 new
+  [Koh Kong island] 11.338,103.05 r=25000m
+    tourist_attraction       18 results, 10 new
+    museum                    2 results,  0 new
+    historical_landmark       1 results,  0 new
+    park                     11 results,  6 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           9 results,  1 new
+    church                    1 results,  0 new
+    mosque                    0 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                0 results,  0 new
+    shopping_mall             0 results,  0 new
+  [Botum Sakor National Park] 11.166,103.42 r=50000m
+    tourist_attraction       20 results, 11 new
+    museum                    5 results,  2 new
+    historical_landmark       9 results,  7 new
+    park                     20 results, 15 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          15 results,  9 new
+    church                    9 results,  8 new
+    mosque                    9 results,  5 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   1 results,  1 new
+    night_club                3 results,  2 new
+    shopping_mall            14 results, 11 new
+  -> 90 API calls, 299 unique places
+  [rank] 16/299 -> koh_kong_top50.csv
+  [1/16] River Cloud-Stueng PorPok                        skip (5 photos)
+  [2/16] Chhay Kpous Waterfall                            skip (5 photos)
+  [3/16] Chhay Proy Waterfall                             skip (5 photos)
+  [4/16] អូរសោម                                           skip (5 photos)
+  [5/16] Wat Hat Sai Daeng                                skip (5 photos)
+  [6/16] Wat Khlong Yai                                   skip (5 photos)
+  [7/16] ផ្លូវចូលសហគមន៏ជីផាត                              +5 photos
+  [8/16] Peam Krasaop Wildlife Sanctuary                  skip (5 photos)
+  [9/16] កីឡ​ដ្ឋាន​​ទី​រួម​ខេត្ត​កោះ​កុង                  skip (5 photos)
+  [10/16] Nesat Beach                                      +5 photos
+  [11/16] Bak                                              skip (5 photos)
+  [12/16] Diamond Beach Dara Sakor                         +5 photos
+  [13/16] Koh Kong Market                                  skip (5 photos)
+  [14/16] Botum Sakor National Park                        +5 photos
+  [15/16] ALICIA Beach Resort TRAT                         skip (5 photos)
+  [16/16] Narrowest Part of Thailand                       skip (5 photos)
+  [seed] rolled back: {'inserted': 9, 'reused': 7, 'uploaded': 80, 'skipped': 0}
+
+=== Kratie ===
+  [Kratie town] 12.488,106.0188 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                    4 results,  4 new
+    historical_landmark      20 results, 20 new
+    park                     20 results, 20 new
+    art_gallery               1 results,  0 new
+    hindu_temple              2 results,  2 new
+    buddhist_temple          20 results, 19 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   6 results,  6 new
+    night_club                9 results,  9 new
+    shopping_mall            20 results, 20 new
+  [Kampi dolphin pool] 12.63,106.025 r=15000m
+    tourist_attraction       20 results, 11 new
+    museum                    1 results,  0 new
+    historical_landmark       4 results,  0 new
+    park                      4 results,  3 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          20 results, 17 new
+    church                    5 results,  0 new
+    mosque                    2 results,  1 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                3 results,  0 new
+    shopping_mall             4 results,  1 new
+  [Koh Trong island] 12.463,106.003 r=10000m
+    tourist_attraction       20 results, 11 new
+    museum                    3 results,  0 new
+    historical_landmark       6 results,  0 new
+    park                      8 results,  4 new
+    art_gallery               1 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          20 results, 10 new
+    church                   12 results,  0 new
+    mosque                    2 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                6 results,  0 new
+    shopping_mall            11 results,  3 new
+  [Sambor / Mekong north] 12.772,106.022 r=25000m
+    tourist_attraction       20 results,  5 new
+    museum                    0 results,  0 new
+    historical_landmark       4 results,  1 new
+    park                     14 results, 11 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          20 results,  7 new
+    church                    4 results,  1 new
+    mosque                    2 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   1 results,  0 new
+    night_club                0 results,  0 new
+    shopping_mall             4 results,  1 new
+  -> 60 API calls, 249 unique places
+  [rank] 4/249 -> kratie_top50.csv
+  [1/4] Silver Dolphin Kayaking                          +5 photos
+  [2/4] Mekong Dolphin Pleasance                         +5 photos
+  [3/4] Phnom Sambok Pagoda                              +5 photos
+  [4/4] Kampi Mega Rapid                                 +5 photos
+  [seed] rolled back: {'inserted': 4, 'reused': 0, 'uploaded': 20, 'skipped': 0}
+
+=== Mondulkiri ===
+  [Sen Monorom] 12.454,107.19 r=40000m
+    tourist_attraction       20 results, 20 new
+    museum                    0 results,  0 new
+    historical_landmark      15 results, 15 new
+    park                     20 results, 16 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           9 results,  9 new
+    church                   20 results, 20 new
+    mosque                    5 results,  5 new
+    zoo                       2 results,  1 new
+    aquarium                  0 results,  0 new
+    amusement_park            3 results,  3 new
+    stadium                   0 results,  0 new
+    night_club                5 results,  5 new
+    shopping_mall             7 results,  7 new
+  [North Mondulkiri] 12.7879,107.1006 r=50000m
+    tourist_attraction       20 results,  5 new
+    museum                    1 results,  1 new
+    historical_landmark       9 results,  2 new
+    park                     20 results,  5 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          10 results,  2 new
+    church                   20 results,  4 new
+    mosque                    4 results,  0 new
+    zoo                       2 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                5 results,  1 new
+    shopping_mall             9 results,  3 new
+  [Bou Sra waterfall] 12.568,107.463 r=25000m
+    tourist_attraction       19 results, 16 new
+    museum                    0 results,  0 new
+    historical_landmark       2 results,  0 new
+    park                     20 results, 10 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           5 results,  2 new
+    church                   20 results, 17 new
+    mosque                    0 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  2 new
+    stadium                   1 results,  1 new
+    night_club                2 results,  2 new
+    shopping_mall            13 results, 12 new
+  [Sea Forest / Mereuch] 12.37,107.13 r=40000m
+    tourist_attraction       20 results,  2 new
+    museum                    1 results,  1 new
+    historical_landmark      14 results,  0 new
+    park                     20 results,  1 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          11 results,  2 new
+    church                   20 results, 11 new
+    mosque                    4 results,  1 new
+    zoo                       2 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            4 results,  1 new
+    stadium                   1 results,  1 new
+    night_club                7 results,  2 new
+    shopping_mall             8 results,  1 new
+  [Elephant Valley Project] 12.487,107.138 r=15000m
+    tourist_attraction       20 results,  6 new
+    museum                    0 results,  0 new
+    historical_landmark       5 results,  0 new
+    park                     20 results,  8 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           3 results,  0 new
+    church                   10 results,  0 new
+    mosque                    2 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                4 results,  0 new
+    shopping_mall             4 results,  0 new
+  [Dak Dam / Vietnam border] 12.396,107.336 r=25000m
+    tourist_attraction       20 results,  1 new
+    museum                    0 results,  0 new
+    historical_landmark      14 results,  0 new
+    park                     20 results,  2 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           8 results,  1 new
+    church                   20 results,  4 new
+    mosque                    3 results,  0 new
+    zoo                       2 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                5 results,  0 new
+    shopping_mall             9 results,  3 new
+  -> 90 API calls, 234 unique places
+  [rank] 23/234 -> mondulkiri_top50.csv
+  [1/23] Mondulkiri Project Elephant Sanctuary            skip (5 photos)
+  [2/23] ELIE & The Elephant Valley Project               skip (5 photos)
+  [3/23] Vinh An Parish Church                            +5 photos
+  [4/23] Bousra Waterfall                                 skip (5 photos)
+  [5/23] Giáo Xứ Đăk Ân                                   +5 photos
+  [6/23] Namlear Mountain                                 skip (5 photos)
+  [7/23] Xã Đoài Parish Church                            +5 photos
+  [8/23] Leng Ang Leng Khin Waterfall                     skip (5 photos)
+  [9/23] Cổng Barie Trạm 1                                skip (5 photos)
+  [10/23] Phnom Nam Lyr Wildlife Sanctuary                 skip (5 photos)
+  [11/23] Đức Hạnh Church                                  +5 photos
+  [12/23] ភ្នំអណ្តូងស្នេហ៍                                 skip (5 photos)
+  [13/23] Dakmil Square                                    +5 photos
+  [14/23] Phnom Namlear Wildlife Sanctuary                 skip (5 photos)
+  [15/23] Thác Đắk Mai                                     +5 photos
+  [16/23] Trung Tâm Điện Máy Hoàng Thao                    +5 photos
+  [17/23] Dak Mil Prison                                   +5 photos
+  [18/23] Kouprey Roundabout                               skip (5 photos)
+  [19/23] Chrey Thom Waterfall                             skip (5 photos)
+  [20/23] Park Town Dak Mil                                +5 photos
+  [21/23] Phnum Prech Wildlife Sanctuary                   skip (5 photos)
+  [22/23] Bù Gia Mập National Park                         +5 photos
+  [23/23] Nature Lodge Resort                              skip (5 photos)
+  [seed] rolled back: {'inserted': 11, 'reused': 12, 'uploaded': 115, 'skipped': 0}
+
+=== Oddar Meanchey ===
+  [Samraong] 14.181,103.5111 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                    8 results,  8 new
+    historical_landmark      20 results, 18 new
+    park                     20 results, 18 new
+    art_gallery               1 results,  1 new
+    hindu_temple             20 results, 20 new
+    buddhist_temple          20 results, 20 new
+    church                   17 results, 17 new
+    mosque                    4 results,  4 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   5 results,  5 new
+    night_club               13 results, 13 new
+    shopping_mall            20 results, 20 new
+  [Anlong Veng / Dangrek] 14.239,104.082 r=30000m
+    tourist_attraction       20 results, 18 new
+    museum                    3 results,  2 new
+    historical_landmark      11 results, 10 new
+    park                      9 results,  9 new
+    art_gallery               0 results,  0 new
+    hindu_temple              3 results,  3 new
+    buddhist_temple          20 results, 16 new
+    church                   11 results, 10 new
+    mosque                    3 results,  3 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   1 results,  1 new
+    night_club                7 results,  6 new
+    shopping_mall            11 results, 11 new
+  [Ta Mok lake] 14.239,104.095 r=10000m
+    tourist_attraction        2 results,  1 new
+    museum                    1 results,  0 new
+    historical_landmark       7 results,  0 new
+    park                      2 results,  0 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           3 results,  2 new
+    church                    5 results,  0 new
+    mosque                    1 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                4 results,  0 new
+    shopping_mall             1 results,  0 new
+  -> 45 API calls, 256 unique places
+  [rank] 24/256 -> oddar_meanchey_top50.csv
+  [1/24] Wat Phrai Phatthana (Luang Pu Suang)             +5 photos
+  [2/24] Wat Khao Sala Atulthanajaro                      +5 photos
+  [3/24] Wat Luang Phu Suang                              +5 photos
+  [4/24] Wat Pa Tham Phueng                               +5 photos
+  [5/24] Cambodia Wildlife Sanctuary                      +5 photos
+  [6/24] หาดสุขสำราญ                                      +5 photos
+  [7/24] Wat Pa Sai Thong                                 +5 photos
+  [8/24] Wat Khok Krom                                    +5 photos
+  [9/24] Wat Prasat Ta Moan Saen Chey                     +5 photos
+  [10/24] Wat Tham Pha Sai                                 +5 photos
+  [11/24] Pha Phaya Goopree National Park                  +5 photos
+  [12/24] Banteay Chhmar Temple                            skip (5 photos)
+  [13/24] ปราสาทตาควาย                                     +5 photos
+  [14/24] จุดชมวิวผามะนาว อำเภอกาบเชิง จังหวัดสุรินทร์     +5 photos
+  [15/24] Wat Khao Sala                                    +5 photos
+  [16/24] Wat Phatthana Thammaram Kabcheing (Luang Pu Heng +5 photos
+  [17/24] Wat Chang Mop                                    +5 photos
+  [18/24] Prasat Ta Muen                                   +5 photos
+  [19/24] Prasat Bai Baek                                  +5 photos
+  [20/24] Prasat Mebon (Banteay Chhmar)                    skip (5 photos)
+  [21/24] เขาทมอโรย                                        +5 photos
+  [22/24] Huay Tab Tan - Huay Sam Rarn Sanctuary           +5 photos
+  [23/24] Prasat Ban Phluang                               +5 photos
+  [24/24] Ta Mok House                                     +5 photos
+  [seed] rolled back: {'inserted': 24, 'reused': 0, 'uploaded': 120, 'skipped': 0}
+
+=== Pailin ===
+  [Pailin town] 12.8489,102.6093 r=30000m
+    tourist_attraction       20 results, 20 new
+    museum                    2 results,  2 new
+    historical_landmark       8 results,  8 new
+    park                     20 results, 19 new
+    art_gallery               0 results,  0 new
+    hindu_temple              1 results,  1 new
+    buddhist_temple          20 results, 18 new
+    church                   15 results, 15 new
+    mosque                    4 results,  4 new
+    zoo                       1 results,  1 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   1 results,  1 new
+    night_club                7 results,  7 new
+    shopping_mall            20 results, 20 new
+  [Phnom Yat] 12.853,102.609 r=8000m
+    tourist_attraction        8 results,  3 new
+    museum                    0 results,  0 new
+    historical_landmark       3 results,  0 new
+    park                      9 results,  3 new
+    art_gallery               0 results,  0 new
+    hindu_temple              1 results,  0 new
+    buddhist_temple           7 results,  7 new
+    church                    9 results,  0 new
+    mosque                    3 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                4 results,  0 new
+    shopping_mall             9 results,  4 new
+  -> 30 API calls, 133 unique places
+  [rank] 8/133 -> pailin_top50.csv
+  [1/8] วัดเขาชวัง                                       +5 photos
+  [2/8] វត្តភ្នំយ៉ាត                                     +5 photos
+  [3/8] Wat Nong Bon                                     +5 photos
+  [4/8] Yey Yat Shrine                                   +5 photos
+  [5/8] Namtok Khlong Kaeo National Park                 +5 photos
+  [6/8] Independence monument (Pailin)                   +5 photos
+  [7/8] ផ្លូវបំបែកកំរៀង ខេត្តបាត់ដំបង                    +5 photos
+  [8/8] Phnom Khiev Waterfall                            +5 photos
+  [seed] rolled back: {'inserted': 8, 'reused': 0, 'uploaded': 40, 'skipped': 0}
+
+=== Preah Sihanouk ===
+  [Sihanoukville] 10.6253,103.5224 r=25000m
+    tourist_attraction       20 results, 20 new
+    museum                    3 results,  3 new
+    historical_landmark      20 results, 19 new
+    park                     20 results, 19 new
+    art_gallery               0 results,  0 new
+    hindu_temple              2 results,  2 new
+    buddhist_temple          17 results, 16 new
+    church                   20 results, 20 new
+    mosque                    2 results,  2 new
+    zoo                       1 results,  1 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  2 new
+    stadium                   5 results,  5 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Otres / Ream] 10.578,103.628 r=20000m
+    tourist_attraction       20 results,  5 new
+    museum                    3 results,  0 new
+    historical_landmark      20 results,  1 new
+    park                     20 results,  2 new
+    art_gallery               0 results,  0 new
+    hindu_temple              3 results,  1 new
+    buddhist_temple          20 results,  3 new
+    church                   20 results,  0 new
+    mosque                   15 results, 13 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   5 results,  0 new
+    night_club               20 results,  0 new
+    shopping_mall            20 results,  0 new
+  [Koh Rong] 10.722,103.24 r=25000m
+    tourist_attraction       20 results, 15 new
+    museum                    2 results,  2 new
+    historical_landmark       4 results,  3 new
+    park                     17 results, 17 new
+    art_gallery               1 results,  1 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           4 results,  4 new
+    church                    0 results,  0 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                6 results,  6 new
+    shopping_mall             2 results,  2 new
+  [Koh Rong Samloem] 10.602,103.314 r=15000m
+    tourist_attraction       20 results,  1 new
+    museum                    0 results,  0 new
+    historical_landmark       3 results,  0 new
+    park                      8 results,  0 new
+    art_gallery               1 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           3 results,  0 new
+    church                    0 results,  0 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                4 results,  0 new
+    shopping_mall             1 results,  0 new
+  [Ream National Park] 10.517,103.639 r=20000m
+    tourist_attraction       20 results,  4 new
+    museum                    3 results,  0 new
+    historical_landmark      20 results,  1 new
+    park                     20 results,  0 new
+    art_gallery               0 results,  0 new
+    hindu_temple              3 results,  0 new
+    buddhist_temple          19 results,  2 new
+    church                   20 results,  1 new
+    mosque                   10 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   5 results,  0 new
+    night_club               20 results,  0 new
+    shopping_mall            20 results,  0 new
+  [Kbal Chhay waterfall] 10.708,103.679 r=10000m
+    tourist_attraction       10 results,  6 new
+    museum                    1 results,  0 new
+    historical_landmark       0 results,  0 new
+    park                      7 results,  5 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           4 results,  0 new
+    church                    6 results,  5 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                2 results,  2 new
+    shopping_mall             4 results,  4 new
+  -> 90 API calls, 255 unique places
+  [rank] 34/255 -> preah_sihanouk_top50.csv
+  [1/34] Statue of Preah Thong Neang Neak                 +5 photos
+  [2/34] Ocean Breeze                                     +5 photos
+  [3/34] Sunset Beach                                     +5 photos
+  [4/34] Two Lions Roundabout(SHV)                        +5 photos
+  [5/34] St. Michael Catholic Church                      +5 photos
+  [6/34] Masjid kampung som                               +5 photos
+  [7/34] 5 mile Beach                                     +5 photos
+  [8/34] ខ្មែរធ្វើបាន Cambodian Can Do It                 +5 photos
+  [9/34] M'Pai Bay                                        +5 photos
+  [10/34] Golden Beach Resort                              +5 photos
+  [11/34] Udom Vinhean Ream Pagoda វត្តឧត្ដមវិញ្ញាណរាម     +5 photos
+  [12/34] Coconut Beach                                    +5 photos
+  [13/34] N1 Taxi lounge                                   +5 photos
+  [14/34] Westport Wanda Plaza                             +5 photos
+  [15/34] ATM Lounge and Restaurant                        +5 photos
+  [16/34] Roundabout of Lord Shiva and Princess Parvati    +5 photos
+  [17/34] Love Waiting Rock                                +5 photos
+  [18/34] Sihanoukville Poy Machov                         +5 photos
+  [19/34] កោះសំពោច                                         +5 photos
+  [20/34] Water Park Sihanouk                              +5 photos
+  [21/34] Sihanoukville Royal Residence                    +5 photos
+  [22/34] ទឹកធ្លាក់ព្រៃនប់                                 skip (5 photos)
+  [23/34] Lucky Sun Hostel                                 +5 photos
+  [24/34] One Lion Roundabout                              +5 photos
+  [25/34] Wat IntNhean Called Wat Krom                     +5 photos
+  [26/34] Independence Park                                +5 photos
+  [27/34] Saracen Bay Beach                                +5 photos
+  [28/34] U Mall Sihanoukville                             +5 photos
+  [29/34] សហគមន៍អេកូទេសចរណ៍ “ព្រែកតាសុខ” Prek Ta Sok Eco-T +5 photos
+  [30/34] Wat Leu Pagoda                                   +5 photos
+  [31/34] Kbal Chhay Waterfalls                            +5 photos
+  [32/34] Pier 52                                          +5 photos
+  [33/34] Ream National Park                               +5 photos
+  [34/34] Phsar Leu Market                                 +5 photos
+  [50/50] insert Phnom Phreah Reach Throap/ Phnom Oudong/Ca +5 (skip 0)
+  [1/29] reuse Sothy's Pepper Farm                        +5 (skip 0)
+  [2/29] insert Light Mountain Embankment                  +5 (skip 0)
+  [3/29] reuse Paris Kep Restaurant                       +5 (skip 0)
+  [4/29] insert Landscape Tower                            +5 (skip 0)
+  [5/29] insert Núi Nai Lighthouse                         +5 (skip 0)
+  [6/29] insert Núi Tà Pang                                +5 (skip 0)
+  [7/29] reuse Trapeang Sangkae Fishery Community         +5 (skip 0)
+  [8/29] reuse Vipassana Dhura Kep                        +5 (skip 0)
+  [9/29] reuse Kep Lodge                                  +5 (skip 0)
+  [10/29] reuse Kampot River beach                         +5 (skip 0)
+  [11/29] insert ភ្នំទឹកធំ                                  +5 (skip 0)
+  [12/29] insert ឆ្នេរអង្កោល(កែប)                           +5 (skip 0)
+  [13/29] insert Pagoda Xa Xia                              +5 (skip 0)
+  [14/29] insert Cột mốc 314                                +5 (skip 0)
+  [15/29] insert Kampong Trach Mountain Park                +5 (skip 0)
+  [16/29] insert Núi Đá Dựng                                +5 (skip 0)
+  [17/29] insert Kampong Trach Cave                         +5 (skip 0)
+  [18/29] reuse Lotus Pond                                 +5 (skip 0)
+  [19/29] insert Hà Tiên Vegas Entertainment Resort         +5 (skip 0)
+  [20/29] reuse Sdech Korn Statue                          +5 (skip 0)
+  [21/29] insert Border Post Cambodia–Viet Nam 313          +5 (skip 0)
+  [22/29] reuse Kep National Park                          +5 (skip 0)
+  [23/29] insert Pantai Kep                                 +5 (skip 0)
+  [24/29] reuse Krong Kep Blue Crab Statue                 +5 (skip 0)
+  [25/29] reuse Phnom Chhngok Cave                         +5 (skip 0)
+  [26/29] reuse White Lady Statue                          +5 (skip 0)
+  [27/29] insert Khu Du lịch Mũi Nai                        +5 (skip 0)
+  [28/29] insert Bãi xe khu du lịch Thạch Động              +5 (skip 0)
+  [29/29] insert Bãi tắm Mũi Nai                            +5 (skip 0)
+  [1/16] insert River Cloud-Stueng PorPok                  +5 (skip 0)
+  [2/16] reuse Chhay Kpous Waterfall                      +5 (skip 0)
+  [3/16] reuse Chhay Proy Waterfall                       +5 (skip 0)
+  [4/16] reuse អូរសោម                                     +5 (skip 0)
+  [5/16] insert Wat Hat Sai Daeng                          +5 (skip 0)
+  [6/16] insert Wat Khlong Yai                             +5 (skip 0)
+  [7/16] insert ផ្លូវចូលសហគមន៏ជីផាត                        +5 (skip 0)
+  [8/16] reuse Peam Krasaop Wildlife Sanctuary            +5 (skip 0)
+  [9/16] reuse កីឡ​ដ្ឋាន​​ទី​រួម​ខេត្ត​កោះ​កុង            +5 (skip 0)
+  [10/16] insert Nesat Beach                                +5 (skip 0)
+  [11/16] reuse Bak                                        +5 (skip 0)
+  [12/16] insert Diamond Beach Dara Sakor                   +5 (skip 0)
+  [13/16] reuse Koh Kong Market                            +5 (skip 0)
+  [14/16] insert Botum Sakor National Park                  +5 (skip 0)
+  [15/16] insert ALICIA Beach Resort TRAT                   +5 (skip 0)
+  [16/16] insert Narrowest Part of Thailand                 +5 (skip 0)
+  [1/4] insert Silver Dolphin Kayaking                    +5 (skip 0)
+  [2/4] insert Mekong Dolphin Pleasance                   +5 (skip 0)
+  [3/4] insert Phnom Sambok Pagoda                        +5 (skip 0)
+  [4/4] insert Kampi Mega Rapid                           +5 (skip 0)
+  [1/23] reuse Mondulkiri Project Elephant Sanctuary      +5 (skip 0)
+  [2/23] reuse ELIE & The Elephant Valley Project         +5 (skip 0)
+  [3/23] insert Vinh An Parish Church                      +5 (skip 0)
+  [4/23] reuse Bousra Waterfall                           +5 (skip 0)
+  [5/23] insert Giáo Xứ Đăk Ân                             +5 (skip 0)
+  [6/23] reuse Namlear Mountain                           +5 (skip 0)
+  [7/23] insert Xã Đoài Parish Church                      +5 (skip 0)
+  [8/23] reuse Leng Ang Leng Khin Waterfall               +5 (skip 0)
+  [9/23] insert Cổng Barie Trạm 1                          +5 (skip 0)
+  [10/23] reuse Phnom Nam Lyr Wildlife Sanctuary           +5 (skip 0)
+  [11/23] insert Đức Hạnh Church                            +5 (skip 0)
+  [12/23] reuse ភ្នំអណ្តូងស្នេហ៍                           +5 (skip 0)
+  [13/23] insert Dakmil Square                              +5 (skip 0)
+  [14/23] reuse Phnom Namlear Wildlife Sanctuary           +5 (skip 0)
+  [15/23] insert Thác Đắk Mai                               +5 (skip 0)
+  [16/23] insert Trung Tâm Điện Máy Hoàng Thao              +5 (skip 0)
+  [17/23] insert Dak Mil Prison                             +5 (skip 0)
+  [18/23] reuse Kouprey Roundabout                         +5 (skip 0)
+  [19/23] reuse Chrey Thom Waterfall                       +5 (skip 0)
+  [20/23] insert Park Town Dak Mil                          +5 (skip 0)
+  [21/23] reuse Phnum Prech Wildlife Sanctuary             +5 (skip 0)
+  [22/23] insert Bù Gia Mập National Park                   +5 (skip 0)
+  [23/23] reuse Nature Lodge Resort                        +5 (skip 0)
+  [1/24] insert Wat Phrai Phatthana (Luang Pu Suang)       +5 (skip 0)
+  [2/24] insert Wat Khao Sala Atulthanajaro                +5 (skip 0)
+  [3/24] insert Wat Luang Phu Suang                        +5 (skip 0)
+  [4/24] insert Wat Pa Tham Phueng                         +5 (skip 0)
+  [5/24] insert Cambodia Wildlife Sanctuary                +5 (skip 0)
+  [6/24] insert หาดสุขสำราญ                                +5 (skip 0)
+  [7/24] insert Wat Pa Sai Thong                           +5 (skip 0)
+  [8/24] insert Wat Khok Krom                              +5 (skip 0)
+  [9/24] insert Wat Prasat Ta Moan Saen Chey               +5 (skip 0)
+  [10/24] insert Wat Tham Pha Sai                           +5 (skip 0)
+  [11/24] insert Pha Phaya Goopree National Park            +5 (skip 0)
+  [12/24] insert Banteay Chhmar Temple                      +5 (skip 0)
+  [13/24] insert ปราสาทตาควาย                               +5 (skip 0)
+  [14/24] insert จุดชมวิวผามะนาว อำเภอกาบเชิง จังหวัดสุรินท +5 (skip 0)
+  [15/24] insert Wat Khao Sala                              +5 (skip 0)
+  [16/24] insert Wat Phatthana Thammaram Kabcheing (Luang P +5 (skip 0)
+  [17/24] insert Wat Chang Mop                              +5 (skip 0)
+  [18/24] insert Prasat Ta Muen                             +5 (skip 0)
+  [19/24] insert Prasat Bai Baek                            +5 (skip 0)
+  [20/24] insert Prasat Mebon (Banteay Chhmar)              +5 (skip 0)
+  [21/24] insert เขาทมอโรย                                  +5 (skip 0)
+  [22/24] insert Huay Tab Tan - Huay Sam Rarn Sanctuary     +5 (skip 0)
+  [23/24] insert Prasat Ban Phluang                         +5 (skip 0)
+  [24/24] insert Ta Mok House                               +5 (skip 0)
+  [1/8] insert วัดเขาชวัง                                 +5 (skip 0)
+  [2/8] insert វត្តភ្នំយ៉ាត                               +5 (skip 0)
+  [3/8] insert Wat Nong Bon                               +5 (skip 0)
+  [4/8] insert Yey Yat Shrine                             +5 (skip 0)
+  [5/8] insert Namtok Khlong Kaeo National Park           +5 (skip 0)
+  [6/8] insert Independence monument (Pailin)             +5 (skip 0)
+  [7/8] insert ផ្លូវបំបែកកំរៀង ខេត្តបាត់ដំបង              +5 (skip 0)
+  [8/8] insert Phnom Khiev Waterfall                      +5 (skip 0)
+  [1/34] insert Statue of Preah Thong Neang Neak           +5 (skip 0)
+  [2/34] insert Ocean Breeze                               +5 (skip 0)
+  [3/34] insert Sunset Beach                               +5 (skip 0)
+  [seed] rolled back: {'inserted': 33, 'reused': 1, 'uploaded': 170, 'skipped': 0}
+
+=== Preah Vihear ===
+  [Tbeng Meanchey] 13.7903,104.981 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                    2 results,  2 new
+    historical_landmark      19 results, 18 new
+    park                     20 results, 20 new
+    art_gallery               0 results,  0 new
+    hindu_temple             20 results, 19 new
+    buddhist_temple          20 results, 20 new
+    church                   20 results, 20 new
+    mosque                    6 results,  6 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   1 results,  1 new
+    night_club                5 results,  5 new
+    shopping_mall            20 results, 20 new
+  [Preah Vihear temple] 14.387,104.68 r=30000m
+    tourist_attraction       20 results, 20 new
+    museum                    5 results,  5 new
+    historical_landmark       7 results,  4 new
+    park                     20 results, 20 new
+    art_gallery               1 results,  1 new
+    hindu_temple              8 results,  8 new
+    buddhist_temple          20 results, 19 new
+    church                   11 results, 11 new
+    mosque                    3 results,  3 new
+    zoo                       1 results,  1 new
+    aquarium                  0 results,  0 new
+    amusement_park            4 results,  4 new
+    stadium                   2 results,  2 new
+    night_club                5 results,  5 new
+    shopping_mall            20 results, 20 new
+  [Koh Ker temple complex] 13.7833,104.5333 r=20000m
+    tourist_attraction        3 results,  1 new
+    museum                    0 results,  0 new
+    historical_landmark       5 results,  0 new
+    park                     20 results, 18 new
+    art_gallery               0 results,  0 new
+    hindu_temple             20 results,  9 new
+    buddhist_temple          12 results, 10 new
+    church                    2 results,  1 new
+    mosque                    1 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                0 results,  0 new
+    shopping_mall             3 results,  2 new
+  [Prasat Preah Khan of Kompong Svay] 13.429,105.047 r=20000m
+    tourist_attraction        2 results,  1 new
+    museum                    0 results,  0 new
+    historical_landmark       0 results,  0 new
+    park                      6 results,  4 new
+    art_gallery               0 results,  0 new
+    hindu_temple              2 results,  1 new
+    buddhist_temple           7 results,  5 new
+    church                    6 results,  5 new
+    mosque                    1 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                4 results,  4 new
+    shopping_mall             3 results,  2 new
+  -> 60 API calls, 338 unique places
+  [rank] 19/338 -> preah_vihear_top50.csv
+  [1/19] Koh Ker Pyramid Temple                           +5 photos
+  [2/19] ผามออีแดง ประเทศไทย                              +5 photos
+  [3/19] Preah Vihear Temple                              +5 photos
+  [4/19] Prasat Pram (Koh Ker)                            +5 photos
+  [5/19] Koh Ker Ticket Booth                             +5 photos
+  [6/19] Wat Samrong Kiat                                 +5 photos
+  [7/19] ภูมิซรอล                                         +5 photos
+  [8/19] Prasat Preah Vihear Gopura 4                     +5 photos
+  [9/19] Prasat Preah Khan of Kampong Svay                +5 photos
+  [10/19] Deer Park, Nong good health                      +5 photos
+  [11/19] Prasat Tamnak Sai                                +5 photos
+  [12/19] ភ្នំត្បែងមានជ័យ                                  +5 photos
+  [13/19] Bas Relief                                       +5 photos
+  [14/19] Khao Phra Wihan National Park Office             +5 photos
+  [15/19] สถูปคู่                                          +5 photos
+  [16/19] น้ำฟ้า                                           +5 photos
+  [17/19] Khao Phra Wihan National Park Area               +5 photos
+  [18/19] Samrong Kiat Waterfall                           +5 photos
+  [19/19] Loong Serm Garden                                +5 photos
+  [seed] rolled back: {'inserted': 19, 'reused': 0, 'uploaded': 95, 'skipped': 0}
+
+=== Pursat ===
+  [Pursat town] 12.5388,103.9192 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                    4 results,  4 new
+    historical_landmark      18 results, 18 new
+    park                     20 results, 18 new
+    art_gallery               1 results,  1 new
+    hindu_temple              1 results,  1 new
+    buddhist_temple          20 results, 20 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   2 results,  2 new
+    night_club               14 results, 14 new
+    shopping_mall            20 results, 20 new
+  [Kompong Luong floating village] 12.571,104.216 r=15000m
+    tourist_attraction        2 results,  1 new
+    museum                    0 results,  0 new
+    historical_landmark       4 results,  0 new
+    park                      7 results,  4 new
+    art_gallery               1 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          14 results, 11 new
+    church                    2 results,  1 new
+    mosque                    8 results,  3 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                2 results,  0 new
+    shopping_mall             6 results,  3 new
+  [Cardamom foothills west] 12.25,103.4 r=50000m
+    tourist_attraction       20 results, 13 new
+    museum                    0 results,  0 new
+    historical_landmark      10 results,  5 new
+    park                     20 results, 13 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          20 results, 19 new
+    church                   12 results,  7 new
+    mosque                    9 results,  4 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   1 results,  0 new
+    night_club                3 results,  2 new
+    shopping_mall            16 results, 14 new
+  [Phnom Aural approach] 12.025,104.13 r=30000m
+    tourist_attraction       20 results, 18 new
+    museum                    0 results,  0 new
+    historical_landmark       0 results,  0 new
+    park                     20 results, 16 new
+    art_gallery               0 results,  0 new
+    hindu_temple              2 results,  2 new
+    buddhist_temple          18 results, 18 new
+    church                    6 results,  5 new
+    mosque                    2 results,  2 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   0 results,  0 new
+    night_club                2 results,  1 new
+    shopping_mall             3 results,  3 new
+  -> 60 API calls, 324 unique places
+  [rank] 13/324 -> pursat_top50.csv
+  [1/13] Keat Farm - Organic Sheep Farm - គៀតហ្វាម - កសិដ skip (5 photos)
+  [2/13] Wat Moniratanaram                                +5 photos
+  [3/13] Chreav Waterfall 7th floor                       skip (5 photos)
+  [4/13] Tmor Kral Waterfall                              skip (5 photos)
+  [5/13] Phnom Trob Monastery                             +5 photos
+  [6/13] ទឹកធ្លាក់ ចំការក្រូច                             +5 photos
+  [7/13] អូរសោម                                           skip (5 photos)
+  [8/13] Chhay Proy Waterfall                             skip (5 photos)
+  [9/13] Chreav Waterfall                                 +5 photos
+  [10/13] Chrok La Eang Waterfall                          +5 photos
+  [11/13] Phtel Khat Roundabout (Pursat Circle Statue)     +5 photos
+  [12/13] Sampov Meas                                      +5 photos
+  [13/13] Phnum Samkos Wildlife Sanctuary                  +5 photos
+  [seed] rolled back: {'inserted': 11, 'reused': 2, 'uploaded': 65, 'skipped': 0}
+
+=== Prey Veng ===
+  [Prey Veng town] 11.4869,105.3252 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                   20 results, 17 new
+    historical_landmark      20 results, 18 new
+    park                     20 results, 15 new
+    art_gallery              20 results, 20 new
+    hindu_temple             20 results, 20 new
+    buddhist_temple          20 results, 17 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       7 results,  7 new
+    aquarium                  8 results,  8 new
+    amusement_park           20 results, 18 new
+    stadium                  20 results, 20 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Ba Phnom] 11.29,105.546 r=15000m
+    tourist_attraction       10 results, 10 new
+    museum                    2 results,  2 new
+    historical_landmark       3 results,  3 new
+    park                      6 results,  6 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          20 results, 20 new
+    church                   18 results, 18 new
+    mosque                    0 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   2 results,  2 new
+    night_club                6 results,  6 new
+    shopping_mall            10 results, 10 new
+  [Neak Loeung / Mekong] 11.262,105.278 r=20000m
+    tourist_attraction       16 results, 15 new
+    museum                    1 results,  1 new
+    historical_landmark      20 results, 19 new
+    park                     20 results, 18 new
+    art_gallery               0 results,  0 new
+    hindu_temple             16 results, 10 new
+    buddhist_temple          20 results, 19 new
+    church                   20 results, 20 new
+    mosque                    4 results,  4 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   1 results,  0 new
+    night_club                9 results,  9 new
+    shopping_mall            20 results, 19 new
+  -> 45 API calls, 471 unique places
+  [rank] 50/471 -> prey_veng_top50.csv
+  [1/50] LOVE - Phnom Penh                                skip (10 photos)
+  [2/50] SOSORO - Preah Srey Içanavarman Museum           skip (10 photos)
+  [3/50] Al-Serkal Mosque                                 skip (10 photos)
+  [4/50] Tuol Sleng Genocide Museum                       skip (10 photos)
+  [5/50] PH Euro Park                                     skip (10 photos)
+  [6/50] Choeung Ek Genocidal Center                      skip (5 photos)
+  [7/50] Statue of His Majesty Preah Bat Samdech Preah No skip (10 photos)
+  [8/50] AEON Mall Sen Sok City                           skip (10 photos)
+  [9/50] Royal Palace Park                                skip (10 photos)
+  [10/50] Independence Monument                            skip (10 photos)
+  [11/50] Kol Tor Teung Pagoda                             skip (5 photos)
+  [12/50] AEON MALL Mean Chey                              skip (5 photos)
+  [13/50] Wat Ounalom Monastery                            skip (10 photos)
+  [14/50] SUN & MOON, Riverside Hotel                      skip (9 photos)
+  [15/50] MARA                                             skip (10 photos)
+  [16/50] Chew & Bash, Phnom Penh Island Club              skip (10 photos)
+  [17/50] Institut français du Cambodge (IFC)              skip (10 photos)
+  [18/50] Masjid al aala Prek Pra                          skip (5 photos)
+  [19/50] Sra'Art Gallery                                  skip (5 photos)
+  [20/50] Wat Monisovann                                   +5 photos
+  [21/50] Queen of Peace Church                            skip (10 photos)
+  [22/50] Cambodian Buddhist Center                        +5 photos
+  [23/50] Techo Cultural Park                              skip (5 photos)
+  [24/50] AEON MALL Mean Chey                              skip (5 photos)
+  [25/50] New Life Fellowship​ Cambodia                    skip (5 photos)
+  [26/50] Riverside                                        skip (5 photos)
+  [27/50] The Gallerist - Contemporary Art Gallery         skip (5 photos)
+  [28/50] Ministry of Economy and Finance of Cambodia      skip (10 photos)
+  [29/50] 一号公馆KTV                                          skip (5 photos)
+  [30/50] TŌKIO CLUB                                       skip (10 photos)
+  [31/50] Saint Joseph Catholic Church                     skip (5 photos)
+  [32/50] YES KTV                                          skip (5 photos)
+  [33/50] Smart RSN Stadium                                skip (10 photos)
+  [34/50] Korean Church of Phnom Penh                      skip (5 photos)
+  [35/50] AEON Mall Phnom Penh                             skip (10 photos)
+  [36/50] Wat Phnom Daun Penh                              skip (10 photos)
+  [37/50] Km 8 Mosque مسجد النورالنعيم                     skip (5 photos)
+  [38/50] Wat Botum Park                                   skip (10 photos)
+  [39/50] Sisowath Riverside Park                          skip (10 photos)
+  [40/50] Silver Pagoda                                    skip (10 photos)
+  [41/50] Koh Norea River Bank                             skip (5 photos)
+  [42/50] Vattanac Capital                                 skip (10 photos)
+  [43/50] Church of Christ Our Peace                       skip (5 photos)
+  [44/50] Chip Mong 271 Mega Mall                          skip (10 photos)
+  [45/50] La Croisette                                     skip (10 photos)
+  [46/50] PPCFC RSN Stadium                                skip (5 photos)
+  [47/50] Tsubasa Bridge                                   +5 photos
+  [48/50] SPACE FOUR ZERO Wang Dang Doodle                 +5 photos
+  [49/50] Coconut Park I - Koh Pich                        skip (10 photos)
+  [50/50] សួនហាត់ប្រាណ ស្ពានអាកាសស្ទឹងមានជ័យ               +5 photos
+  [4/34] insert Two Lions Roundabout(SHV)                  +5 (skip 0)
+  [5/34] insert St. Michael Catholic Church                +5 (skip 0)
+  [6/34] insert Masjid kampung som                         +5 (skip 0)
+  [7/34] insert 5 mile Beach                               +5 (skip 0)
+  [8/34] insert ខ្មែរធ្វើបាន Cambodian Can Do It           +5 (skip 0)
+  [9/34] insert M'Pai Bay                                  +5 (skip 0)
+  [10/34] insert Golden Beach Resort                        +5 (skip 0)
+  [11/34] insert Udom Vinhean Ream Pagoda វត្តឧត្ដមវិញ្ញាណរ +5 (skip 0)
+  [12/34] insert Coconut Beach                              +5 (skip 0)
+  [13/34] insert N1 Taxi lounge                             +5 (skip 0)
+  [14/34] insert Westport Wanda Plaza                       +5 (skip 0)
+  [15/34] insert ATM Lounge and Restaurant                  +5 (skip 0)
+  [16/34] insert Roundabout of Lord Shiva and Princess Parv +5 (skip 0)
+  [17/34] insert Love Waiting Rock                          +5 (skip 0)
+  [18/34] insert Sihanoukville Poy Machov                   +5 (skip 0)
+  [19/34] insert កោះសំពោច                                   +5 (skip 0)
+  [20/34] insert Water Park Sihanouk                        +5 (skip 0)
+  [21/34] insert Sihanoukville Royal Residence              +5 (skip 0)
+  [22/34] reuse ទឹកធ្លាក់ព្រៃនប់                           +5 (skip 0)
+  [23/34] insert Lucky Sun Hostel                           +5 (skip 0)
+  [24/34] insert One Lion Roundabout                        +5 (skip 0)
+  [25/34] insert Wat IntNhean Called Wat Krom               +5 (skip 0)
+  [26/34] insert Independence Park                          +5 (skip 0)
+  [27/34] insert Saracen Bay Beach                          +5 (skip 0)
+  [28/34] insert U Mall Sihanoukville                       +5 (skip 0)
+  [29/34] insert សហគមន៍អេកូទេសចរណ៍ “ព្រែកតាសុខ” Prek Ta Sok +5 (skip 0)
+  [30/34] insert Wat Leu Pagoda                             +5 (skip 0)
+  [31/34] insert Kbal Chhay Waterfalls                      +5 (skip 0)
+  [32/34] insert Pier 52                                    +5 (skip 0)
+  [33/34] insert Ream National Park                         +5 (skip 0)
+  [34/34] insert Phsar Leu Market                           +5 (skip 0)
+  [1/19] insert Koh Ker Pyramid Temple                     +5 (skip 0)
+  [2/19] insert ผามออีแดง ประเทศไทย                        +5 (skip 0)
+  [3/19] insert Preah Vihear Temple                        +5 (skip 0)
+  [4/19] insert Prasat Pram (Koh Ker)                      +5 (skip 0)
+  [5/19] insert Koh Ker Ticket Booth                       +5 (skip 0)
+  [6/19] insert Wat Samrong Kiat                           +5 (skip 0)
+  [7/19] insert ภูมิซรอล                                   +5 (skip 0)
+  [8/19] insert Prasat Preah Vihear Gopura 4               +5 (skip 0)
+  [9/19] insert Prasat Preah Khan of Kampong Svay          +5 (skip 0)
+  [10/19] insert Deer Park, Nong good health                +5 (skip 0)
+  [11/19] insert Prasat Tamnak Sai                          +5 (skip 0)
+  [12/19] insert ភ្នំត្បែងមានជ័យ                            +5 (skip 0)
+  [13/19] insert Bas Relief                                 +5 (skip 0)
+  [14/19] insert Khao Phra Wihan National Park Office       +5 (skip 0)
+  [15/19] insert สถูปคู่                                    +5 (skip 0)
+  [16/19] insert น้ำฟ้า                                     +5 (skip 0)
+  [17/19] insert Khao Phra Wihan National Park Area         +5 (skip 0)
+  [18/19] insert Samrong Kiat Waterfall                     +5 (skip 0)
+  [19/19] insert Loong Serm Garden                          +5 (skip 0)
+  [1/13] insert Keat Farm - Organic Sheep Farm - គៀតហ្វាម  +5 (skip 0)
+  [2/13] insert Wat Moniratanaram                          +5 (skip 0)
+  [3/13] insert Chreav Waterfall 7th floor                 +5 (skip 0)
+  [4/13] insert Tmor Kral Waterfall                        +5 (skip 0)
+  [5/13] insert Phnom Trob Monastery                       +5 (skip 0)
+  [6/13] insert ទឹកធ្លាក់ ចំការក្រូច                       +5 (skip 0)
+  [7/13] reuse អូរសោម                                     +5 (skip 0)
+  [8/13] reuse Chhay Proy Waterfall                       +5 (skip 0)
+  [9/13] insert Chreav Waterfall                           +5 (skip 0)
+  [10/13] insert Chrok La Eang Waterfall                    +5 (skip 0)
+  [11/13] insert Phtel Khat Roundabout (Pursat Circle Statu +5 (skip 0)
+  [12/13] insert Sampov Meas                                +5 (skip 0)
+  [13/13] insert Phnum Samkos Wildlife Sanctuary            +5 (skip 0)
+  [1/50] reuse LOVE - Phnom Penh                          +10 (skip 0)
+  [2/50] reuse SOSORO - Preah Srey Içanavarman Museum     +10 (skip 0)
+  [3/50] reuse Al-Serkal Mosque                           +10 (skip 0)
+  [4/50] reuse Tuol Sleng Genocide Museum                 +10 (skip 0)
+  [5/50] reuse PH Euro Park                               +10 (skip 0)
+  [6/50] insert Choeung Ek Genocidal Center                +5 (skip 0)
+  [7/50] reuse Statue of His Majesty Preah Bat Samdech Pr +10 (skip 0)
+  [8/50] reuse AEON Mall Sen Sok City                     +10 (skip 0)
+  [9/50] reuse Royal Palace Park                          +10 (skip 0)
+  [10/50] reuse Independence Monument                      +10 (skip 0)
+  [11/50] insert Kol Tor Teung Pagoda                       +5 (skip 0)
+  [12/50] insert AEON MALL Mean Chey                        +5 (skip 0)
+  [13/50] reuse Wat Ounalom Monastery                      +10 (skip 0)
+  [14/50] reuse SUN & MOON, Riverside Hotel                +9 (skip 0)
+  [15/50] reuse MARA                                       +10 (skip 0)
+  [16/50] reuse Chew & Bash, Phnom Penh Island Club        +10 (skip 0)
+  [17/50] reuse Institut français du Cambodge (IFC)        +10 (skip 0)
+  [18/50] insert Masjid al aala Prek Pra                    +5 (skip 0)
+  [19/50] insert Sra'Art Gallery                            +5 (skip 0)
+  [20/50] insert Wat Monisovann                             +5 (skip 0)
+  [21/50] reuse Queen of Peace Church                      +10 (skip 0)
+  [22/50] insert Cambodian Buddhist Center                  +5 (skip 0)
+  [23/50] insert Techo Cultural Park                        +5 (skip 0)
+  [24/50] insert AEON MALL Mean Chey                        +5 (skip 0)
+  [25/50] insert New Life Fellowship​ Cambodia              +5 (skip 0)
+  [26/50] insert Riverside                                  +5 (skip 0)
+  [27/50] insert The Gallerist - Contemporary Art Gallery   +5 (skip 0)
+  [28/50] reuse Ministry of Economy and Finance of Cambodi +10 (skip 0)
+  [29/50] insert 一号公馆KTV                                    +5 (skip 0)
+  [30/50] insert TŌKIO CLUB                                 +10 (skip 0)
+  [31/50] insert Saint Joseph Catholic Church               +5 (skip 0)
+  [32/50] insert YES KTV                                    +5 (skip 0)
+  [33/50] reuse Smart RSN Stadium                          +10 (skip 0)
+  [34/50] insert Korean Church of Phnom Penh                +5 (skip 0)
+  [35/50] reuse AEON Mall Phnom Penh                       +10 (skip 0)
+  [36/50] reuse Wat Phnom Daun Penh                        +10 (skip 0)
+  [37/50] insert Km 8 Mosque مسجد النورالنعيم               +5 (skip 0)
+  [38/50] reuse Wat Botum Park                             +10 (skip 0)
+  [39/50] reuse Sisowath Riverside Park                    +10 (skip 0)
+  [40/50] reuse Silver Pagoda                              +10 (skip 0)
+  [41/50] insert Koh Norea River Bank                       +5 (skip 0)
+  [42/50] reuse Vattanac Capital                           +10 (skip 0)
+  [43/50] insert Church of Christ Our Peace                 +5 (skip 0)
+  [44/50] reuse Chip Mong 271 Mega Mall                    +10 (skip 0)
+  [45/50] reuse La Croisette                               +10 (skip 0)
+  [46/50] insert PPCFC RSN Stadium                          +5 (skip 0)
+  [seed] rolled back: {'inserted': 24, 'reused': 26, 'uploaded': 384, 'skipped': 0}
+
+=== Ratanakiri ===
+  [Banlung] 13.7395,106.9873 r=30000m
+    tourist_attraction       20 results, 20 new
+    museum                    1 results,  1 new
+    historical_landmark       6 results,  6 new
+    park                     20 results, 20 new
+    art_gallery               0 results,  0 new
+    hindu_temple              1 results,  1 new
+    buddhist_temple           7 results,  7 new
+    church                   20 results, 20 new
+    mosque                    2 results,  2 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   0 results,  0 new
+    night_club                8 results,  8 new
+    shopping_mall            18 results, 18 new
+  [Virachey area] 13.9,107.15 r=50000m
+    tourist_attraction       20 results,  3 new
+    museum                    1 results,  0 new
+    historical_landmark       9 results,  3 new
+    park                     20 results,  8 new
+    art_gallery               0 results,  0 new
+    hindu_temple              1 results,  0 new
+    buddhist_temple          16 results, 11 new
+    church                   20 results,  4 new
+    mosque                    8 results,  6 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   2 results,  2 new
+    night_club               11 results,  3 new
+    shopping_mall            19 results,  1 new
+  [Yeak Laom Lake] 13.728,107.007 r=8000m
+    tourist_attraction       20 results,  6 new
+    museum                    0 results,  0 new
+    historical_landmark       1 results,  0 new
+    park                      9 results,  0 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           2 results,  0 new
+    church                   15 results,  0 new
+    mosque                    2 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                6 results,  0 new
+    shopping_mall            14 results,  0 new
+  [Ka Chanh waterfall] 13.727,107.042 r=8000m
+    tourist_attraction       20 results,  5 new
+    museum                    0 results,  0 new
+    historical_landmark       1 results,  0 new
+    park                      7 results,  0 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           2 results,  0 new
+    church                   14 results,  0 new
+    mosque                    2 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                6 results,  0 new
+    shopping_mall            13 results,  0 new
+  [Bokeo / gem mines] 13.737,107.216 r=20000m
+    tourist_attraction       11 results,  8 new
+    museum                    1 results,  0 new
+    historical_landmark       1 results,  0 new
+    park                      6 results,  0 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           3 results,  0 new
+    church                   15 results, 10 new
+    mosque                    5 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   1 results,  0 new
+    night_club                2 results,  0 new
+    shopping_mall             1 results,  0 new
+  [Lumphat / Sesan] 13.506,106.981 r=25000m
+    tourist_attraction       16 results,  6 new
+    museum                    0 results,  0 new
+    historical_landmark       3 results,  0 new
+    park                     20 results, 11 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple           5 results,  0 new
+    church                   10 results,  2 new
+    mosque                    1 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  0 new
+    shopping_mall             3 results,  0 new
+  -> 90 API calls, 193 unique places
+  [rank] 10/193 -> ratanakiri_top50.csv
+  [1/10] Green jungle trekking Tours-Cambodia             skip (5 photos)
+  [2/10] បឹងយក្សឡោម                                       skip (5 photos)
+  [3/10] Svay Mountain                                    skip (5 photos)
+  [4/10] Virachey National Park                           skip (5 photos)
+  [5/10] O Sinlair Waterfallinlove                        skip (5 photos)
+  [6/10] Katieng Waterfall                                skip (5 photos)
+  [7/10] Kachanh Waterfall                                skip (5 photos)
+  [8/10] Cha Ong Waterfall, Ratanakiri                    skip (5 photos)
+  [9/10] ផ្សារទំនើបស៊ីត្រា                                skip (5 photos)
+  [10/10] Lumphat Wildlife Sanctuary                       +5 photos
+  [seed] rolled back: {'inserted': 1, 'reused': 9, 'uploaded': 50, 'skipped': 0}
+
+=== Siem Reap ===
+  [Town centre] 13.355,103.855 r=2500m
+    tourist_attraction       20 results, 20 new
+    museum                   10 results,  8 new
+    historical_landmark      12 results, 11 new
+    park                     15 results, 13 new
+    art_gallery              20 results, 19 new
+    hindu_temple              3 results,  3 new
+    buddhist_temple          20 results, 17 new
+    church                   20 results, 20 new
+    mosque                    4 results,  4 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   2 results,  2 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Wat Bo / Riverside] 13.358,103.865 r=2000m
+    tourist_attraction       20 results,  2 new
+    museum                   10 results,  0 new
+    historical_landmark      10 results,  0 new
+    park                     12 results,  0 new
+    art_gallery              20 results,  2 new
+    hindu_temple              2 results,  1 new
+    buddhist_temple          19 results,  4 new
+    church                   20 results,  5 new
+    mosque                    4 results,  1 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   1 results,  0 new
+    night_club               20 results,  1 new
+    shopping_mall            20 results,  3 new
+  [Sok San Rd] 13.355,103.84 r=2500m
+    tourist_attraction       20 results,  3 new
+    museum                    7 results,  1 new
+    historical_landmark      12 results,  1 new
+    park                     15 results,  2 new
+    art_gallery              20 results,  1 new
+    hindu_temple              4 results,  1 new
+    buddhist_temple          20 results,  4 new
+    church                   20 results,  9 new
+    mosque                    5 results,  2 new
+    zoo                       2 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  1 new
+    stadium                   1 results,  0 new
+    night_club               20 results,  4 new
+    shopping_mall            20 results,  3 new
+  [Charles de Gaulle] 13.38,103.858 r=2500m
+    tourist_attraction       20 results, 11 new
+    museum                   11 results,  4 new
+    historical_landmark      11 results,  1 new
+    park                     12 results,  3 new
+    art_gallery              17 results,  8 new
+    hindu_temple              5 results,  2 new
+    buddhist_temple          18 results,  4 new
+    church                   20 results,  5 new
+    mosque                    1 results,  1 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   1 results,  0 new
+    night_club               18 results, 13 new
+    shopping_mall            20 results, 11 new
+  [Angkor Wat] 13.4125,103.867 r=2000m
+    tourist_attraction       13 results, 13 new
+    museum                    1 results,  1 new
+    historical_landmark      10 results,  7 new
+    park                      2 results,  1 new
+    art_gallery               4 results,  1 new
+    hindu_temple              9 results,  3 new
+    buddhist_temple           5 results,  3 new
+    church                    1 results,  1 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                0 results,  0 new
+    shopping_mall             3 results,  3 new
+  [Angkor Thom] 13.4413,103.8587 r=3000m
+    tourist_attraction       20 results, 17 new
+    museum                    1 results,  0 new
+    historical_landmark      20 results, 11 new
+    park                      4 results,  2 new
+    art_gallery               0 results,  0 new
+    hindu_temple             20 results,  9 new
+    buddhist_temple          18 results, 11 new
+    church                    1 results,  1 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  1 new
+    shopping_mall             0 results,  0 new
+  [Small circuit] 13.435,103.89 r=3000m
+    tourist_attraction       20 results, 13 new
+    museum                    2 results,  1 new
+    historical_landmark      11 results,  6 new
+    park                      3 results,  2 new
+    art_gallery               0 results,  0 new
+    hindu_temple             11 results,  3 new
+    buddhist_temple           9 results,  4 new
+    church                    0 results,  0 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   0 results,  0 new
+    night_club                0 results,  0 new
+    shopping_mall             0 results,  0 new
+  [Grand circuit] 13.465,103.878 r=3000m
+    tourist_attraction       20 results,  4 new
+    museum                    1 results,  0 new
+    historical_landmark      20 results,  6 new
+    park                      6 results,  5 new
+    art_gallery               0 results,  0 new
+    hindu_temple             18 results,  7 new
+    buddhist_temple          11 results,  0 new
+    church                    0 results,  0 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  0 new
+    shopping_mall             0 results,  0 new
+  [Banteay Srei] 13.5985,103.9628 r=5000m
+    tourist_attraction        8 results,  8 new
+    museum                    1 results,  1 new
+    historical_landmark       0 results,  0 new
+    park                      1 results,  1 new
+    art_gallery               0 results,  0 new
+    hindu_temple              4 results,  4 new
+    buddhist_temple           1 results,  1 new
+    church                    1 results,  1 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                0 results,  0 new
+    shopping_mall             1 results,  1 new
+  [Roluos group] 13.337,103.9716 r=3000m
+    tourist_attraction        6 results,  6 new
+    museum                    1 results,  1 new
+    historical_landmark       2 results,  2 new
+    park                      0 results,  0 new
+    art_gallery               1 results,  1 new
+    hindu_temple             16 results, 13 new
+    buddhist_temple           5 results,  3 new
+    church                    1 results,  1 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  1 new
+    shopping_mall             1 results,  1 new
+  [Tonle Sap] 13.27,103.835 r=5000m
+    tourist_attraction       13 results, 13 new
+    museum                    0 results,  0 new
+    historical_landmark       1 results,  0 new
+    park                      4 results,  4 new
+    art_gallery               0 results,  0 new
+    hindu_temple              1 results,  1 new
+    buddhist_temple           5 results,  5 new
+    church                    6 results,  6 new
+    mosque                    2 results,  2 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  1 new
+    shopping_mall             2 results,  2 new
+  [Phnom Kulen] 13.5773,104.1183 r=5000m
+    tourist_attraction        9 results,  9 new
+    museum                    0 results,  0 new
+    historical_landmark       3 results,  3 new
+    park                      5 results,  5 new
+    art_gallery               0 results,  0 new
+    hindu_temple              3 results,  3 new
+    buddhist_temple           7 results,  7 new
+    church                    1 results,  1 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                0 results,  0 new
+    shopping_mall             0 results,  0 new
+  [Beng Mealea] 13.4756,104.2375 r=5000m
+    tourist_attraction        4 results,  4 new
+    museum                    0 results,  0 new
+    historical_landmark       5 results,  5 new
+    park                      0 results,  0 new
+    art_gallery               0 results,  0 new
+    hindu_temple             10 results,  9 new
+    buddhist_temple           3 results,  2 new
+    church                    0 results,  0 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  1 new
+    shopping_mall             0 results,  0 new
+  -> 195 API calls, 538 unique places
+  [rank] 50/538 -> siem_reap_top50.csv
+  [1/50] Angkor Wat                                       skip (5 photos)
+  [2/50] Bayon Temple                                     skip (5 photos)
+  [3/50] Ta Prohm Temple                                  skip (5 photos)
+  [4/50] Phare, The Cambodian Circus                      skip (5 photos)
+  [5/50] Preah Khan Temple                                skip (5 photos)
+  [6/50] Lotus Silk Farm                                  skip (5 photos)
+  [7/50] Banteay Srei Temple                              skip (5 photos)
+  [8/50] The River Gallery                                skip (5 photos)
+  [9/50] Kulen Elephant Forest                            skip (5 photos)
+  [10/50] Treeline Urban Resort                            skip (5 photos)
+  [11/50] Wake Park Cambodia                               skip (5 photos)
+  [12/50] VIMEAN SOKHA MUSEUM                              +5 photos
+  [13/50] Prasat Beng Mealea                               skip (5 photos)
+  [14/50] Baphuon Temple                                   skip (5 photos)
+  [15/50] Ta Keo Temple                                    skip (5 photos)
+  [16/50] Banteay Kdei Temple                              skip (5 photos)
+  [17/50] Gate of the Dead                                 skip (5 photos)
+  [18/50] Тheam's Gallery                                  skip (5 photos)
+  [19/50] Travel to Inspire                                skip (5 photos)
+  [20/50] Victory Gate                                     skip (5 photos)
+  [21/50] Sokkhak River Lounge                             skip (5 photos)
+  [22/50] Sombai Cambodian Liqueur and souvenirs           skip (5 photos)
+  [23/50] Thommanon Temple                                 skip (5 photos)
+  [24/50] Angkor Special Tours                             +5 photos
+  [25/50] The Cocoon House - Art Gallery, Concept Store, F skip (5 photos)
+  [26/50] Angkor Zipline                                   skip (5 photos)
+  [27/50] Palilay Temple                                   skip (5 photos)
+  [28/50] Ta Nei Temple                                    skip (5 photos)
+  [29/50] WAT CHOCOLATE Store & Cafe Riverside Siem Reap   skip (5 photos)
+  [30/50] South Gate Angkor Thom                           +5 photos
+  [31/50] La Bastide de Caro                               skip (5 photos)
+  [32/50] Neak Poan Bridge                                 +5 photos
+  [33/50] Flying Foxes                                     skip (5 photos)
+  [34/50] Khmer Ceramics & Fine Arts Centre                skip (5 photos)
+  [35/50] St. John Catholic Church Siem Reap               skip (5 photos)
+  [36/50] Ta Kav Gate (West Gate of Angkor Thom)           skip (5 photos)
+  [37/50] Phnom Bakheng Temple                             skip (5 photos)
+  [38/50] Terrace of Honor                                 skip (5 photos)
+  [39/50] Dei Chnang Gate (Angkor Thom North Gate)         +5 photos
+  [40/50] Terrace of the Elephants                         skip (5 photos)
+  [41/50] Angkor Wat - Eastern Entrance                    +5 photos
+  [42/50] Neak Poan Temple                                 skip (5 photos)
+  [43/50] FUJIYAMA BOM-BA-YE (game & karaoke bar)          +5 photos
+  [44/50] Cambodian buggy adventures                       +5 photos
+  [45/50] Bakong Temples                                   skip (5 photos)
+  [46/50] Hall of a Thousand Gods                          +5 photos
+  [47/50] Churning of the Sea of Milk Gallery              +5 photos
+  [48/50] Banteay Srei Interpretation Centre               skip (5 photos)
+  [49/50] Krol Ko Temple                                   skip (5 photos)
+  [50/50] Ambar Cocktails & Karaoke Bar                    skip (5 photos)
+  [seed] rolled back: {'inserted': 10, 'reused': 40, 'uploaded': 250, 'skipped': 0}
+
+=== Stung Treng ===
+  [Stung Treng town] 13.5258,105.9683 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                    8 results,  8 new
+    historical_landmark      12 results, 11 new
+    park                     20 results, 20 new
+    art_gallery               1 results,  1 new
+    hindu_temple             14 results, 12 new
+    buddhist_temple          20 results, 19 new
+    church                   13 results, 13 new
+    mosque                   20 results, 20 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  1 new
+    stadium                   1 results,  1 new
+    night_club                7 results,  7 new
+    shopping_mall            20 results, 20 new
+  [Anlong Cheuteal dolphins] 13.917,105.967 r=20000m
+    tourist_attraction       20 results,  9 new
+    museum                    1 results,  0 new
+    historical_landmark      11 results,  3 new
+    park                      5 results,  3 new
+    art_gallery               0 results,  0 new
+    hindu_temple              2 results,  0 new
+    buddhist_temple          20 results, 17 new
+    church                    1 results,  1 new
+    mosque                    0 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                1 results,  1 new
+    shopping_mall             2 results,  0 new
+  [Mekong Flooded Forest] 13.82,106.05 r=30000m
+    tourist_attraction       20 results,  1 new
+    museum                    2 results,  0 new
+    historical_landmark      11 results,  0 new
+    park                     12 results,  4 new
+    art_gallery               0 results,  0 new
+    hindu_temple              2 results,  0 new
+    buddhist_temple          20 results,  4 new
+    church                    0 results,  0 new
+    mosque                    4 results,  2 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                0 results,  0 new
+    shopping_mall             3 results,  1 new
+  [Siem Pang / Sekong] 14.117,106.383 r=50000m
+    tourist_attraction       13 results,  8 new
+    museum                    0 results,  0 new
+    historical_landmark       2 results,  0 new
+    park                     13 results,  9 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          16 results, 13 new
+    church                    1 results,  1 new
+    mosque                    3 results,  1 new
+    zoo                       1 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                2 results,  2 new
+    shopping_mall             3 results,  1 new
+  -> 60 API calls, 234 unique places
+  [rank] 8/234 -> stung_treng_top50.csv
+  [1/8] Khone Phapheng Waterfall                         +5 photos
+  [2/8] Li Phi Somphamit Waterfalls                      +5 photos
+  [3/8] កន្លែងកម្សាន្ត កោះហាន                            +5 photos
+  [4/8] Preah Nimith Waterfall                           +5 photos
+  [5/8] Songphamit Waterfall Ticket Office               +5 photos
+  [6/8] Preah Ko Temple                                  +5 photos
+  [7/8] Khone Pa Soy Waterfall                           +5 photos
+  [8/8] Historic Bridge Don Det - Don Khon               +5 photos
+  [seed] rolled back: {'inserted': 8, 'reused': 0, 'uploaded': 40, 'skipped': 0}
+
+=== Svay Rieng ===
+  [Svay Rieng town] 11.0879,105.7993 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                   19 results, 19 new
+    historical_landmark      20 results, 17 new
+    park                     20 results, 19 new
+    art_gallery               5 results,  5 new
+    hindu_temple             20 results, 20 new
+    buddhist_temple          20 results, 20 new
+    church                   20 results, 20 new
+    mosque                    7 results,  7 new
+    zoo                       3 results,  3 new
+    aquarium                  1 results,  1 new
+    amusement_park            4 results,  4 new
+    stadium                  19 results, 19 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Bavet border] 11.093,106.17 r=25000m
+    tourist_attraction       20 results, 14 new
+    museum                   10 results,  4 new
+    historical_landmark      20 results, 13 new
+    park                     20 results, 14 new
+    art_gallery               3 results,  0 new
+    hindu_temple              3 results,  0 new
+    buddhist_temple          20 results, 12 new
+    church                   20 results, 16 new
+    mosque                    2 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            6 results,  5 new
+    stadium                  14 results,  8 new
+    night_club               20 results, 10 new
+    shopping_mall            20 results,  9 new
+  -> 30 API calls, 319 unique places
+  [rank] 50/319 -> svay_rieng_top50.csv
+  [1/50] Tay Ninh Holy See                                +5 photos
+  [2/50] Chùa Thiền Lâm (Gò Kén)                          +5 photos
+  [3/50] TRẦN BẢO Store - Mobile Tây Ninh                 +5 photos
+  [4/50] Tượng đài liệt sĩ Tây Ninh                      +5 photos
+  [5/50] Parish Cao Xa                                    +5 photos
+  [6/50] Tây Ninh Ford                                    +5 photos
+  [7/50] Cổng chào Thị Xã Trảng Bàng                      +5 photos
+  [8/50] Bac Hoa Church                                   +5 photos
+  [9/50] Van Linh Temple                                  +5 photos
+  [10/50] Karaoke Lucky                                    +5 photos
+  [11/50] Thiền viện Trúc Lâm Tây Ninh                     +5 photos
+  [12/50] Nhà thờ Phong Cốc                                +5 photos
+  [13/50] Chùa Tây Thiên                                   +5 photos
+  [14/50] Cao Sơn Tự                                       +5 photos
+  [15/50] Giáo Xứ Phong Cốc                                +5 photos
+  [16/50] Nhà thờ giáo xứ Gò Dầu                           +5 photos
+  [17/50] Vincom Plaza Tây Ninh                            +5 photos
+  [18/50] Quảng trường Chiến Thắng Tây Ninh                +5 photos
+  [19/50] NHÀ THỜ THÁNH TUÂN - TÂY NINH                    +5 photos
+  [20/50] Tháp Cổ Bình Thạnh                               +5 photos
+  [21/50] Nhà thờ Giáo xứ Vinh Sơn                         +5 photos
+  [22/50] Phuoc Truong Pagoda-Archaeological Site of An So +5 photos
+  [23/50] Khu Di Tích Lịch Sử Quốc Gia Khu vực Đồn Long Kh +5 photos
+  [24/50] Tha La Church                                    +5 photos
+  [25/50] Công viên Xuân Hồng                              +5 photos
+  [26/50] Nhà thờ Giáo xứ Phước Điền                       +5 photos
+  [27/50] Bà Đen Garden - Hương Sen Quán                   +5 photos
+  [28/50] Công viên 30/4                                   +5 photos
+  [29/50] Chùa An Phước                                    +5 photos
+  [30/50] Srah Vong Park ស្រះវង់                           +5 photos
+  [31/50] Chót Mạt Ancient Temple                          +5 photos
+  [32/50] Di tích chiến thắng Tua Hai                      +5 photos
+  [33/50] Chùa Giác Ngạn                                   +5 photos
+  [34/50] Lu Quan Village                                  +5 photos
+  [35/50] Mellow’s kitchen                                 +5 photos
+  [36/50] Nhà thờ giáo xứ Hiệp Thạnh                       +5 photos
+  [37/50] Svay Rieng Stadium                               +5 photos
+  [38/50] Bảo Tàng Tỉnh Tây Ninh                           +5 photos
+  [39/50] Binh Nguyen Parish                               +5 photos
+  [40/50] Tela Mart,and Gasline Station                    +5 photos
+  [41/50] Karaoke Vui Vui Tây Ninh                         +5 photos
+  [42/50] Công viên Thắng Lợi                              +5 photos
+  [43/50] Karaoke MỸ QUỲNH 2                               +5 photos
+  [44/50] Karaoke Bạch Yến 4 (Queen)                       +5 photos
+  [45/50] Home Appliance Store XANH                        +5 photos
+  [46/50] Karaoke GOLD                                     +5 photos
+  [47/50] Tran Quoc Dai Park                               +5 photos
+  [48/50] Central Square of Trảng Bàng Town                +5 photos
+  [49/50] Karaoke Hồng Thuý                                +5 photos
+  [50/50] Karaoke Bạch Yến 2                             +5 photos
+  [47/50] insert Tsubasa Bridge                             +5 (skip 0)
+  [48/50] insert SPACE FOUR ZERO Wang Dang Doodle           +5 (skip 0)
+  [49/50] reuse Coconut Park I - Koh Pich                  +10 (skip 0)
+  [50/50] insert សួនហាត់ប្រាណ ស្ពានអាកាសស្ទឹងមានជ័យ         +5 (skip 0)
+  [1/10] reuse Green jungle trekking Tours-Cambodia       +5 (skip 0)
+  [2/10] reuse បឹងយក្សឡោម                                 +5 (skip 0)
+  [3/10] reuse Svay Mountain                              +5 (skip 0)
+  [4/10] reuse Virachey National Park                     +5 (skip 0)
+  [5/10] reuse O Sinlair Waterfallinlove                  +5 (skip 0)
+  [6/10] reuse Katieng Waterfall                          +5 (skip 0)
+  [7/10] reuse Kachanh Waterfall                          +5 (skip 0)
+  [8/10] reuse Cha Ong Waterfall, Ratanakiri              +5 (skip 0)
+  [9/10] reuse ផ្សារទំនើបស៊ីត្រា                          +5 (skip 0)
+  [10/10] insert Lumphat Wildlife Sanctuary                 +5 (skip 0)
+  [1/50] reuse Angkor Wat                                 +5 (skip 0)
+  [2/50] reuse Bayon Temple                               +5 (skip 0)
+  [3/50] reuse Ta Prohm Temple                            +5 (skip 0)
+  [4/50] reuse Phare, The Cambodian Circus                +5 (skip 0)
+  [5/50] reuse Preah Khan Temple                          +5 (skip 0)
+  [6/50] reuse Lotus Silk Farm                            +5 (skip 0)
+  [7/50] reuse Banteay Srei Temple                        +5 (skip 0)
+  [8/50] reuse The River Gallery                          +5 (skip 0)
+  [9/50] reuse Kulen Elephant Forest                      +5 (skip 0)
+  [10/50] reuse Treeline Urban Resort                      +5 (skip 0)
+  [11/50] reuse Wake Park Cambodia                         +5 (skip 0)
+  [12/50] insert VIMEAN SOKHA MUSEUM                        +5 (skip 0)
+  [13/50] reuse Prasat Beng Mealea                         +5 (skip 0)
+  [14/50] reuse Baphuon Temple                             +5 (skip 0)
+  [15/50] reuse Ta Keo Temple                              +5 (skip 0)
+  [16/50] reuse Banteay Kdei Temple                        +5 (skip 0)
+  [17/50] reuse Gate of the Dead                           +5 (skip 0)
+  [18/50] reuse Тheam's Gallery                            +5 (skip 0)
+  [19/50] reuse Travel to Inspire                          +5 (skip 0)
+  [20/50] reuse Victory Gate                               +5 (skip 0)
+  [21/50] reuse Sokkhak River Lounge                       +5 (skip 0)
+  [22/50] reuse Sombai Cambodian Liqueur and souvenirs     +5 (skip 0)
+  [23/50] reuse Thommanon Temple                           +5 (skip 0)
+  [24/50] insert Angkor Special Tours                       +5 (skip 0)
+  [25/50] reuse The Cocoon House - Art Gallery, Concept St +5 (skip 0)
+  [26/50] reuse Angkor Zipline                             +5 (skip 0)
+  [27/50] reuse Palilay Temple                             +5 (skip 0)
+  [28/50] reuse Ta Nei Temple                              +5 (skip 0)
+  [29/50] reuse WAT CHOCOLATE Store & Cafe Riverside Siem  +5 (skip 0)
+  [30/50] insert South Gate Angkor Thom                     +5 (skip 0)
+  [31/50] reuse La Bastide de Caro                         +5 (skip 0)
+  [32/50] insert Neak Poan Bridge                           +5 (skip 0)
+  [33/50] reuse Flying Foxes                               +5 (skip 0)
+  [34/50] reuse Khmer Ceramics & Fine Arts Centre          +5 (skip 0)
+  [35/50] reuse St. John Catholic Church Siem Reap         +5 (skip 0)
+  [36/50] reuse Ta Kav Gate (West Gate of Angkor Thom)     +5 (skip 0)
+  [37/50] reuse Phnom Bakheng Temple                       +5 (skip 0)
+  [38/50] reuse Terrace of Honor                           +5 (skip 0)
+  [39/50] insert Dei Chnang Gate (Angkor Thom North Gate)   +5 (skip 0)
+  [40/50] reuse Terrace of the Elephants                   +5 (skip 0)
+  [41/50] insert Angkor Wat - Eastern Entrance              +5 (skip 0)
+  [42/50] reuse Neak Poan Temple                           +5 (skip 0)
+  [43/50] insert FUJIYAMA BOM-BA-YE (game & karaoke bar)    +5 (skip 0)
+  [44/50] insert Cambodian buggy adventures                 +5 (skip 0)
+  [45/50] reuse Bakong Temples                             +5 (skip 0)
+  [46/50] insert Hall of a Thousand Gods                    +5 (skip 0)
+  [47/50] insert Churning of the Sea of Milk Gallery        +5 (skip 0)
+  [48/50] reuse Banteay Srei Interpretation Centre         +5 (skip 0)
+  [49/50] reuse Krol Ko Temple                             +5 (skip 0)
+  [50/50] reuse Ambar Cocktails & Karaoke Bar              +5 (skip 0)
+  [1/8] insert Khone Phapheng Waterfall                   +5 (skip 0)
+  [2/8] insert Li Phi Somphamit Waterfalls                +5 (skip 0)
+  [3/8] insert កន្លែងកម្សាន្ត កោះហាន                      +5 (skip 0)
+  [4/8] insert Preah Nimith Waterfall                     +5 (skip 0)
+  [5/8] insert Songphamit Waterfall Ticket Office         +5 (skip 0)
+  [6/8] insert Preah Ko Temple                            +5 (skip 0)
+  [7/8] insert Khone Pa Soy Waterfall                     +5 (skip 0)
+  [8/8] insert Historic Bridge Don Det - Don Khon         +5 (skip 0)
+  [1/50] insert Tay Ninh Holy See                          +5 (skip 0)
+  [2/50] insert Chùa Thiền Lâm (Gò Kén)                    +5 (skip 0)
+  [3/50] insert TRẦN BẢO Store - Mobile Tây Ninh           +5 (skip 0)
+  [4/50] insert Tượng đài liệt sĩ Tây Ninh                +5 (skip 0)
+  [5/50] insert Parish Cao Xa                              +5 (skip 0)
+  [6/50] insert Tây Ninh Ford                              +5 (skip 0)
+  [7/50] insert Cổng chào Thị Xã Trảng Bàng                +5 (skip 0)
+  [8/50] insert Bac Hoa Church                             +5 (skip 0)
+  [9/50] insert Van Linh Temple                            +5 (skip 0)
+  [10/50] insert Karaoke Lucky                              +5 (skip 0)
+  [11/50] insert Thiền viện Trúc Lâm Tây Ninh               +5 (skip 0)
+  [12/50] insert Nhà thờ Phong Cốc                          +5 (skip 0)
+  [13/50] insert Chùa Tây Thiên                             +5 (skip 0)
+  [14/50] insert Cao Sơn Tự                                 +5 (skip 0)
+  [15/50] insert Giáo Xứ Phong Cốc                          +5 (skip 0)
+  [16/50] insert Nhà thờ giáo xứ Gò Dầu                     +5 (skip 0)
+  [17/50] insert Vincom Plaza Tây Ninh                      +5 (skip 0)
+  [18/50] insert Quảng trường Chiến Thắng Tây Ninh          +5 (skip 0)
+  [19/50] insert NHÀ THỜ THÁNH TUÂN - TÂY NINH              +5 (skip 0)
+  [20/50] insert Tháp Cổ Bình Thạnh                         +5 (skip 0)
+  [21/50] insert Nhà thờ Giáo xứ Vinh Sơn                   +5 (skip 0)
+  [22/50] insert Phuoc Truong Pagoda-Archaeological Site of +5 (skip 0)
+  [23/50] insert Khu Di Tích Lịch Sử Quốc Gia Khu vực Đồn L +5 (skip 0)
+  [24/50] insert Tha La Church                              +5 (skip 0)
+  [25/50] insert Công viên Xuân Hồng                        +5 (skip 0)
+  [26/50] insert Nhà thờ Giáo xứ Phước Điền                 +5 (skip 0)
+  [27/50] insert Bà Đen Garden - Hương Sen Quán             +5 (skip 0)
+  [28/50] insert Công viên 30/4                             +5 (skip 0)
+  [29/50] insert Chùa An Phước                              +5 (skip 0)
+  [30/50] insert Srah Vong Park ស្រះវង់                     +5 (skip 0)
+  [31/50] insert Chót Mạt Ancient Temple                    +5 (skip 0)
+  [32/50] insert Di tích chiến thắng Tua Hai                +5 (skip 0)
+  [33/50] insert Chùa Giác Ngạn                             +5 (skip 0)
+  [34/50] insert Lu Quan Village                            +5 (skip 0)
+  [35/50] insert Mellow’s kitchen                           +5 (skip 0)
+  [36/50] insert Nhà thờ giáo xứ Hiệp Thạnh                 +5 (skip 0)
+  [37/50] insert Svay Rieng Stadium                         +5 (skip 0)
+  [38/50] insert Bảo Tàng Tỉnh Tây Ninh                     +5 (skip 0)
+  [seed] rolled back: {'inserted': 50, 'reused': 0, 'uploaded': 250, 'skipped': 0}
+
+=== Takeo ===
+  [Takeo town] 10.9909,104.7855 r=40000m
+    tourist_attraction       20 results, 20 new
+    museum                   14 results, 13 new
+    historical_landmark      20 results, 19 new
+    park                     20 results, 20 new
+    art_gallery               2 results,  2 new
+    hindu_temple             20 results, 18 new
+    buddhist_temple          20 results, 19 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       7 results,  5 new
+    aquarium                  0 results,  0 new
+    amusement_park            8 results,  8 new
+    stadium                  13 results, 13 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Phnom Chisor] 11.263,104.78 r=15000m
+    tourist_attraction       20 results, 15 new
+    museum                    3 results,  0 new
+    historical_landmark      10 results,  7 new
+    park                     20 results, 16 new
+    art_gallery               1 results,  0 new
+    hindu_temple              8 results,  4 new
+    buddhist_temple          20 results, 16 new
+    church                   20 results, 16 new
+    mosque                    6 results,  2 new
+    zoo                       6 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   0 results,  0 new
+    night_club               12 results,  8 new
+    shopping_mall            20 results, 17 new
+  [Phnom Da / Angkor Borei] 10.891,104.833 r=15000m
+    tourist_attraction       12 results, 10 new
+    museum                    0 results,  0 new
+    historical_landmark       8 results,  3 new
+    park                     20 results, 16 new
+    art_gallery               0 results,  0 new
+    hindu_temple              6 results,  0 new
+    buddhist_temple          20 results, 17 new
+    church                   17 results, 14 new
+    mosque                    8 results,  6 new
+    zoo                       0 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            2 results,  0 new
+    stadium                   4 results,  0 new
+    night_club               11 results,  6 new
+    shopping_mall            20 results, 15 new
+  [Tonle Bati] 11.368,104.842 r=10000m
+    tourist_attraction       17 results, 13 new
+    museum                    4 results,  3 new
+    historical_landmark       5 results,  3 new
+    park                     20 results, 14 new
+    art_gallery               0 results,  0 new
+    hindu_temple              4 results,  2 new
+    buddhist_temple          20 results, 13 new
+    church                   20 results, 16 new
+    mosque                    5 results,  4 new
+    zoo                       6 results,  0 new
+    aquarium                  0 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   0 results,  0 new
+    night_club                7 results,  7 new
+    shopping_mall            20 results, 15 new
+  -> 60 API calls, 495 unique places
+  [rank] 20/495 -> takeo_top50.csv
+  [1/20] Ta Prohm Temple (Takeo)                          skip (5 photos)
+  [2/20] Plaza Premium First Phnom Penh                   skip (5 photos)
+  [3/20] Phnom Tamao Wildlife Sanctuary                   skip (5 photos)
+  [4/20] Chisor Mountain Temple                           +5 photos
+  [5/20] Linh An Temple                                   +5 photos
+  [6/20] Phnom Bayang Temple                              +5 photos
+  [7/20] Phnom Da Temple                                  +5 photos
+  [8/20] Phnom Tamao Pagoda                               +5 photos
+  [9/20] Angkor Borei Museum                              +5 photos
+  [10/20] Independence Monument                            +5 photos
+  [11/20] Neang Khmao Pagoda                               +5 photos
+  [12/20] Grand Dragon Resorts                             +5 photos
+  [13/20] Phnom Tamao Zoological Park and Wildlife Rescue  +5 photos
+  [14/20] ផ្សារដើមគរ(ក្លោងទ្វាវត្តទុល)                     +5 photos
+  [15/20] Royal Doun Kaev KTV                              +4 photos
+  [16/20] Tonle Bati Pagoda                                +5 photos
+  [17/20] Trapang Anderk Market                            +5 photos
+  [18/20] An Phu Trade Center                              +5 photos
+  [19/20] Thnal Tortoeng Market                            +5 photos
+  [20/20] រមណីយដ្ឋាន ទន្លេបាទី                             +5 photos
+  [seed] rolled back: {'inserted': 20, 'reused': 0, 'uploaded': 99, 'skipped': 0}
+
+=== Tboung Khmum ===
+  [Suong] 11.9,105.6886 r=50000m
+    tourist_attraction       20 results, 20 new
+    museum                   20 results, 20 new
+    historical_landmark      20 results, 18 new
+    park                     20 results, 20 new
+    art_gallery               1 results,  1 new
+    hindu_temple             20 results, 19 new
+    buddhist_temple          20 results, 19 new
+    church                   20 results, 20 new
+    mosque                   20 results, 20 new
+    zoo                       1 results,  1 new
+    aquarium                  2 results,  2 new
+    amusement_park            3 results,  3 new
+    stadium                  13 results, 13 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [Memot rubber plantations] 11.819,106.174 r=30000m
+    tourist_attraction       20 results, 17 new
+    museum                   10 results,  4 new
+    historical_landmark      20 results, 17 new
+    park                     20 results, 19 new
+    art_gallery               0 results,  0 new
+    hindu_temple              0 results,  0 new
+    buddhist_temple          20 results, 20 new
+    church                   17 results, 17 new
+    mosque                   17 results, 15 new
+    zoo                       0 results,  0 new
+    aquarium                  1 results,  0 new
+    amusement_park            0 results,  0 new
+    stadium                   2 results,  2 new
+    night_club               19 results, 15 new
+    shopping_mall            20 results, 16 new
+  [Krek / Vietnam border] 11.744,105.974 r=25000m
+    tourist_attraction       20 results,  8 new
+    museum                   12 results,  1 new
+    historical_landmark      20 results,  7 new
+    park                     20 results,  8 new
+    art_gallery               0 results,  0 new
+    hindu_temple              3 results,  0 new
+    buddhist_temple          20 results, 11 new
+    church                   16 results,  6 new
+    mosque                   20 results,  8 new
+    zoo                       0 results,  0 new
+    aquarium                  1 results,  0 new
+    amusement_park            1 results,  0 new
+    stadium                   4 results,  1 new
+    night_club               20 results,  9 new
+    shopping_mall            20 results,  8 new
+  -> 45 API calls, 425 unique places
+  [rank] 16/425 -> tboung_khmum_top50.csv
+  [1/16] Khu Di tích Căn cứ Trung ương Cục miền Nam       +5 photos
+  [2/16] Nokor BaChey temple                              skip (5 photos)
+  [3/16] Cheung Kok Ecotourism Village                    skip (5 photos)
+  [4/16] Vườn quốc gia Lò Gò Xa Mát                       +5 photos
+  [5/16] Giáo xứ Tân Hội                                +5 photos
+  [6/16] ក្រុងសួង                                         skip (5 photos)
+  [7/16] Church of the Holy                               +5 photos
+  [8/16] Raksmey Phkaypich Guest House                    +5 photos
+  [9/16] Haong Waterfall                                  +5 photos
+  [10/16] Svay Antor Park                                  skip (5 photos)
+  [11/16] Hồ Bơi Cafe Karaoke La                           +5 photos
+  [12/16] Phnom Srei                                       skip (5 photos)
+  [13/16] រូបសំណាក់ ហ្លួងព្រះស្ដេចកន                       skip (5 photos)
+  [14/16] Phnom Bros Library                               skip (5 photos)
+  [15/16] Tour des Français                                skip (5 photos)
+  [16/16] Kizuna Bridge Roundabout                         skip (5 photos)
+  [seed] rolled back: {'inserted': 16, 'reused': 0, 'uploaded': 80, 'skipped': 0}
+
+attractions inserted: 377
+attractions reused:   217
+photos uploaded:      3311
+photos skipped:       0
+  [39/50] insert Binh Nguyen Parish                         +5 (skip 0)
+  [40/50] insert Tela Mart,and Gasline Station              +5 (skip 0)
+  [41/50] insert Karaoke Vui Vui Tây Ninh                   +5 (skip 0)
+  [42/50] insert Công viên Thắng Lợi                        +5 (skip 0)
+  [43/50] insert Karaoke MỸ QUỲNH 2                         +5 (skip 0)
+  [44/50] insert Karaoke Bạch Yến 4 (Queen)                 +5 (skip 0)
+  [45/50] insert Home Appliance Store XANH                  +5 (skip 0)
+  [46/50] insert Karaoke GOLD                               +5 (skip 0)
+  [47/50] insert Tran Quoc Dai Park                         +5 (skip 0)
+  [48/50] insert Central Square of Trảng Bàng Town          +5 (skip 0)
+  [49/50] insert Karaoke Hồng Thuý                          +5 (skip 0)
+  [50/50] insert Karaoke Bạch Yến 2                       +5 (skip 0)
+  [1/20] insert Ta Prohm Temple (Takeo)                    +5 (skip 0)
+  [2/20] insert Plaza Premium First Phnom Penh             +5 (skip 0)
+  [3/20] insert Phnom Tamao Wildlife Sanctuary             +5 (skip 0)
+  [4/20] insert Chisor Mountain Temple                     +5 (skip 0)
+  [5/20] insert Linh An Temple                             +5 (skip 0)
+  [6/20] insert Phnom Bayang Temple                        +5 (skip 0)
+  [7/20] insert Phnom Da Temple                            +5 (skip 0)
+  [8/20] insert Phnom Tamao Pagoda                         +5 (skip 0)
+  [9/20] insert Angkor Borei Museum                        +5 (skip 0)
+  [10/20] insert Independence Monument                      +5 (skip 0)
+  [11/20] insert Neang Khmao Pagoda                         +5 (skip 0)
+  [12/20] insert Grand Dragon Resorts                       +5 (skip 0)
+  [13/20] insert Phnom Tamao Zoological Park and Wildlife R +5 (skip 0)
+  [14/20] insert ផ្សារដើមគរ(ក្លោងទ្វាវត្តទុល)               +5 (skip 0)
+  [15/20] insert Royal Doun Kaev KTV                        +4 (skip 0)
+  [16/20] insert Tonle Bati Pagoda                          +5 (skip 0)
+  [17/20] insert Trapang Anderk Market                      +5 (skip 0)
+  [18/20] insert An Phu Trade Center                        +5 (skip 0)
+  [19/20] insert Thnal Tortoeng Market                      +5 (skip 0)
+  [20/20] insert រមណីយដ្ឋាន ទន្លេបាទី                       +5 (skip 0)
+  [1/16] insert Khu Di tích Căn cứ Trung ương Cục miền Nam +5 (skip 0)
+  [2/16] insert Nokor BaChey temple                        +5 (skip 0)
+  [3/16] insert Cheung Kok Ecotourism Village              +5 (skip 0)
+  [4/16] insert Vườn quốc gia Lò Gò Xa Mát                 +5 (skip 0)
+  [5/16] insert Giáo xứ Tân Hội                          +5 (skip 0)
+  [6/16] insert ក្រុងសួង                                   +5 (skip 0)
+  [7/16] insert Church of the Holy                         +5 (skip 0)
+  [8/16] insert Raksmey Phkaypich Guest House              +5 (skip 0)
+  [9/16] insert Haong Waterfall                            +5 (skip 0)
+  [10/16] insert Svay Antor Park                            +5 (skip 0)
+  [11/16] insert Hồ Bơi Cafe Karaoke La                     +5 (skip 0)
+  [12/16] insert Phnom Srei                                 +5 (skip 0)
+  [13/16] insert រូបសំណាក់ ហ្លួងព្រះស្ដេចកន                 +5 (skip 0)
+  [14/16] insert Phnom Bros Library                         +5 (skip 0)
+  [15/16] insert Tour des Français                          +5 (skip 0)
+  [16/16] insert Kizuna Bridge Roundabout                   +5 (skip 0)

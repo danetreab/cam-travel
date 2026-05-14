@@ -1,0 +1,1569 @@
+/Users/danet/Developers/cam-travel/apps/py/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Provinces: ['Banteay Meanchey', 'Battambang', 'Kampong Cham', 'Kampong Chhnang', 'Kampong Speu', 'Kampong Thom', 'Kampot', 'Kandal', 'Kep', 'Koh Kong', 'Kratie', 'Mondulkiri', 'Oddar Meanchey', 'Pailin', 'Preah Sihanouk', 'Preah Vihear', 'Pursat', 'Prey Veng', 'Ratanakiri', 'Siem Reap', 'Stung Treng', 'Svay Rieng', 'Takeo', 'Tboung Khmum']
+Mode: fetch=False photos=True seed=True dry_run=False
+DB:    152.42.162.231:5432/cam-travel
+MinIO: minio-dev.rikrey.com/cam-travel
+
+=== Banteay Meanchey ===
+  [fetch] using existing banteay_meanchey_places.csv (369 rows)
+  [rank] 38/369 -> banteay_meanchey_top50.csv
+  [1/38] Banteay Chhmar Temple                            skip (5 photos)
+  [2/38] Krong Poi Pet Mosque                             skip (5 photos)
+  [3/38] Royal KTV                                        +5 photos
+  [4/38] MAX CLUB POIPET                                  skip (5 photos)
+  [5/38] Khmer Buddhist Temple                            +5 photos
+  [6/38] Prey Moan Pagoda                                 +5 photos
+  [7/38] edm poipet                                       +5 photos
+  [8/38] F-Plus KTV                                       skip (5 photos)
+  [9/38] Nova KTV and Hotel                               +5 photos
+  [10/38] Poipet Catholic Church Mary Magdala              +5 photos
+  [11/38] រង្វង់មូលប៉ោយប៉ែត                                +5 photos
+  [12/38] Prasat Mebon (Banteay Chhmar)                    skip (5 photos)
+  [13/38] Prasat Samnang Tasok                             +5 photos
+  [14/38] វត្តប្រាសាទរលំជ្រៃ                               +5 photos
+  [15/38] JV Night Market sells all kinds of shoes         +2 photos
+  [16/38] Prasat Banteay Toap                              +5 photos
+  [17/38] Poipet Catholic Church                           +5 photos
+  [18/38] Season Mall                                      +5 photos
+  [19/38] AGA SPORT (អាហ្កា ស្ពត)                          +5 photos
+  [20/38] Kralanh Roundabout                               +5 photos
+  [21/38] Rathana Ram Pagoda                               +5 photos
+  [22/38] Banteay Meanchey Provincial Museum               skip (5 photos)
+  [23/38] Paradise Sea Park                                +5 photos
+  [24/38] រមនីយដ្ឋាន ទំនប់អាងទឹកពង្រសូរិយា                 +5 photos
+  [25/38] Tepkaosa Snay Archaeological Site                +5 photos
+  [26/38] អាស៊ានម៉ាត                                       +5 photos
+  [27/38] REC                                              skip (5 photos)
+  [28/38] G9 KTV                                           +5 photos
+  [29/38] ព្រះសហគមន៍កាតូលិក​ សិរីសោភ័ណ                     +5 photos
+  [30/38] Malai market                                     skip (5 photos)
+  [31/38] Khnach Romeas Pagoda                             +5 photos
+  [32/38] Grandma-Harvesting-Rice Statue                   +5 photos
+  [33/38] រមណីយដ្ឋានធម្មជាតិភ្នំប្រាំពីរ                   +5 photos
+  [34/38] Poipet Pass Hotel                                skip (5 photos)
+  [35/38] កោះសាងស្នេហ៍                                     skip (5 photos)
+  [36/38] Suon Sne Jun Bot                                 skip (5 photos)
+  [37/38] Tropicana Resort & Casino                        skip (5 photos)
+  [38/38] Star Vegas Casino                                skip (5 photos)
+  [seed] committed: {'inserted': 37, 'reused': 1, 'uploaded': 182, 'skipped': 5}
+
+=== Battambang ===
+  [fetch] using existing battambang_places.csv (247 rows)
+  [rank] 50/247 -> battambang_top50.csv
+  [1/50] Phare Ponleu Selpak                              skip (5 photos)
+  [2/50] Romcheik 5 Artspace & Café                       skip (5 photos)
+  [3/50] Lazy Mango Homestay // Battambang Tuk Tuk Buddy  skip (5 photos)
+  [4/50] Bat Cave Phnom Sampov                            skip (5 photos)
+  [5/50] Lok Ta Dambong Kra Nhoung                        skip (5 photos)
+  [6/50] Banan Temple                                     skip (5 photos)
+  [7/50] Battambang Catholic Church                       skip (5 photos)
+  [8/50] Wat Samrong Knong                                skip (5 photos)
+  [9/50] Bossbha’s house                                  +5 photos
+  [10/50] Samrong Krong Killing Field                      skip (5 photos)
+  [11/50] Ek Phnom Temple                                  skip (5 photos)
+  [12/50] KC Heritage Gallery (small museum)               +5 photos
+  [13/50] Independence Monument (Battambang)               skip (5 photos)
+  [14/50] Wat Kandal                                       skip (5 photos)
+  [15/50] ផ្សាររោងចក្រ​ខេត្ត​បាត់ដំបង                      +5 photos
+  [16/50] Phnom Sampeau                                    +5 photos
+  [17/50] វត្ត ពោធិ៍វាល                                    skip (5 photos)
+  [18/50] Wat Keo                                          +5 photos
+  [19/50] ភ្នំបាណន់                                        skip (5 photos)
+  [20/50] ក្រមុំជ្រឹងវត្តបាយដំរាំ                          skip (5 photos)
+  [21/50] Ek Phnom Kun Khmer Arena                         skip (5 photos)
+  [22/50] Phnom Sampow Pagoda                              skip (5 photos)
+  [23/50] ទំនប់ សាលាតាអន                                   +5 photos
+  [24/50] Cambodia Peace Gallery                           skip (5 photos)
+  [25/50] Bats view                                        skip (5 photos)
+  [26/50] ផ្សារដូនទាវ ខេត្តបាត់ដំបង                        +5 photos
+  [27/50] សារមន្ទីរ​ប្រវត្តិសាស្ត្រ​បាត់ដំបង (ផ្ទះលោកម្ចាស +5 photos
+  [28/50] East Snoeng Temple                               +5 photos
+  [29/50] The Well of Shadows                              +5 photos
+  [30/50] ផ្សារបានឡែម                                      +2 photos
+  [31/50] West Snoeng Temple                               +5 photos
+  [32/50] Wat Phnov                                        +5 photos
+  [33/50] Soun Taleang                                     +5 photos
+  [34/50] វត្តពោធិវង្ស                                     +5 photos
+  [35/50] Pkar Slar Cave                                   +5 photos
+  [36/50] អាគារបុរាណ សាលាខេត្ត                             +5 photos
+  [37/50] Lucky 5 Phone Shop (ហាងលក់ទូរស័ព្ទ ឡាក់គី៥)      +5 photos
+  [38/50] Ou Moni Pagoda                                   +5 photos
+  [39/50] អូអណ្ដូង មានលក់ភេសជ្ជៈគ្រប់មុខ                   +4 photos
+  [40/50] Kunthakod                                        +5 photos
+  [41/50] Global House Battambang                          skip (5 photos)
+  [42/50] Po Knong Pagoda                                  +5 photos
+  [43/50] Thma Koul New Maket (THANN SYTHORNG)             +5 photos
+  [44/50] សួនជើងភ្នំបាណន់ ចំណតឡូរី                         skip (5 photos)
+  [45/50] សោភ័ណ២៥០០រៀលម៉ាត                                 +5 photos
+  [46/50] Battambang Day Tour                              +5 photos
+  [47/50] The Garden of SamDech Sar Kheng                  skip (5 photos)
+  [48/50] Wat Banan                                        +5 photos
+  [49/50] Balat Pagoda                                     +5 photos
+  [50/50] Wat Kampheng                                     +5 photos
+  [seed] committed: {'inserted': 29, 'reused': 21, 'uploaded': 141, 'skipped': 105}
+
+=== Kampong Cham ===
+  [fetch] using existing kampong_cham_places.csv (319 rows)
+  [rank] 31/319 -> kampong_cham_top50.csv
+  [1/31] Nokor BaChey temple                              skip (5 photos)
+  [2/31] Cheung Kok Ecotourism Village                    skip (5 photos)
+  [3/31] KuhNoKor Temple                                  +5 photos
+  [4/31] Moha Leap Pagoda                                 +5 photos
+  [5/31] Hanchey Pagoda                                   +5 photos
+  [6/31] Wat Preah theat                                  +5 photos
+  [7/31] Prasat Cheung Ang                                +5 photos
+  [8/31] Che La                                           +2 photos
+  [9/31] កំពង់ដើមពោធិ៍ មុខវត្តដីដុះ                       +5 photos
+  [10/31] Independence Monument (Kampong Cham)             +5 photos
+  [11/31] Kampong Cham Peace Park                          +5 photos
+  [12/31] Kuk Yeay Ham Temple                              +5 photos
+  [13/31] Luong Preah Sdach Kan                            +5 photos
+  [14/31] Preah Theat Baray Temple                         +5 photos
+  [15/31] Wat Speu                                         +5 photos
+  [16/31] ក្រុងសួង                                         skip (5 photos)
+  [17/31] Wat Sereisakor Koh Kampong Trom                  +5 photos
+  [18/31] ជីហែរ                                            +5 photos
+  [19/31] Toek Chha Tourism Site                           +5 photos
+  [20/31] Kbal Hong Toekcha Resort                         skip (5 photos)
+  [21/31] Wat Nokor                                        +5 photos
+  [22/31] Srey Santhor District                            skip (5 photos)
+  [23/31] រមណីយដ្ឋានបឹងធំ                                  +5 photos
+  [24/31] Ta Ong Pagoda                                    +5 photos
+  [25/31] Svay Antor Park                                  skip (5 photos)
+  [26/31] រូបសំណាក់ ហ្លួងព្រះស្ដេចកន                       skip (5 photos)
+  [27/31] Tour des Français                                skip (5 photos)
+  [28/31] Phnom Srei                                       skip (5 photos)
+  [29/31] Kbal Toek Chha Resort                            skip (5 photos)
+  [30/31] Phnom Bros Library                               skip (5 photos)
+  [31/31] Kizuna Bridge Roundabout                         skip (5 photos)
+  [1/38] insert Banteay Chhmar Temple                      +5 (skip 0)
+  [2/38] insert Krong Poi Pet Mosque                       +5 (skip 0)
+  [3/38] insert Royal KTV                                  +5 (skip 0)
+  [4/38] insert MAX CLUB POIPET                            +5 (skip 0)
+  [5/38] insert Khmer Buddhist Temple                      +5 (skip 0)
+  [6/38] insert Prey Moan Pagoda                           +5 (skip 0)
+  [7/38] insert edm poipet                                 +5 (skip 0)
+  [8/38] insert F-Plus KTV                                 +5 (skip 0)
+  [9/38] insert Nova KTV and Hotel                         +5 (skip 0)
+  [10/38] insert Poipet Catholic Church Mary Magdala        +5 (skip 0)
+  [11/38] insert រង្វង់មូលប៉ោយប៉ែត                          +5 (skip 0)
+  [12/38] insert Prasat Mebon (Banteay Chhmar)              +5 (skip 0)
+  [13/38] insert Prasat Samnang Tasok                       +5 (skip 0)
+  [14/38] insert វត្តប្រាសាទរលំជ្រៃ                         +5 (skip 0)
+  [15/38] insert JV Night Market sells all kinds of shoes   +2 (skip 0)
+  [16/38] insert Prasat Banteay Toap                        +5 (skip 0)
+  [17/38] insert Poipet Catholic Church                     +5 (skip 0)
+  [18/38] insert Season Mall                                +5 (skip 0)
+  [19/38] insert AGA SPORT (អាហ្កា ស្ពត)                    +5 (skip 0)
+  [20/38] insert Kralanh Roundabout                         +5 (skip 0)
+  [21/38] insert Rathana Ram Pagoda                         +5 (skip 0)
+  [22/38] insert Banteay Meanchey Provincial Museum         +5 (skip 0)
+  [23/38] insert Paradise Sea Park                          +5 (skip 0)
+  [24/38] insert រមនីយដ្ឋាន ទំនប់អាងទឹកពង្រសូរិយា           +5 (skip 0)
+  [25/38] insert Tepkaosa Snay Archaeological Site          +5 (skip 0)
+  [26/38] insert អាស៊ានម៉ាត                                 +5 (skip 0)
+  [27/38] insert REC                                        +5 (skip 0)
+  [28/38] insert G9 KTV                                     +5 (skip 0)
+  [29/38] insert ព្រះសហគមន៍កាតូលិក​ សិរីសោភ័ណ               +5 (skip 0)
+  [30/38] insert Malai market                               +5 (skip 0)
+  [31/38] insert Khnach Romeas Pagoda                       +5 (skip 0)
+  [32/38] insert Grandma-Harvesting-Rice Statue             +5 (skip 0)
+  [33/38] insert រមណីយដ្ឋានធម្មជាតិភ្នំប្រាំពីរ             +5 (skip 0)
+  [34/38] insert Poipet Pass Hotel                          +5 (skip 0)
+  [35/38] reuse កោះសាងស្នេហ៍                               +0 (skip 5)
+  [36/38] insert Suon Sne Jun Bot                           +5 (skip 0)
+  [37/38] insert Tropicana Resort & Casino                  +5 (skip 0)
+  [38/38] insert Star Vegas Casino                          +5 (skip 0)
+  [1/50] reuse Phare Ponleu Selpak                        +0 (skip 5)
+  [2/50] reuse Romcheik 5 Artspace & Café                 +0 (skip 5)
+  [3/50] reuse Lazy Mango Homestay // Battambang Tuk Tuk  +0 (skip 5)
+  [4/50] reuse Bat Cave Phnom Sampov                      +0 (skip 5)
+  [5/50] reuse Lok Ta Dambong Kra Nhoung                  +0 (skip 5)
+  [6/50] reuse Banan Temple                               +0 (skip 5)
+  [7/50] reuse Battambang Catholic Church                 +0 (skip 5)
+  [8/50] reuse Wat Samrong Knong                          +0 (skip 5)
+  [9/50] insert Bossbha’s house                            +5 (skip 0)
+  [10/50] reuse Samrong Krong Killing Field                +0 (skip 5)
+  [11/50] reuse Ek Phnom Temple                            +0 (skip 5)
+  [12/50] insert KC Heritage Gallery (small museum)         +5 (skip 0)
+  [13/50] reuse Independence Monument (Battambang)         +0 (skip 5)
+  [14/50] reuse Wat Kandal                                 +0 (skip 5)
+  [15/50] insert ផ្សាររោងចក្រ​ខេត្ត​បាត់ដំបង                +5 (skip 0)
+  [16/50] insert Phnom Sampeau                              +5 (skip 0)
+  [17/50] reuse វត្ត ពោធិ៍វាល                              +0 (skip 5)
+  [18/50] insert Wat Keo                                    +5 (skip 0)
+  [19/50] reuse ភ្នំបាណន់                                  +0 (skip 5)
+  [20/50] insert ក្រមុំជ្រឹងវត្តបាយដំរាំ                    +5 (skip 0)
+  [21/50] reuse Ek Phnom Kun Khmer Arena                   +0 (skip 5)
+  [22/50] reuse Phnom Sampow Pagoda                        +0 (skip 5)
+  [23/50] insert ទំនប់ សាលាតាអន                             +5 (skip 0)
+  [24/50] reuse Cambodia Peace Gallery                     +0 (skip 5)
+  [25/50] reuse Bats view                                  +0 (skip 5)
+  [26/50] insert ផ្សារដូនទាវ ខេត្តបាត់ដំបង                  +5 (skip 0)
+  [27/50] insert សារមន្ទីរ​ប្រវត្តិសាស្ត្រ​បាត់ដំបង (ផ្ទះលោ +5 (skip 0)
+  [28/50] insert East Snoeng Temple                         +5 (skip 0)
+  [29/50] insert The Well of Shadows                        +5 (skip 0)
+  [30/50] insert ផ្សារបានឡែម                                +2 (skip 0)
+  [31/50] insert West Snoeng Temple                         +5 (skip 0)
+  [32/50] insert Wat Phnov                                  +5 (skip 0)
+  [33/50] insert Soun Taleang                               +5 (skip 0)
+  [34/50] insert វត្តពោធិវង្ស                               +5 (skip 0)
+  [35/50] insert Pkar Slar Cave                             +5 (skip 0)
+  [36/50] insert អាគារបុរាណ សាលាខេត្ត                       +5 (skip 0)
+  [37/50] insert Lucky 5 Phone Shop (ហាងលក់ទូរស័ព្ទ ឡាក់គី៥ +5 (skip 0)
+  [38/50] insert Ou Moni Pagoda                             +5 (skip 0)
+  [39/50] insert អូអណ្ដូង មានលក់ភេសជ្ជៈគ្រប់មុខ             +4 (skip 0)
+  [40/50] insert Kunthakod                                  +5 (skip 0)
+  [41/50] reuse Global House Battambang                    +0 (skip 5)
+  [42/50] insert Po Knong Pagoda                            +5 (skip 0)
+  [43/50] insert Thma Koul New Maket (THANN SYTHORNG)       +5 (skip 0)
+  [44/50] reuse សួនជើងភ្នំបាណន់ ចំណតឡូរី                   +0 (skip 5)
+  [45/50] insert សោភ័ណ២៥០០រៀលម៉ាត                           +5 (skip 0)
+  [46/50] insert Battambang Day Tour                        +5 (skip 0)
+  [47/50] reuse The Garden of SamDech Sar Kheng            +0 (skip 5)
+  [48/50] insert Wat Banan                                  +5 (skip 0)
+  [49/50] insert Balat Pagoda                               +5 (skip 0)
+  [50/50] insert Wat Kampheng                               +5 (skip 0)
+  [1/31] insert Nokor BaChey temple                        +5 (skip 0)
+  [2/31] insert Cheung Kok Ecotourism Village              +5 (skip 0)
+  [3/31] insert KuhNoKor Temple                            +5 (skip 0)
+  [4/31] insert Moha Leap Pagoda                           +5 (skip 0)
+  [5/31] insert Hanchey Pagoda                             +5 (skip 0)
+  [6/31] insert Wat Preah theat                            +5 (skip 0)
+  [7/31] insert Prasat Cheung Ang                          +5 (skip 0)
+  [8/31] insert Che La                                     +2 (skip 0)
+  [9/31] insert កំពង់ដើមពោធិ៍ មុខវត្តដីដុះ                 +5 (skip 0)
+  [10/31] insert Independence Monument (Kampong Cham)       +5 (skip 0)
+  [11/31] insert Kampong Cham Peace Park                    +5 (skip 0)
+  [12/31] insert Kuk Yeay Ham Temple                        +5 (skip 0)
+  [13/31] insert Luong Preah Sdach Kan                      +5 (skip 0)
+  [seed] committed: {'inserted': 31, 'reused': 0, 'uploaded': 152, 'skipped': 0}
+
+=== Kampong Chhnang ===
+  [fetch] using existing kampong_chhnang_places.csv (363 rows)
+  [rank] 22/363 -> kampong_chhnang_top50.csv
+  [1/22] Tmor Kral Waterfall                              skip (5 photos)
+  [2/22] KuhNoKor Temple                                  skip (5 photos)
+  [3/22] Tralaeng Kaeng Pagoda                            skip (5 photos)
+  [4/22] ហាងជាងទយរមាសលក់ទូរស័ព្ទ                          +4 photos
+  [5/22] Taing Krasaing Pagoda                            +5 photos
+  [6/22] Independence Monument - Kampong Chhnang Province skip (5 photos)
+  [7/22] Phnom Cheung Prei Temple                         +5 photos
+  [8/22] Che La                                           +0 photos
+  [9/22] Wat Ta Sot - Chantappakjot Tanaram Khmer Pagoda  skip (5 photos)
+  [10/22] UTYEANTEPROKHA SOURKEALEY RESTAURANT ឧទ្យានទេពរុ +5 photos
+  [11/22] Wat Aranh                                        +5 photos
+  [12/22] ភ្នំជាលា                                         +5 photos
+  [13/22] ផ្លូវបំបែកនារីសូនឆ្នាំងដី                        +5 photos
+  [14/22] Wat Praes Meas Temple                            +5 photos
+  [15/22] PRIME POWER II KTV                               +5 photos
+  [16/22] Masjid Phum Chrak Romiet                         +5 photos
+  [17/22] Wat Kiribopharam                                 +5 photos
+  [18/22] Reachny LongVek                                  skip (5 photos)
+  [19/22] ចំណតឈប់សម្រាកRH                                  +5 photos
+  [20/22] Tbaeng Khpos Pagoda                              +5 photos
+  [21/22] Kongkea Resort                                   skip (5 photos)
+  [22/22] រូបសំណាកឆ្នាំង                                   skip (5 photos)
+  [seed] committed: {'inserted': 20, 'reused': 2, 'uploaded': 99, 'skipped': 7}
+
+=== Kampong Speu ===
+  [fetch] using existing kampong_speu_places.csv (488 rows)
+  [rank] 50/488 -> kampong_speu_top50.csv
+  [1/50] LOVE - Phnom Penh                                skip (10 photos)
+  [2/50] SOSORO - Preah Srey Içanavarman Museum           skip (10 photos)
+  [3/50] Al-Serkal Mosque                                 skip (10 photos)
+  [4/50] Tuol Sleng Genocide Museum                       skip (10 photos)
+  [5/50] Morodok Techo National Stadium                   skip (5 photos)
+  [6/50] PH Euro Park                                     skip (10 photos)
+  [7/50] Choeung Ek Genocidal Center                      skip (5 photos)
+  [8/50] Statue of His Majesty Preah Bat Samdech Preah No skip (10 photos)
+  [9/50] Kol Tor Teung Pagoda                             skip (5 photos)
+  [10/50] Keat Farm - Organic Sheep Farm - គៀតហ្វាម - កសិដ skip (5 photos)
+  [11/50] Saint George Orthodox Christian Church           +5 photos
+  [12/50] Masjid al aala Prek Pra                          skip (5 photos)
+  [13/50] Sra'Art Gallery                                  skip (5 photos)
+  [14/50] AEON Mall Sen Sok City                           skip (10 photos)
+  [15/50] Chew & Bash, Phnom Penh Island Club              skip (10 photos)
+  [16/50] Royal Palace Park                                skip (10 photos)
+  [17/50] Independence Monument                            skip (10 photos)
+  [18/50] Kirirom National Park                            skip (5 photos)
+  [19/50] BAZA.Ink Tattoo Studio                           +5 photos
+  [20/50] Institut français du Cambodge (IFC)              skip (10 photos)
+  [21/50] Phnom Tamao Wildlife Sanctuary                   skip (5 photos)
+  [22/50] AEON MALL Mean Chey                              skip (5 photos)
+  [23/50] Cambodian Memorial Sites: Former M-13 Prison     +5 photos
+  [24/50] Queen of Peace Church                            skip (10 photos)
+  [25/50] Wat Ounalom Monastery                            skip (10 photos)
+  [26/50] Kingdom Hall of Jehovah's Witnesses              +2 photos
+  [27/50] តូបចែខួច                                         +5 photos
+  [28/50] Chreav Waterfall 7th floor                       skip (5 photos)
+  [29/50] Maha Panna Vihara (វត្តបញ្ញាធំ)                  skip (5 photos)
+  [30/50] Nations Church Phnom Penh ក្រុមជំនុំណេសិន        +5 photos
+  [31/50] International Christian Assembly (ICA Cambodia)  skip (5 photos)
+  [32/50] SUN & MOON, Riverside Hotel                      skip (9 photos)
+  [33/50] Catholic Phnom Penh Pastoral Hall                skip (5 photos)
+  [34/50] Ta Prohm Temple (Takeo)                          skip (5 photos)
+  [35/50] Freedom Church PNH                               +5 photos
+  [36/50] Riverside                                        skip (5 photos)
+  [37/50] Masjid Chaom Chao                                +5 photos
+  [38/50] MARA                                             skip (10 photos)
+  [39/50] Apsara Art Gallery                               +5 photos
+  [40/50] FT Gallery                                       +5 photos
+  [41/50] THE FIRST METHODIST CHURCH IN PHNOM PENH(KOREAN  +5 photos
+  [42/50] The Gallerist - Contemporary Art Gallery         skip (5 photos)
+  [43/50] 一号公馆KTV                                          skip (5 photos)
+  [44/50] Pakistani mosque                                 +5 photos
+  [45/50] Masjid Arrahman Malaysia Cambodia                +5 photos
+  [46/50] Child Jesus Catholic Church Buoeng Tompun        +5 photos
+  [47/50] Saint Joseph Catholic Church                     skip (5 photos)
+  [48/50] Masjid Darussalam                                +5 photos
+  [49/50] Tmor Kral Waterfall                              skip (5 photos)
+  [50/50] ហាងជាងទយរមាសលក់ទូរស័ព្ទ                          +0 photos
+  [seed] committed: {'inserted': 33, 'reused': 17, 'uploaded': 162, 'skipped': 158}
+
+=== Kampong Thom ===
+  [fetch] using existing kampong_thom_places.csv (287 rows)
+  [rank] 15/287 -> kampong_thom_top50.csv
+  [1/15] Sambor Prei Kuk Ticket Booth                     skip (5 photos)
+  [2/15] Sampow Trailok Traileak                          skip (5 photos)
+  [3/15] Prasat Chrei                                     +5 photos
+  [4/15] ចំណតទូកទឹកស្អាត ១ មករា                           +5 photos
+  [5/15] Kampong Thom Museum                              skip (5 photos)
+  [6/15] Chamka TaKna                                     +5 photos
+  [7/15] Independence Monument - Kampong thom             +5 photos
+  [8/15] Wat Bakong                                       +5 photos
+  [9/15] Mreak River Resort                               +5 photos
+  [10/15] Taing Krasaing Pagoda                            +5 photos
+  [11/15] Phnom Santouk Tourism Site                       +5 photos
+  [12/15] វត្ត​ក្ដី​អណ្ដែត                                 +5 photos
+  [13/15] Kampong Thmar Pagoda                             +5 photos
+  [14/15] Wat Krayea                                       +5 photos
+  [15/15] Phnom Santuk                                     skip (5 photos)
+  [seed] committed: {'inserted': 15, 'reused': 0, 'uploaded': 75, 'skipped': 0}
+
+=== Kampot ===
+  [fetch] using existing kampot_places.csv (296 rows)
+  [rank] 50/296 -> kampot_top50.csv
+  [1/50] Sothy's Pepper Farm                              skip (5 photos)
+  [2/50] Ciao                                             skip (5 photos)
+  [3/50] Krong Kampot                                     skip (5 photos)
+  [4/50] Paris Kep Restaurant                             skip (5 photos)
+  [5/50] Seahorse Statue                                  skip (5 photos)
+  [6/50] ផ្សិតប្រវត្តិសាស្ត្រ - Historical Mushroom       skip (5 photos)
+  [7/50] Wat Sampov Pram                                  skip (5 photos)
+  [8/50] The Tree House Kampot ផ្ទះដើមឈើ                  +5 photos
+  [9/50] La Plantation Spice Bar                          +5 photos
+  [10/50] Wat Traeuy Kaoh                                  skip (5 photos)
+  [11/50] Good Time Relax Resort                           skip (5 photos)
+  [12/50] Yin Paradise Memorial Park (Kampot)              skip (5 photos)
+  [13/50] ភ្នំបូកគោ ខេត្ត កំពត                             skip (5 photos)
+  [14/50] ឆ្នេរចុងប៉ូច The Last Beach                      +5 photos
+  [15/50] កំពត ដីមាស KTV                                   +5 photos
+  [16/50] River Park - Activity ឧទ្យានដងព្រែក              skip (5 photos)
+  [17/50] Phnom Chhngok Resort                             +5 photos
+  [18/50] រង្វង់មូលទឹករលក Wave Roundabout                  +5 photos
+  [19/50] Wat Chum Kreal                                   +5 photos
+  [20/50] Kampot Beach                                     skip (5 photos)
+  [21/50] Wat Pichey Oudong                                +5 photos
+  [22/50] ឆ្នេរអង្កោ ខេត្តកែប                              +5 photos
+  [23/50] V-Relaxing Resort កំពត                           +5 photos
+  [24/50] "Lok Yeay Mao" Monument                          skip (5 photos)
+  [25/50] Bokor Catholic Church                            skip (5 photos)
+  [26/50] Trapeang Sangkae Fishery Community               skip (5 photos)
+  [27/50] Vipassana Dhura Kep                              skip (5 photos)
+  [28/50] Farm Link                                        skip (5 photos)
+  [29/50] Kep Lodge                                        skip (5 photos)
+  [30/50] Phnom Kbal Romeas                                skip (5 photos)
+  [31/50] Kampot River beach                               skip (5 photos)
+  [32/50] French Colonial Hotel                            +5 photos
+  [33/50] Wat Puthi                                        +5 photos
+  [34/50] ផ្លូវថ្មីកាត់ទៅកែប                               skip (5 photos)
+  [35/50] Bokor Buddha-Statue                              +5 photos
+  [36/50] ទឹកធ្លាក់ព្រៃនប់                                 skip (5 photos)
+  [37/50] Wat Phnom Reab                                   +5 photos
+  [38/50] O'Krosar Community                               +5 photos
+  [39/50] Veal Pouch Pagoda                                +5 photos
+  [40/50] Anlong Thom Waterfall                            skip (5 photos)
+  [41/50] Wat sovansakor                                   +5 photos
+  [42/50] New Kep Beach (Kep Thmey កែប​ថ្មី)               +5 photos
+  [43/50] Temple                                           +5 photos
+  [44/50] Beetle Waterfall                                 skip (5 photos)
+  [45/50] Lotus Pond                                       skip (5 photos)
+  [46/50] Sdech Korn Statue                                skip (5 photos)
+  [47/50] Green Cathedral                                  skip (5 photos)
+  [48/50] Royal Kampot KTV                                 skip (5 photos)
+  [49/50] Preah Monivong Bokor National Park               skip (5 photos)
+  [50/50] Bokor Hill Station                               skip (5 photos)
+  [14/31] insert Preah Theat Baray Temple                   +5 (skip 0)
+  [15/31] insert Wat Speu                                   +5 (skip 0)
+  [16/31] insert ក្រុងសួង                                   +5 (skip 0)
+  [17/31] insert Wat Sereisakor Koh Kampong Trom            +5 (skip 0)
+  [18/31] insert ជីហែរ                                      +5 (skip 0)
+  [19/31] insert Toek Chha Tourism Site                     +5 (skip 0)
+  [20/31] insert Kbal Hong Toekcha Resort                   +5 (skip 0)
+  [21/31] insert Wat Nokor                                  +5 (skip 0)
+  [22/31] insert Srey Santhor District                      +5 (skip 0)
+  [23/31] insert រមណីយដ្ឋានបឹងធំ                            +5 (skip 0)
+  [24/31] insert Ta Ong Pagoda                              +5 (skip 0)
+  [25/31] insert Svay Antor Park                            +5 (skip 0)
+  [26/31] insert រូបសំណាក់ ហ្លួងព្រះស្ដេចកន                 +5 (skip 0)
+  [27/31] insert Tour des Français                          +5 (skip 0)
+  [28/31] insert Phnom Srei                                 +5 (skip 0)
+  [29/31] insert Kbal Toek Chha Resort                      +5 (skip 0)
+  [30/31] insert Phnom Bros Library                         +5 (skip 0)
+  [31/31] insert Kizuna Bridge Roundabout                   +5 (skip 0)
+  [1/22] insert Tmor Kral Waterfall                        +5 (skip 0)
+  [2/22] reuse KuhNoKor Temple                            +0 (skip 5)
+  [3/22] insert Tralaeng Kaeng Pagoda                      +5 (skip 0)
+  [4/22] insert ហាងជាងទយរមាសលក់ទូរស័ព្ទ                    +4 (skip 0)
+  [5/22] insert Taing Krasaing Pagoda                      +5 (skip 0)
+  [6/22] insert Independence Monument - Kampong Chhnang Pr +5 (skip 0)
+  [7/22] insert Phnom Cheung Prei Temple                   +5 (skip 0)
+  [8/22] reuse Che La                                     +0 (skip 2)
+  [9/22] insert Wat Ta Sot - Chantappakjot Tanaram Khmer P +5 (skip 0)
+  [10/22] insert UTYEANTEPROKHA SOURKEALEY RESTAURANT ឧទ្យា +5 (skip 0)
+  [11/22] insert Wat Aranh                                  +5 (skip 0)
+  [12/22] insert ភ្នំជាលា                                   +5 (skip 0)
+  [13/22] insert ផ្លូវបំបែកនារីសូនឆ្នាំងដី                  +5 (skip 0)
+  [14/22] insert Wat Praes Meas Temple                      +5 (skip 0)
+  [15/22] insert PRIME POWER II KTV                         +5 (skip 0)
+  [16/22] insert Masjid Phum Chrak Romiet                   +5 (skip 0)
+  [17/22] insert Wat Kiribopharam                           +5 (skip 0)
+  [18/22] insert Reachny LongVek                            +5 (skip 0)
+  [19/22] insert ចំណតឈប់សម្រាកRH                            +5 (skip 0)
+  [20/22] insert Tbaeng Khpos Pagoda                        +5 (skip 0)
+  [21/22] insert Kongkea Resort                             +5 (skip 0)
+  [22/22] insert រូបសំណាកឆ្នាំង                             +5 (skip 0)
+  [1/50] reuse LOVE - Phnom Penh                          +0 (skip 10)
+  [2/50] reuse SOSORO - Preah Srey Içanavarman Museum     +0 (skip 10)
+  [3/50] reuse Al-Serkal Mosque                           +0 (skip 10)
+  [4/50] reuse Tuol Sleng Genocide Museum                 +0 (skip 10)
+  [5/50] insert Morodok Techo National Stadium             +5 (skip 0)
+  [6/50] reuse PH Euro Park                               +0 (skip 10)
+  [7/50] insert Choeung Ek Genocidal Center                +5 (skip 0)
+  [8/50] reuse Statue of His Majesty Preah Bat Samdech Pr +0 (skip 10)
+  [9/50] insert Kol Tor Teung Pagoda                       +5 (skip 0)
+  [10/50] insert Keat Farm - Organic Sheep Farm - គៀតហ្វាម  +5 (skip 0)
+  [11/50] insert Saint George Orthodox Christian Church     +5 (skip 0)
+  [12/50] insert Masjid al aala Prek Pra                    +5 (skip 0)
+  [13/50] insert Sra'Art Gallery                            +5 (skip 0)
+  [14/50] reuse AEON Mall Sen Sok City                     +0 (skip 10)
+  [15/50] reuse Chew & Bash, Phnom Penh Island Club        +0 (skip 10)
+  [16/50] reuse Royal Palace Park                          +0 (skip 10)
+  [17/50] reuse Independence Monument                      +0 (skip 10)
+  [18/50] insert Kirirom National Park                      +5 (skip 0)
+  [19/50] insert BAZA.Ink Tattoo Studio                     +5 (skip 0)
+  [20/50] reuse Institut français du Cambodge (IFC)        +0 (skip 10)
+  [21/50] insert Phnom Tamao Wildlife Sanctuary             +5 (skip 0)
+  [22/50] insert AEON MALL Mean Chey                        +5 (skip 0)
+  [23/50] insert Cambodian Memorial Sites: Former M-13 Pris +5 (skip 0)
+  [24/50] reuse Queen of Peace Church                      +0 (skip 10)
+  [25/50] reuse Wat Ounalom Monastery                      +0 (skip 10)
+  [26/50] insert Kingdom Hall of Jehovah's Witnesses        +2 (skip 0)
+  [27/50] insert តូបចែខួច                                   +5 (skip 0)
+  [28/50] insert Chreav Waterfall 7th floor                 +5 (skip 0)
+  [29/50] insert Maha Panna Vihara (វត្តបញ្ញាធំ)            +5 (skip 0)
+  [30/50] insert Nations Church Phnom Penh ក្រុមជំនុំណេសិន  +5 (skip 0)
+  [31/50] insert International Christian Assembly (ICA Camb +5 (skip 0)
+  [32/50] reuse SUN & MOON, Riverside Hotel                +0 (skip 9)
+  [33/50] insert Catholic Phnom Penh Pastoral Hall          +5 (skip 0)
+  [34/50] insert Ta Prohm Temple (Takeo)                    +5 (skip 0)
+  [35/50] insert Freedom Church PNH                         +5 (skip 0)
+  [36/50] insert Riverside                                  +5 (skip 0)
+  [37/50] insert Masjid Chaom Chao                          +5 (skip 0)
+  [38/50] reuse MARA                                       +0 (skip 10)
+  [39/50] insert Apsara Art Gallery                         +5 (skip 0)
+  [40/50] insert FT Gallery                                 +5 (skip 0)
+  [41/50] insert THE FIRST METHODIST CHURCH IN PHNOM PENH(K +5 (skip 0)
+  [42/50] insert The Gallerist - Contemporary Art Gallery   +5 (skip 0)
+  [43/50] insert 一号公馆KTV                                    +5 (skip 0)
+  [44/50] insert Pakistani mosque                           +5 (skip 0)
+  [45/50] insert Masjid Arrahman Malaysia Cambodia          +5 (skip 0)
+  [46/50] insert Child Jesus Catholic Church Buoeng Tompun  +5 (skip 0)
+  [47/50] insert Saint Joseph Catholic Church               +5 (skip 0)
+  [48/50] insert Masjid Darussalam                          +5 (skip 0)
+  [49/50] reuse Tmor Kral Waterfall                        +0 (skip 5)
+  [50/50] reuse ហាងជាងទយរមាសលក់ទូរស័ព្ទ                    +0 (skip 4)
+  [1/15] insert Sambor Prei Kuk Ticket Booth               +5 (skip 0)
+  [2/15] insert Sampow Trailok Traileak                    +5 (skip 0)
+  [3/15] insert Prasat Chrei                               +5 (skip 0)
+  [4/15] insert ចំណតទូកទឹកស្អាត ១ មករា                     +5 (skip 0)
+  [5/15] insert Kampong Thom Museum                        +5 (skip 0)
+  [6/15] insert Chamka TaKna                               +5 (skip 0)
+  [7/15] insert Independence Monument - Kampong thom       +5 (skip 0)
+  [8/15] insert Wat Bakong                                 +5 (skip 0)
+  [9/15] insert Mreak River Resort                         +5 (skip 0)
+  [10/15] insert Taing Krasaing Pagoda                      +5 (skip 0)
+  [11/15] insert Phnom Santouk Tourism Site                 +5 (skip 0)
+  [12/15] insert វត្ត​ក្ដី​អណ្ដែត                           +5 (skip 0)
+  [13/15] insert Kampong Thmar Pagoda                       +5 (skip 0)
+  [14/15] insert Wat Krayea                                 +5 (skip 0)
+  [15/15] insert Phnom Santuk                               +5 (skip 0)
+  [1/50] reuse Sothy's Pepper Farm                        +0 (skip 5)
+  [2/50] reuse Ciao                                       +0 (skip 5)
+  [seed] committed: {'inserted': 21, 'reused': 29, 'uploaded': 105, 'skipped': 145}
+
+=== Kandal ===
+  [fetch] using existing kandal_places.csv (505 rows)
+  [rank] 50/505 -> kandal_top50.csv
+  [1/50] LOVE - Phnom Penh                                skip (10 photos)
+  [2/50] SOSORO - Preah Srey Içanavarman Museum           skip (10 photos)
+  [3/50] Al-Serkal Mosque                                 skip (10 photos)
+  [4/50] Tuol Sleng Genocide Museum                       skip (10 photos)
+  [5/50] Morodok Techo National Stadium                   skip (5 photos)
+  [6/50] PH Euro Park                                     skip (10 photos)
+  [7/50] Choeung Ek Genocidal Center                      skip (5 photos)
+  [8/50] Statue of His Majesty Preah Bat Samdech Preah No skip (10 photos)
+  [9/50] Kol Tor Teung Pagoda                             skip (5 photos)
+  [10/50] KTI Airport Viewpoint                            skip (5 photos)
+  [11/50] AEON Mall Sen Sok City                           skip (10 photos)
+  [12/50] Royal Palace Park                                skip (10 photos)
+  [13/50] Independence Monument                            skip (10 photos)
+  [14/50] Plaza Premium First Phnom Penh                   skip (5 photos)
+  [15/50] AEON MALL Mean Chey                              skip (5 photos)
+  [16/50] Wat Ounalom Monastery                            skip (10 photos)
+  [17/50] Chew & Bash, Phnom Penh Island Club              skip (10 photos)
+  [18/50] Masjid al aala Prek Pra                          skip (5 photos)
+  [19/50] Saint George Orthodox Christian Church           skip (5 photos)
+  [20/50] Sra'Art Gallery                                  skip (5 photos)
+  [21/50] SUN & MOON, Riverside Hotel                      skip (9 photos)
+  [22/50] Institut français du Cambodge (IFC)              skip (10 photos)
+  [23/50] Phnom Tamao Wildlife Sanctuary                   skip (5 photos)
+  [24/50] Ta Prohm Temple (Takeo)                          skip (5 photos)
+  [25/50] BAZA.Ink Tattoo Studio                           skip (5 photos)
+  [26/50] Techo Cultural Park                              skip (5 photos)
+  [27/50] MARA                                             skip (10 photos)
+  [28/50] Mongkol Serei Kien Khleang Pagoda                skip (10 photos)
+  [29/50] Queen of Peace Church                            skip (10 photos)
+  [30/50] Maha Panna Vihara (វត្តបញ្ញាធំ)                  skip (5 photos)
+  [31/50] Kingdom Hall of Jehovah's Witnesses              +0 photos
+  [32/50] 九号国际商务会所                                         +5 photos
+  [33/50] International Christian Assembly (ICA Cambodia)  skip (5 photos)
+  [34/50] Nations Church Phnom Penh ក្រុមជំនុំណេសិន        skip (5 photos)
+  [35/50] Riverside                                        skip (5 photos)
+  [36/50] Catholic Phnom Penh Pastoral Hall                skip (5 photos)
+  [37/50] Freedom Church PNH                               skip (5 photos)
+  [38/50] Cambodia Adventist Mission & Toul Kork Church    +5 photos
+  [39/50] Masjid Chaom Chao                                skip (5 photos)
+  [40/50] The Gallerist - Contemporary Art Gallery         skip (5 photos)
+  [41/50] Apsara Art Gallery                               skip (5 photos)
+  [42/50] FT Gallery                                       skip (5 photos)
+  [43/50] 一号公馆KTV                                          skip (5 photos)
+  [44/50] THE FIRST METHODIST CHURCH IN PHNOM PENH(KOREAN  skip (5 photos)
+  [45/50] AEON MALL Mean Chey                              skip (5 photos)
+  [46/50] Central X Club                                   skip (5 photos)
+  [47/50] Pakistani mosque                                 skip (5 photos)
+  [48/50] Saint Joseph Catholic Church                     skip (5 photos)
+  [49/50] Masjid Arrahman Malaysia Cambodia                skip (5 photos)
+  [50/50] Child Jesus Catholic Church Buoeng Tompun        skip (5 photos)
+  [seed] committed: {'inserted': 7, 'reused': 43, 'uploaded': 35, 'skipped': 291}
+
+=== Kep ===
+  [fetch] using existing kep_places.csv (205 rows)
+  [rank] 29/205 -> kep_top50.csv
+  [1/29] Sothy's Pepper Farm                              skip (5 photos)
+  [2/29] Paris Kep Restaurant                             skip (5 photos)
+  [3/29] La Plantation Spice Bar                          skip (5 photos)
+  [4/29] Landscape Tower                                  skip (5 photos)
+  [5/29] Trapeang Sangkae Fishery Community               skip (5 photos)
+  [6/29] Vipassana Dhura Kep                              skip (5 photos)
+  [7/29] Kep Lodge                                        skip (5 photos)
+  [8/29] Kampot River beach                               skip (5 photos)
+  [9/29] ភ្នំទឹកធំ                                        skip (5 photos)
+  [10/29] Wat Chum Kreal                                   skip (5 photos)
+  [11/29] ឆ្នេរអង្កោ ខេត្តកែប                              skip (5 photos)
+  [12/29] ឆ្នេរអង្កោល(កែប)                                 skip (5 photos)
+  [13/29] Kep Mountain Lodge                               +5 photos
+  [14/29] Salt Fields                                      +5 photos
+  [15/29] Wat Utumpor Kampong Trach                        +5 photos
+  [16/29] Wat Phnom Reab                                   skip (5 photos)
+  [17/29] New White Horse Statue                           +5 photos
+  [18/29] Kampong Trach Mountain Park                      skip (5 photos)
+  [19/29] Wat sovansakor                                   skip (5 photos)
+  [20/29] Kampong Trach Cave                               skip (5 photos)
+  [21/29] Lotus Pond                                       skip (5 photos)
+  [22/29] Hà Tiên Vegas Entertainment Resort               skip (5 photos)
+  [23/29] Sdech Korn Statue                                skip (5 photos)
+  [24/29] Border Post Cambodia–Viet Nam 313                skip (5 photos)
+  [25/29] Kep National Park                                skip (5 photos)
+  [26/29] Pantai Kep                                       skip (5 photos)
+  [27/29] Krong Kep Blue Crab Statue                       skip (5 photos)
+  [28/29] Phnom Chhngok Cave                               skip (5 photos)
+  [29/29] White Lady Statue                                skip (5 photos)
+  [3/50] reuse Krong Kampot                               +0 (skip 5)
+  [4/50] reuse Paris Kep Restaurant                       +0 (skip 5)
+  [5/50] reuse Seahorse Statue                            +0 (skip 5)
+  [6/50] reuse ផ្សិតប្រវត្តិសាស្ត្រ - Historical Mushroom +0 (skip 5)
+  [7/50] reuse Wat Sampov Pram                            +0 (skip 5)
+  [8/50] insert The Tree House Kampot ផ្ទះដើមឈើ            +5 (skip 0)
+  [9/50] insert La Plantation Spice Bar                    +5 (skip 0)
+  [10/50] reuse Wat Traeuy Kaoh                            +0 (skip 5)
+  [11/50] reuse Good Time Relax Resort                     +0 (skip 5)
+  [12/50] reuse Yin Paradise Memorial Park (Kampot)        +0 (skip 5)
+  [13/50] reuse ភ្នំបូកគោ ខេត្ត កំពត                       +0 (skip 5)
+  [14/50] insert ឆ្នេរចុងប៉ូច The Last Beach                +5 (skip 0)
+  [15/50] insert កំពត ដីមាស KTV                             +5 (skip 0)
+  [16/50] reuse River Park - Activity ឧទ្យានដងព្រែក        +0 (skip 5)
+  [17/50] insert Phnom Chhngok Resort                       +5 (skip 0)
+  [18/50] insert រង្វង់មូលទឹករលក Wave Roundabout            +5 (skip 0)
+  [19/50] insert Wat Chum Kreal                             +5 (skip 0)
+  [20/50] reuse Kampot Beach                               +0 (skip 5)
+  [21/50] insert Wat Pichey Oudong                          +5 (skip 0)
+  [22/50] insert ឆ្នេរអង្កោ ខេត្តកែប                        +5 (skip 0)
+  [23/50] insert V-Relaxing Resort កំពត                     +5 (skip 0)
+  [24/50] reuse "Lok Yeay Mao" Monument                    +0 (skip 5)
+  [25/50] reuse Bokor Catholic Church                      +0 (skip 5)
+  [26/50] reuse Trapeang Sangkae Fishery Community         +0 (skip 5)
+  [27/50] reuse Vipassana Dhura Kep                        +0 (skip 5)
+  [28/50] insert Farm Link                                  +5 (skip 0)
+  [29/50] reuse Kep Lodge                                  +0 (skip 5)
+  [30/50] insert Phnom Kbal Romeas                          +5 (skip 0)
+  [31/50] reuse Kampot River beach                         +0 (skip 5)
+  [32/50] insert French Colonial Hotel                      +5 (skip 0)
+  [33/50] insert Wat Puthi                                  +5 (skip 0)
+  [34/50] reuse ផ្លូវថ្មីកាត់ទៅកែប                         +0 (skip 5)
+  [35/50] insert Bokor Buddha-Statue                        +5 (skip 0)
+  [36/50] reuse ទឹកធ្លាក់ព្រៃនប់                           +0 (skip 5)
+  [37/50] insert Wat Phnom Reab                             +5 (skip 0)
+  [38/50] insert O'Krosar Community                         +5 (skip 0)
+  [39/50] insert Veal Pouch Pagoda                          +5 (skip 0)
+  [40/50] reuse Anlong Thom Waterfall                      +0 (skip 5)
+  [41/50] insert Wat sovansakor                             +5 (skip 0)
+  [42/50] insert New Kep Beach (Kep Thmey កែប​ថ្មី)         +5 (skip 0)
+  [43/50] insert Temple                                     +5 (skip 0)
+  [44/50] reuse Beetle Waterfall                           +0 (skip 5)
+  [45/50] reuse Lotus Pond                                 +0 (skip 5)
+  [46/50] reuse Sdech Korn Statue                          +0 (skip 5)
+  [47/50] reuse Green Cathedral                            +0 (skip 5)
+  [48/50] reuse Royal Kampot KTV                           +0 (skip 5)
+  [49/50] reuse Preah Monivong Bokor National Park         +0 (skip 5)
+  [50/50] reuse Bokor Hill Station                         +0 (skip 5)
+  [1/50] reuse LOVE - Phnom Penh                          +0 (skip 10)
+  [2/50] reuse SOSORO - Preah Srey Içanavarman Museum     +0 (skip 10)
+  [3/50] reuse Al-Serkal Mosque                           +0 (skip 10)
+  [4/50] reuse Tuol Sleng Genocide Museum                 +0 (skip 10)
+  [5/50] reuse Morodok Techo National Stadium             +0 (skip 5)
+  [6/50] reuse PH Euro Park                               +0 (skip 10)
+  [7/50] reuse Choeung Ek Genocidal Center                +0 (skip 5)
+  [8/50] reuse Statue of His Majesty Preah Bat Samdech Pr +0 (skip 10)
+  [9/50] reuse Kol Tor Teung Pagoda                       +0 (skip 5)
+  [10/50] insert KTI Airport Viewpoint                      +5 (skip 0)
+  [11/50] reuse AEON Mall Sen Sok City                     +0 (skip 10)
+  [12/50] reuse Royal Palace Park                          +0 (skip 10)
+  [13/50] reuse Independence Monument                      +0 (skip 10)
+  [14/50] insert Plaza Premium First Phnom Penh             +5 (skip 0)
+  [15/50] reuse AEON MALL Mean Chey                        +0 (skip 5)
+  [16/50] reuse Wat Ounalom Monastery                      +0 (skip 10)
+  [17/50] reuse Chew & Bash, Phnom Penh Island Club        +0 (skip 10)
+  [18/50] reuse Masjid al aala Prek Pra                    +0 (skip 5)
+  [19/50] reuse Saint George Orthodox Christian Church     +0 (skip 5)
+  [20/50] reuse Sra'Art Gallery                            +0 (skip 5)
+  [21/50] reuse SUN & MOON, Riverside Hotel                +0 (skip 9)
+  [22/50] reuse Institut français du Cambodge (IFC)        +0 (skip 10)
+  [23/50] reuse Phnom Tamao Wildlife Sanctuary             +0 (skip 5)
+  [24/50] reuse Ta Prohm Temple (Takeo)                    +0 (skip 5)
+  [25/50] reuse BAZA.Ink Tattoo Studio                     +0 (skip 5)
+  [26/50] insert Techo Cultural Park                        +5 (skip 0)
+  [27/50] reuse MARA                                       +0 (skip 10)
+  [28/50] reuse Mongkol Serei Kien Khleang Pagoda          +0 (skip 10)
+  [29/50] reuse Queen of Peace Church                      +0 (skip 10)
+  [30/50] reuse Maha Panna Vihara (វត្តបញ្ញាធំ)            +0 (skip 5)
+  [31/50] reuse Kingdom Hall of Jehovah's Witnesses        +0 (skip 2)
+  [32/50] insert 九号国际商务会所                                   +5 (skip 0)
+  [33/50] reuse International Christian Assembly (ICA Camb +0 (skip 5)
+  [34/50] reuse Nations Church Phnom Penh ក្រុមជំនុំណេសិន  +0 (skip 5)
+  [35/50] reuse Riverside                                  +0 (skip 5)
+  [36/50] reuse Catholic Phnom Penh Pastoral Hall          +0 (skip 5)
+  [37/50] reuse Freedom Church PNH                         +0 (skip 5)
+  [38/50] insert Cambodia Adventist Mission & Toul Kork Chu +5 (skip 0)
+  [39/50] reuse Masjid Chaom Chao                          +0 (skip 5)
+  [40/50] reuse The Gallerist - Contemporary Art Gallery   +0 (skip 5)
+  [41/50] reuse Apsara Art Gallery                         +0 (skip 5)
+  [42/50] reuse FT Gallery                                 +0 (skip 5)
+  [43/50] reuse 一号公馆KTV                                    +0 (skip 5)
+  [44/50] reuse THE FIRST METHODIST CHURCH IN PHNOM PENH(K +0 (skip 5)
+  [45/50] insert AEON MALL Mean Chey                        +5 (skip 0)
+  [46/50] insert Central X Club                             +5 (skip 0)
+  [47/50] reuse Pakistani mosque                           +0 (skip 5)
+  [48/50] reuse Saint Joseph Catholic Church               +0 (skip 5)
+  [49/50] reuse Masjid Arrahman Malaysia Cambodia          +0 (skip 5)
+  [50/50] reuse Child Jesus Catholic Church Buoeng Tompun  +0 (skip 5)
+  [1/29] reuse Sothy's Pepper Farm                        +0 (skip 5)
+  [2/29] reuse Paris Kep Restaurant                       +0 (skip 5)
+  [3/29] reuse La Plantation Spice Bar                    +0 (skip 5)
+  [4/29] insert Landscape Tower                            +5 (skip 0)
+  [5/29] reuse Trapeang Sangkae Fishery Community         +0 (skip 5)
+  [6/29] reuse Vipassana Dhura Kep                        +0 (skip 5)
+  [7/29] reuse Kep Lodge                                  +0 (skip 5)
+  [8/29] reuse Kampot River beach                         +0 (skip 5)
+  [9/29] insert ភ្នំទឹកធំ                                  +5 (skip 0)
+  [10/29] reuse Wat Chum Kreal                             +0 (skip 5)
+  [seed] committed: {'inserted': 12, 'reused': 17, 'uploaded': 60, 'skipped': 85}
+
+=== Koh Kong ===
+  [fetch] using existing koh_kong_places.csv (299 rows)
+  [rank] 25/299 -> koh_kong_top50.csv
+  [1/25] Canvas & Orchids Retreat | Embarking Point       +5 photos
+  [2/25] King's Well                                      +5 photos
+  [3/25] Wildlife Alliance Release Station                +5 photos
+  [4/25] Chhay Tahing Rapid                               +5 photos
+  [5/25] River Cloud-Stueng PorPok                        skip (5 photos)
+  [6/25] KHE គីមហុងលក់គ្រឿង អគ្គិសនី                      +5 photos
+  [7/25] រង្វង់មូល ព្រឹទ្ធាចារ្យ សាយ ភូថង                 +5 photos
+  [8/25] Chhay Kpous Waterfall                            skip (5 photos)
+  [9/25] កោះខ្យង                                          +5 photos
+  [10/25] Tatai waterfalls                                 +5 photos
+  [11/25] Beautiful Bays Statue                            +5 photos
+  [12/25] Koh Kong Maritime Port Monument                  +5 photos
+  [13/25] SAMOTHEARAM PAGODA (Wat Pak Khlong Pagoda)       +5 photos
+  [14/25] ផ្លូវចូលសហគមន៏ជីផាត                              skip (5 photos)
+  [15/25] អូរសោម                                           skip (5 photos)
+  [16/25] Chhay Proy Waterfall                             skip (5 photos)
+  [17/25] ជ្រោយប្រស់                                       +5 photos
+  [18/25] កីឡ​ដ្ឋាន​​ទី​រួម​ខេត្ត​កោះ​កុង                  skip (5 photos)
+  [19/25] Cham Yeam Border Market                          +5 photos
+  [20/25] Bak                                              skip (5 photos)
+  [21/25] Nesat Beach                                      skip (5 photos)
+  [22/25] Koh Kong Market                                  skip (5 photos)
+  [23/25] Peam Krasaop Wildlife Sanctuary                  skip (5 photos)
+  [24/25] Diamond Beach Dara Sakor                         skip (5 photos)
+  [25/25] Botum Sakor National Park                        skip (5 photos)
+  [seed] committed: {'inserted': 18, 'reused': 7, 'uploaded': 90, 'skipped': 35}
+
+=== Kratie ===
+  [fetch] using existing kratie_places.csv (249 rows)
+  [rank] 13/249 -> kratie_top50.csv
+  [1/13] Silver Dolphin Kayaking                          skip (5 photos)
+  [2/13] Mekong Dolphin Pleasance                         skip (5 photos)
+  [3/13] Chantaraingsei Keng Pagoda                       +5 photos
+  [4/13] Phnom Soporkaley                                 +5 photos
+  [5/13] Wat Rokar Kandal Chas                            +5 photos
+  [6/13] Chhlong Historical Building Area                 +5 photos
+  [7/13] Krong Kracheh Pagoda                             +5 photos
+  [8/13] Independence Monument ( Kratié)                  +5 photos
+  [9/13] Preah Chan Reachea Pagoda                        +5 photos
+  [10/13] Sei La Vayti Keatchun High School Stadium        +5 photos
+  [11/13] Phnom Sambok Pagoda                              skip (5 photos)
+  [12/13] Sambok Pagoda                                    +5 photos
+  [13/13] Kampi Mega Rapid                                 skip (5 photos)
+  [seed] committed: {'inserted': 13, 'reused': 0, 'uploaded': 65, 'skipped': 0}
+
+=== Mondulkiri ===
+  [fetch] using existing mondulkiri_places.csv (234 rows)
+  [rank] 22/234 -> mondulkiri_top50.csv
+  [1/22] Mondulkiri Project Elephant Sanctuary            skip (5 photos)
+  [2/22] ELIE & The Elephant Valley Project               skip (5 photos)
+  [3/22] Bousra Waterfall                                 skip (5 photos)
+  [4/22] Namlear Mountain                                 skip (5 photos)
+  [5/22] Leng Ang Leng Khin Waterfall                     skip (5 photos)
+  [6/22] Phnom Nam Lyr Wildlife Sanctuary                 skip (5 photos)
+  [7/22] Jahoo                                            +5 photos
+  [8/22] Chomkatea Mondolkiri                             +5 photos
+  [9/22] Laeng Truk Waterfall                             +5 photos
+  [10/22] Phnom Namlear Wildlife Sanctuary                 skip (5 photos)
+  [11/22] Andung Sneh                                      +5 photos
+  [12/22] ភ្នំអណ្តូងស្នេហ៍                                 skip (5 photos)
+  [13/22] Chrey Yos Eco-Park                               +5 photos
+  [14/22] ROYAL MONDULKIRI KTV                             +5 photos
+  [15/22] ទំនប់អូរតេធិបតី                                  +5 photos
+  [16/22] Kbal Preah Waterfall                             +5 photos
+  [17/22] Sea Forest Resort-Mondulkiri                     +5 photos
+  [18/22] Junction to Busra Waterfall                      +5 photos
+  [19/22] Kouprey Roundabout                               skip (5 photos)
+  [20/22] Chrey Thom Waterfall                             skip (5 photos)
+  [21/22] Phnum Prech Wildlife Sanctuary                   skip (5 photos)
+  [22/22] Nature Lodge Resort                              skip (5 photos)
+  [seed] committed: {'inserted': 10, 'reused': 12, 'uploaded': 50, 'skipped': 60}
+
+=== Oddar Meanchey ===
+  [fetch] using existing oddar_meanchey_places.csv (256 rows)
+  [rank] 10/256 -> oddar_meanchey_top50.csv
+  [1/10] Banteay Chhmar Temple                            skip (5 photos)
+  [2/10] Cambodia Wildlife Sanctuary                      skip (5 photos)
+  [3/10] Wat Prasat Ta Moan Saen Chey                     skip (5 photos)
+  [4/10] Prasat Samnang Tasok                             skip (5 photos)
+  [5/10] Prasat Mebon (Banteay Chhmar)                    skip (5 photos)
+  [6/10] Prasat Chan                                      +5 photos
+  [7/10] Prasat Banteay Toap                              skip (5 photos)
+  [8/10] Jayavarman VII Roundabout                        +5 photos
+  [9/10] Prasat Phnom Kaun Khlaeng                        +5 photos
+  [10/10] Ta Mok House                                     skip (5 photos)
+  [seed] committed: {'inserted': 6, 'reused': 4, 'uploaded': 30, 'skipped': 20}
+
+=== Pailin ===
+  [fetch] using existing pailin_places.csv (133 rows)
+  [rank] 8/133 -> pailin_top50.csv
+  [1/8] វត្តភ្នំយ៉ាត                                     skip (5 photos)
+  [2/8] Yey Yat Shrine                                   skip (5 photos)
+  [3/8] Phnom Khiev Waterfall                            skip (5 photos)
+  [4/8] Independence monument (Pailin)                   skip (5 photos)
+  [5/8] Kids Park (Pailin Province)                      +5 photos
+  [6/8] Borhuy or Elephant Head Waterfall                +5 photos
+  [7/8] ផ្លូវបំបែកកំរៀង ខេត្តបាត់ដំបង                    skip (5 photos)
+  [8/8] Bor Lang Waterfall                               +5 photos
+  [seed] committed: {'inserted': 8, 'reused': 0, 'uploaded': 40, 'skipped': 0}
+
+=== Preah Sihanouk ===
+  [fetch] using existing preah_sihanouk_places.csv (255 rows)
+  [rank] 47/255 -> preah_sihanouk_top50.csv
+  [1/47] Statue of Preah Thong Neang Neak                 skip (5 photos)
+  [2/47] Ocean Breeze                                     skip (5 photos)
+  [3/47] Sunset Beach                                     skip (5 photos)
+  [4/47] Two Lions Roundabout(SHV)                        skip (5 photos)
+  [5/47] St. Michael Catholic Church                      skip (5 photos)
+  [6/47] Masjid kampung som                               skip (5 photos)
+  [7/47] 5 mile Beach                                     skip (5 photos)
+  [8/47] Udom Vinhean Ream Pagoda វត្តឧត្ដមវិញ្ញាណរាម     skip (5 photos)
+  [9/47] ខ្មែរធ្វើបាន Cambodian Can Do It                 skip (5 photos)
+  [10/47] M'Pai Bay                                        skip (5 photos)
+  [11/47] Golden Beach Resort                              skip (5 photos)
+  [12/47] Koh Rong Beach - ឆ្នេរកោះរ៉ុង                    +5 photos
+  [13/47] សហគមន៍អេកូទេសចរណ៍ ព្រែកកោងកាងកោះរ៉ុង Prek Kongka +5 photos
+  [14/47] Coconut Beach                                    skip (5 photos)
+  [15/47] Gobo East                                        +5 photos
+  [16/47] N1 Taxi lounge                                   skip (5 photos)
+  [17/47] O Ta Pang Waterfall                              +5 photos
+  [18/47] St. Panteleimon Orthodox Christian Church        +5 photos
+  [19/47] Koh Rong Beach - Long Set Pier                   +5 photos
+  [20/47] Westport Wanda Plaza                             skip (5 photos)
+  [21/47] BIG BOSS KTV                                     +3 photos
+  [22/47] ATM Lounge and Restaurant                        skip (5 photos)
+  [23/47] Roundabout of Lord Shiva and Princess Parvati    skip (5 photos)
+  [24/47] Love Waiting Rock                                skip (5 photos)
+  [25/47] Sihanoukville Poy Machov                         skip (5 photos)
+  [26/47] កោះសំពោច                                         skip (5 photos)
+  [27/47] Life Stadium                                     +5 photos
+  [28/47] Water Park Sihanouk                              skip (5 photos)
+  [29/47] Beautiful Bays Statue                            +5 photos
+  [30/47] Point View Sihanoukville City                    +5 photos
+  [31/47] LY VENG CONSTRUCTION ELECTRIC                    +2 photos
+  [32/47] Sihanoukville Royal Residence                    skip (5 photos)
+  [33/47] Temple Club KPS                                  +5 photos
+  [34/47] ទឹកធ្លាក់ព្រៃនប់                                 skip (5 photos)
+  [35/47] Lucky Sun Hostel                                 skip (5 photos)
+  [36/47] Total Shopping Mall                              +5 photos
+  [37/47] One Lion Roundabout                              skip (5 photos)
+  [38/47] Wat IntNhean Called Wat Krom                     skip (5 photos)
+  [39/47] Independence Park                                skip (5 photos)
+  [40/47] Saracen Bay Beach                                skip (5 photos)
+  [41/47] U Mall Sihanoukville                             skip (5 photos)
+  [42/47] សហគមន៍អេកូទេសចរណ៍ “ព្រែកតាសុខ” Prek Ta Sok Eco-T skip (5 photos)
+  [43/47] Wat Leu Pagoda                                   skip (5 photos)
+  [44/47] Kbal Chhay Waterfalls                            skip (5 photos)
+  [45/47] Pier 52                                          skip (5 photos)
+  [46/47] Ream National Park                               skip (5 photos)
+  [47/47] Phsar Leu Market                                 skip (5 photos)
+  [11/29] reuse ឆ្នេរអង្កោ ខេត្តកែប                        +0 (skip 5)
+  [12/29] insert ឆ្នេរអង្កោល(កែប)                           +5 (skip 0)
+  [13/29] insert Kep Mountain Lodge                         +5 (skip 0)
+  [14/29] insert Salt Fields                                +5 (skip 0)
+  [15/29] insert Wat Utumpor Kampong Trach                  +5 (skip 0)
+  [16/29] reuse Wat Phnom Reab                             +0 (skip 5)
+  [17/29] insert New White Horse Statue                     +5 (skip 0)
+  [18/29] insert Kampong Trach Mountain Park                +5 (skip 0)
+  [19/29] reuse Wat sovansakor                             +0 (skip 5)
+  [20/29] insert Kampong Trach Cave                         +5 (skip 0)
+  [21/29] reuse Lotus Pond                                 +0 (skip 5)
+  [22/29] insert Hà Tiên Vegas Entertainment Resort         +5 (skip 0)
+  [23/29] reuse Sdech Korn Statue                          +0 (skip 5)
+  [24/29] insert Border Post Cambodia–Viet Nam 313          +5 (skip 0)
+  [25/29] reuse Kep National Park                          +0 (skip 5)
+  [26/29] insert Pantai Kep                                 +5 (skip 0)
+  [27/29] reuse Krong Kep Blue Crab Statue                 +0 (skip 5)
+  [28/29] reuse Phnom Chhngok Cave                         +0 (skip 5)
+  [29/29] reuse White Lady Statue                          +0 (skip 5)
+  [1/25] insert Canvas & Orchids Retreat | Embarking Point +5 (skip 0)
+  [2/25] insert King's Well                                +5 (skip 0)
+  [3/25] insert Wildlife Alliance Release Station          +5 (skip 0)
+  [4/25] insert Chhay Tahing Rapid                         +5 (skip 0)
+  [5/25] insert River Cloud-Stueng PorPok                  +5 (skip 0)
+  [6/25] insert KHE គីមហុងលក់គ្រឿង អគ្គិសនី                +5 (skip 0)
+  [7/25] insert រង្វង់មូល ព្រឹទ្ធាចារ្យ សាយ ភូថង           +5 (skip 0)
+  [8/25] reuse Chhay Kpous Waterfall                      +0 (skip 5)
+  [9/25] insert កោះខ្យង                                    +5 (skip 0)
+  [10/25] insert Tatai waterfalls                           +5 (skip 0)
+  [11/25] insert Beautiful Bays Statue                      +5 (skip 0)
+  [12/25] insert Koh Kong Maritime Port Monument            +5 (skip 0)
+  [13/25] insert SAMOTHEARAM PAGODA (Wat Pak Khlong Pagoda) +5 (skip 0)
+  [14/25] insert ផ្លូវចូលសហគមន៏ជីផាត                        +5 (skip 0)
+  [15/25] reuse អូរសោម                                     +0 (skip 5)
+  [16/25] reuse Chhay Proy Waterfall                       +0 (skip 5)
+  [17/25] insert ជ្រោយប្រស់                                 +5 (skip 0)
+  [18/25] reuse កីឡ​ដ្ឋាន​​ទី​រួម​ខេត្ត​កោះ​កុង            +0 (skip 5)
+  [19/25] insert Cham Yeam Border Market                    +5 (skip 0)
+  [20/25] reuse Bak                                        +0 (skip 5)
+  [21/25] insert Nesat Beach                                +5 (skip 0)
+  [22/25] reuse Koh Kong Market                            +0 (skip 5)
+  [23/25] reuse Peam Krasaop Wildlife Sanctuary            +0 (skip 5)
+  [24/25] insert Diamond Beach Dara Sakor                   +5 (skip 0)
+  [25/25] insert Botum Sakor National Park                  +5 (skip 0)
+  [1/13] insert Silver Dolphin Kayaking                    +5 (skip 0)
+  [2/13] insert Mekong Dolphin Pleasance                   +5 (skip 0)
+  [3/13] insert Chantaraingsei Keng Pagoda                 +5 (skip 0)
+  [4/13] insert Phnom Soporkaley                           +5 (skip 0)
+  [5/13] insert Wat Rokar Kandal Chas                      +5 (skip 0)
+  [6/13] insert Chhlong Historical Building Area           +5 (skip 0)
+  [7/13] insert Krong Kracheh Pagoda                       +5 (skip 0)
+  [8/13] insert Independence Monument ( Kratié)            +5 (skip 0)
+  [9/13] insert Preah Chan Reachea Pagoda                  +5 (skip 0)
+  [10/13] insert Sei La Vayti Keatchun High School Stadium  +5 (skip 0)
+  [11/13] insert Phnom Sambok Pagoda                        +5 (skip 0)
+  [12/13] insert Sambok Pagoda                              +5 (skip 0)
+  [13/13] insert Kampi Mega Rapid                           +5 (skip 0)
+  [1/22] reuse Mondulkiri Project Elephant Sanctuary      +0 (skip 5)
+  [2/22] reuse ELIE & The Elephant Valley Project         +0 (skip 5)
+  [3/22] reuse Bousra Waterfall                           +0 (skip 5)
+  [4/22] reuse Namlear Mountain                           +0 (skip 5)
+  [5/22] reuse Leng Ang Leng Khin Waterfall               +0 (skip 5)
+  [6/22] reuse Phnom Nam Lyr Wildlife Sanctuary           +0 (skip 5)
+  [7/22] insert Jahoo                                      +5 (skip 0)
+  [8/22] insert Chomkatea Mondolkiri                       +5 (skip 0)
+  [9/22] insert Laeng Truk Waterfall                       +5 (skip 0)
+  [10/22] reuse Phnom Namlear Wildlife Sanctuary           +0 (skip 5)
+  [11/22] insert Andung Sneh                                +5 (skip 0)
+  [12/22] reuse ភ្នំអណ្តូងស្នេហ៍                           +0 (skip 5)
+  [13/22] insert Chrey Yos Eco-Park                         +5 (skip 0)
+  [14/22] insert ROYAL MONDULKIRI KTV                       +5 (skip 0)
+  [15/22] insert ទំនប់អូរតេធិបតី                            +5 (skip 0)
+  [16/22] insert Kbal Preah Waterfall                       +5 (skip 0)
+  [17/22] insert Sea Forest Resort-Mondulkiri               +5 (skip 0)
+  [18/22] insert Junction to Busra Waterfall                +5 (skip 0)
+  [19/22] reuse Kouprey Roundabout                         +0 (skip 5)
+  [20/22] reuse Chrey Thom Waterfall                       +0 (skip 5)
+  [21/22] reuse Phnum Prech Wildlife Sanctuary             +0 (skip 5)
+  [22/22] reuse Nature Lodge Resort                        +0 (skip 5)
+  [1/10] reuse Banteay Chhmar Temple                      +0 (skip 5)
+  [2/10] insert Cambodia Wildlife Sanctuary                +5 (skip 0)
+  [3/10] insert Wat Prasat Ta Moan Saen Chey               +5 (skip 0)
+  [4/10] reuse Prasat Samnang Tasok                       +0 (skip 5)
+  [5/10] reuse Prasat Mebon (Banteay Chhmar)              +0 (skip 5)
+  [6/10] insert Prasat Chan                                +5 (skip 0)
+  [7/10] reuse Prasat Banteay Toap                        +0 (skip 5)
+  [8/10] insert Jayavarman VII Roundabout                  +5 (skip 0)
+  [9/10] insert Prasat Phnom Kaun Khlaeng                  +5 (skip 0)
+  [10/10] insert Ta Mok House                               +5 (skip 0)
+  [1/8] insert វត្តភ្នំយ៉ាត                               +5 (skip 0)
+  [2/8] insert Yey Yat Shrine                             +5 (skip 0)
+  [3/8] insert Phnom Khiev Waterfall                      +5 (skip 0)
+  [4/8] insert Independence monument (Pailin)             +5 (skip 0)
+  [5/8] insert Kids Park (Pailin Province)                +5 (skip 0)
+  [6/8] insert Borhuy or Elephant Head Waterfall          +5 (skip 0)
+  [7/8] insert ផ្លូវបំបែកកំរៀង ខេត្តបាត់ដំបង              +5 (skip 0)
+  [8/8] insert Bor Lang Waterfall                         +5 (skip 0)
+  [1/47] insert Statue of Preah Thong Neang Neak           +5 (skip 0)
+  [2/47] insert Ocean Breeze                               +5 (skip 0)
+  [3/47] insert Sunset Beach                               +5 (skip 0)
+  [4/47] insert Two Lions Roundabout(SHV)                  +5 (skip 0)
+  [5/47] insert St. Michael Catholic Church                +5 (skip 0)
+  [6/47] insert Masjid kampung som                         +5 (skip 0)
+  [7/47] insert 5 mile Beach                               +5 (skip 0)
+  [8/47] insert Udom Vinhean Ream Pagoda វត្តឧត្ដមវិញ្ញាណរ +5 (skip 0)
+  [9/47] insert ខ្មែរធ្វើបាន Cambodian Can Do It           +5 (skip 0)
+  [10/47] insert M'Pai Bay                                  +5 (skip 0)
+  [seed] committed: {'inserted': 46, 'reused': 1, 'uploaded': 225, 'skipped': 5}
+
+=== Preah Vihear ===
+  [fetch] using existing preah_vihear_places.csv (338 rows)
+  [rank] 27/338 -> preah_vihear_top50.csv
+  [1/27] Koh Ker Pyramid Temple                           skip (5 photos)
+  [2/27] Preah Vihear Temple                              skip (5 photos)
+  [3/27] Prasat Pram (Koh Ker)                            skip (5 photos)
+  [4/27] Koh Ker Ticket Booth                             skip (5 photos)
+  [5/27] Jombok Hoas Adventure Learning Center            +5 photos
+  [6/27] Prasat Preah Vihear Gopura 4                     skip (5 photos)
+  [7/27] Tbeng Meanchey Mountain                          +5 photos
+  [8/27] Prasat Damrei Kandoeng                           +5 photos
+  [9/27] Prasat Preah Chaktomuk                           +5 photos
+  [10/27] Prasat Krachap                                   +5 photos
+  [11/27] Prasat Preah Khan of Kampong Svay                skip (5 photos)
+  [12/27] Prasat Neang Khmao                               +5 photos
+  [13/27] Eco-Global Museum                                +5 photos
+  [14/27] Prasat Balang Cheung                             +5 photos
+  [15/27] Sra Em Roundabout                                +5 photos
+  [16/27] Thmor Bei Dom Pagoda                             +5 photos
+  [17/27] Wat Tuol Andet                                   +5 photos
+  [18/27] Prasat Preah Stoeng                              +5 photos
+  [19/27] Prasat Neak Buos                                 +5 photos
+  [20/27] Prasat Damrei                                    +5 photos
+  [21/27] 5,000 Bodhi Trees Pagoda                         +5 photos
+  [22/27] Tama Waterfall                                   +5 photos
+  [23/27] Prasat Banteay Pi Choan                          +5 photos
+  [24/27] វត្តទំនប់ដាច់                                    +5 photos
+  [25/27] ភ្នំត្បែងមានជ័យ                                  skip (5 photos)
+  [26/27] Prasat Kork Beng Pagoda                          +5 photos
+  [27/27] វិមានឯករាជខេត្តព្រះវិហារ,Presh Vihear Independen +5 photos
+  [seed] committed: {'inserted': 27, 'reused': 0, 'uploaded': 135, 'skipped': 0}
+
+=== Pursat ===
+  [fetch] using existing pursat_places.csv (324 rows)
+  [rank] 30/324 -> pursat_top50.csv
+  [1/30] Keat Farm - Organic Sheep Farm - គៀតហ្វាម - កសិដ skip (5 photos)
+  [2/30] Chreav Waterfall 7th floor                       skip (5 photos)
+  [3/30] Wat Moniratanaram                                skip (5 photos)
+  [4/30] Tmor Kral Waterfall                              skip (5 photos)
+  [5/30] Kompong Luong Floating Village                   +5 photos
+  [6/30] Phnom Trob Monastery                             skip (5 photos)
+  [7/30] Anlung Svay Waterfall                            +5 photos
+  [8/30] Chrok La Eang Waterfall                          +5 photos
+  [9/30] Eau Tente Waterfall & Campsite                   +5 photos
+  [10/30] Phnom Tumpor                                     +5 photos
+  [11/30] Keo Vichey Pagoda                                +5 photos
+  [12/30] Keat farm sheep field                            +5 photos
+  [13/30] ផ្ទះបងឈីម ប្រធានសហគមន៍ភ្នំឱរ៉ាល់                 +5 photos
+  [14/30] Aoral Waterfall 1st Floor                        +5 photos
+  [15/30] Pursat Boat Racing Platform                      +5 photos
+  [16/30] Deum Kor Market, Kravanh District, Pursat        +5 photos
+  [17/30] ទឹកធ្លាក់ ចំការក្រូច                             skip (5 photos)
+  [18/30] អូរសោម                                           skip (5 photos)
+  [19/30] Chhay Proy Waterfall                             skip (5 photos)
+  [20/30] Wat Keo Morakod                                  +5 photos
+  [21/30] Banteay Dei Pagoda                               +5 photos
+  [22/30] ទឹកធ្លាក់ ពាមល្វា (ភ្នំឱរ៉ាល់)                   +5 photos
+  [23/30] Prey Domrei Pagoda                               +5 photos
+  [24/30] Chreav Waterfall                                 skip (5 photos)
+  [25/30] Chrok La Eang Waterfall                          skip (5 photos)
+  [26/30] ចំណតឈប់សម្រាកRH                                  skip (5 photos)
+  [27/30] ទំនប់ទឹក បាសាក់                                  +5 photos
+  [28/30] Phtel Khat Roundabout (Pursat Circle Statue)     skip (5 photos)
+  [29/30] Sampov Meas                                      skip (5 photos)
+  [30/30] Phnum Samkos Wildlife Sanctuary                  skip (5 photos)
+  [seed] committed: {'inserted': 24, 'reused': 6, 'uploaded': 120, 'skipped': 30}
+
+=== Prey Veng ===
+  [fetch] using existing prey_veng_places.csv (471 rows)
+  [rank] 50/471 -> prey_veng_top50.csv
+  [1/50] LOVE - Phnom Penh                                skip (10 photos)
+  [2/50] SOSORO - Preah Srey Içanavarman Museum           skip (10 photos)
+  [3/50] Al-Serkal Mosque                                 skip (10 photos)
+  [4/50] Tuol Sleng Genocide Museum                       skip (10 photos)
+  [5/50] PH Euro Park                                     skip (10 photos)
+  [6/50] Choeung Ek Genocidal Center                      skip (5 photos)
+  [7/50] Statue of His Majesty Preah Bat Samdech Preah No skip (10 photos)
+  [8/50] Kol Tor Teung Pagoda                             skip (5 photos)
+  [9/50] AEON Mall Sen Sok City                           skip (10 photos)
+  [10/50] Royal Palace Park                                skip (10 photos)
+  [11/50] Independence Monument                            skip (10 photos)
+  [12/50] AEON MALL Mean Chey                              skip (5 photos)
+  [13/50] Wat Ounalom Monastery                            skip (10 photos)
+  [14/50] Chew & Bash, Phnom Penh Island Club              skip (10 photos)
+  [15/50] Masjid al aala Prek Pra                          skip (5 photos)
+  [16/50] Sra'Art Gallery                                  skip (5 photos)
+  [17/50] SUN & MOON, Riverside Hotel                      skip (9 photos)
+  [18/50] Institut français du Cambodge (IFC)              skip (10 photos)
+  [19/50] BAZA.Ink Tattoo Studio                           skip (5 photos)
+  [20/50] Techo Cultural Park                              skip (5 photos)
+  [21/50] MARA                                             skip (10 photos)
+  [22/50] Queen of Peace Church                            skip (10 photos)
+  [23/50] Cambodian Buddhist Center                        skip (5 photos)
+  [24/50] Kingdom Hall of Jehovah's Witnesses              +0 photos
+  [25/50] 九号国际商务会所                                         skip (5 photos)
+  [26/50] Nations Church Phnom Penh ក្រុមជំនុំណេសិន        skip (5 photos)
+  [27/50] New Life Fellowship​ Cambodia                    skip (5 photos)
+  [28/50] Riverside                                        skip (5 photos)
+  [29/50] Wat Monisovann                                   skip (5 photos)
+  [30/50] The Gallerist - Contemporary Art Gallery         skip (5 photos)
+  [31/50] Apsara Art Gallery                               skip (5 photos)
+  [32/50] FT Gallery                                       skip (5 photos)
+  [33/50] 一号公馆KTV                                          skip (5 photos)
+  [34/50] THE FIRST METHODIST CHURCH IN PHNOM PENH(KOREAN  skip (5 photos)
+  [35/50] AEON MALL Mean Chey                              skip (5 photos)
+  [36/50] Pakistani mosque                                 skip (5 photos)
+  [37/50] Saint Joseph Catholic Church                     skip (5 photos)
+  [38/50] Masjid Arrahman Malaysia Cambodia                skip (5 photos)
+  [39/50] Child Jesus Catholic Church Buoeng Tompun        skip (5 photos)
+  [40/50] YES KTV                                          skip (5 photos)
+  [41/50] Masjid Darussalam                                skip (5 photos)
+  [42/50] Ministry of Economy and Finance of Cambodia      skip (10 photos)
+  [43/50] Korean Church of Phnom Penh                      skip (5 photos)
+  [44/50] Komsan Park Aeon Mall Mean Chey                  +5 photos
+  [45/50] TŌKIO CLUB                                       skip (10 photos)
+  [46/50] Ponlea Chey Pavilion                             +5 photos
+  [47/50] Smart RSN Stadium                                skip (10 photos)
+  [48/50] Cambodian Constitution Monument                  +5 photos
+  [49/50] Kingdomcity Cambodia                             +5 photos
+  [50/50] Km 8 Mosque مسجد النورالنعيم                     skip (5 photos)
+  [11/47] insert Golden Beach Resort                        +5 (skip 0)
+  [12/47] insert Koh Rong Beach - ឆ្នេរកោះរ៉ុង              +5 (skip 0)
+  [13/47] insert សហគមន៍អេកូទេសចរណ៍ ព្រែកកោងកាងកោះរ៉ុង Prek  +5 (skip 0)
+  [14/47] insert Coconut Beach                              +5 (skip 0)
+  [15/47] insert Gobo East                                  +5 (skip 0)
+  [16/47] insert N1 Taxi lounge                             +5 (skip 0)
+  [17/47] insert O Ta Pang Waterfall                        +5 (skip 0)
+  [18/47] insert St. Panteleimon Orthodox Christian Church  +5 (skip 0)
+  [19/47] insert Koh Rong Beach - Long Set Pier             +5 (skip 0)
+  [20/47] insert Westport Wanda Plaza                       +5 (skip 0)
+  [21/47] insert BIG BOSS KTV                               +3 (skip 0)
+  [22/47] insert ATM Lounge and Restaurant                  +5 (skip 0)
+  [23/47] insert Roundabout of Lord Shiva and Princess Parv +5 (skip 0)
+  [24/47] insert Love Waiting Rock                          +5 (skip 0)
+  [25/47] insert Sihanoukville Poy Machov                   +5 (skip 0)
+  [26/47] insert កោះសំពោច                                   +5 (skip 0)
+  [27/47] insert Life Stadium                               +5 (skip 0)
+  [28/47] insert Water Park Sihanouk                        +5 (skip 0)
+  [29/47] insert Beautiful Bays Statue                      +5 (skip 0)
+  [30/47] insert Point View Sihanoukville City              +5 (skip 0)
+  [31/47] insert LY VENG CONSTRUCTION ELECTRIC              +2 (skip 0)
+  [32/47] insert Sihanoukville Royal Residence              +5 (skip 0)
+  [33/47] insert Temple Club KPS                            +5 (skip 0)
+  [34/47] reuse ទឹកធ្លាក់ព្រៃនប់                           +0 (skip 5)
+  [35/47] insert Lucky Sun Hostel                           +5 (skip 0)
+  [36/47] insert Total Shopping Mall                        +5 (skip 0)
+  [37/47] insert One Lion Roundabout                        +5 (skip 0)
+  [38/47] insert Wat IntNhean Called Wat Krom               +5 (skip 0)
+  [39/47] insert Independence Park                          +5 (skip 0)
+  [40/47] insert Saracen Bay Beach                          +5 (skip 0)
+  [41/47] insert U Mall Sihanoukville                       +5 (skip 0)
+  [42/47] insert សហគមន៍អេកូទេសចរណ៍ “ព្រែកតាសុខ” Prek Ta Sok +5 (skip 0)
+  [43/47] insert Wat Leu Pagoda                             +5 (skip 0)
+  [44/47] insert Kbal Chhay Waterfalls                      +5 (skip 0)
+  [45/47] insert Pier 52                                    +5 (skip 0)
+  [46/47] insert Ream National Park                         +5 (skip 0)
+  [47/47] insert Phsar Leu Market                           +5 (skip 0)
+  [1/27] insert Koh Ker Pyramid Temple                     +5 (skip 0)
+  [2/27] insert Preah Vihear Temple                        +5 (skip 0)
+  [3/27] insert Prasat Pram (Koh Ker)                      +5 (skip 0)
+  [4/27] insert Koh Ker Ticket Booth                       +5 (skip 0)
+  [5/27] insert Jombok Hoas Adventure Learning Center      +5 (skip 0)
+  [6/27] insert Prasat Preah Vihear Gopura 4               +5 (skip 0)
+  [7/27] insert Tbeng Meanchey Mountain                    +5 (skip 0)
+  [8/27] insert Prasat Damrei Kandoeng                     +5 (skip 0)
+  [9/27] insert Prasat Preah Chaktomuk                     +5 (skip 0)
+  [10/27] insert Prasat Krachap                             +5 (skip 0)
+  [11/27] insert Prasat Preah Khan of Kampong Svay          +5 (skip 0)
+  [12/27] insert Prasat Neang Khmao                         +5 (skip 0)
+  [13/27] insert Eco-Global Museum                          +5 (skip 0)
+  [14/27] insert Prasat Balang Cheung                       +5 (skip 0)
+  [15/27] insert Sra Em Roundabout                          +5 (skip 0)
+  [16/27] insert Thmor Bei Dom Pagoda                       +5 (skip 0)
+  [17/27] insert Wat Tuol Andet                             +5 (skip 0)
+  [18/27] insert Prasat Preah Stoeng                        +5 (skip 0)
+  [19/27] insert Prasat Neak Buos                           +5 (skip 0)
+  [20/27] insert Prasat Damrei                              +5 (skip 0)
+  [21/27] insert 5,000 Bodhi Trees Pagoda                   +5 (skip 0)
+  [22/27] insert Tama Waterfall                             +5 (skip 0)
+  [23/27] insert Prasat Banteay Pi Choan                    +5 (skip 0)
+  [24/27] insert វត្តទំនប់ដាច់                              +5 (skip 0)
+  [25/27] insert ភ្នំត្បែងមានជ័យ                            +5 (skip 0)
+  [26/27] insert Prasat Kork Beng Pagoda                    +5 (skip 0)
+  [27/27] insert វិមានឯករាជខេត្តព្រះវិហារ,Presh Vihear Inde +5 (skip 0)
+  [1/30] reuse Keat Farm - Organic Sheep Farm - គៀតហ្វាម  +0 (skip 5)
+  [2/30] reuse Chreav Waterfall 7th floor                 +0 (skip 5)
+  [3/30] insert Wat Moniratanaram                          +5 (skip 0)
+  [4/30] reuse Tmor Kral Waterfall                        +0 (skip 5)
+  [5/30] insert Kompong Luong Floating Village             +5 (skip 0)
+  [6/30] insert Phnom Trob Monastery                       +5 (skip 0)
+  [7/30] insert Anlung Svay Waterfall                      +5 (skip 0)
+  [8/30] insert Chrok La Eang Waterfall                    +5 (skip 0)
+  [9/30] insert Eau Tente Waterfall & Campsite             +5 (skip 0)
+  [10/30] insert Phnom Tumpor                               +5 (skip 0)
+  [11/30] insert Keo Vichey Pagoda                          +5 (skip 0)
+  [12/30] insert Keat farm sheep field                      +5 (skip 0)
+  [13/30] insert ផ្ទះបងឈីម ប្រធានសហគមន៍ភ្នំឱរ៉ាល់           +5 (skip 0)
+  [14/30] insert Aoral Waterfall 1st Floor                  +5 (skip 0)
+  [15/30] insert Pursat Boat Racing Platform                +5 (skip 0)
+  [16/30] insert Deum Kor Market, Kravanh District, Pursat  +5 (skip 0)
+  [17/30] insert ទឹកធ្លាក់ ចំការក្រូច                       +5 (skip 0)
+  [18/30] reuse អូរសោម                                     +0 (skip 5)
+  [19/30] reuse Chhay Proy Waterfall                       +0 (skip 5)
+  [20/30] insert Wat Keo Morakod                            +5 (skip 0)
+  [21/30] insert Banteay Dei Pagoda                         +5 (skip 0)
+  [22/30] insert ទឹកធ្លាក់ ពាមល្វា (ភ្នំឱរ៉ាល់)             +5 (skip 0)
+  [23/30] insert Prey Domrei Pagoda                         +5 (skip 0)
+  [24/30] insert Chreav Waterfall                           +5 (skip 0)
+  [25/30] insert Chrok La Eang Waterfall                    +5 (skip 0)
+  [26/30] reuse ចំណតឈប់សម្រាកRH                            +0 (skip 5)
+  [27/30] insert ទំនប់ទឹក បាសាក់                            +5 (skip 0)
+  [28/30] insert Phtel Khat Roundabout (Pursat Circle Statu +5 (skip 0)
+  [29/30] insert Sampov Meas                                +5 (skip 0)
+  [30/30] insert Phnum Samkos Wildlife Sanctuary            +5 (skip 0)
+  [1/50] reuse LOVE - Phnom Penh                          +0 (skip 10)
+  [2/50] reuse SOSORO - Preah Srey Içanavarman Museum     +0 (skip 10)
+  [3/50] reuse Al-Serkal Mosque                           +0 (skip 10)
+  [4/50] reuse Tuol Sleng Genocide Museum                 +0 (skip 10)
+  [5/50] reuse PH Euro Park                               +0 (skip 10)
+  [6/50] reuse Choeung Ek Genocidal Center                +0 (skip 5)
+  [7/50] reuse Statue of His Majesty Preah Bat Samdech Pr +0 (skip 10)
+  [8/50] reuse Kol Tor Teung Pagoda                       +0 (skip 5)
+  [9/50] reuse AEON Mall Sen Sok City                     +0 (skip 10)
+  [10/50] reuse Royal Palace Park                          +0 (skip 10)
+  [11/50] reuse Independence Monument                      +0 (skip 10)
+  [12/50] reuse AEON MALL Mean Chey                        +0 (skip 5)
+  [seed] committed: {'inserted': 11, 'reused': 39, 'uploaded': 60, 'skipped': 276}
+
+=== Ratanakiri ===
+  [fetch] using existing ratanakiri_places.csv (193 rows)
+  [rank] 14/193 -> ratanakiri_top50.csv
+  [1/14] Green jungle trekking Tours-Cambodia             skip (5 photos)
+  [2/14] បឹងយក្សឡោម                                       skip (5 photos)
+  [3/14] Svay Mountain                                    skip (5 photos)
+  [4/14] Virachey National Park                           skip (5 photos)
+  [5/14] បឹងកន្សែង (Kansaeng Lanke)                       +5 photos
+  [6/14] O Sinlair Waterfallinlove                        skip (5 photos)
+  [7/14] Moon Ratanak Homstay ផ្ទះស្នាក់ មូនរ័ត្នន:       +5 photos
+  [8/14] Sen Sopea Shop                                   +5 photos
+  [9/14] Neak Meas KTV                                    +5 photos
+  [10/14] Katieng Waterfall                                skip (5 photos)
+  [11/14] Kachanh Waterfall                                skip (5 photos)
+  [12/14] Cha Ong Waterfall, Ratanakiri                    skip (5 photos)
+  [13/14] ផ្សារទំនើបស៊ីត្រា                                skip (5 photos)
+  [14/14] Lumphat Wildlife Sanctuary                       skip (5 photos)
+  [seed] committed: {'inserted': 5, 'reused': 9, 'uploaded': 25, 'skipped': 45}
+
+=== Siem Reap ===
+  [fetch] using existing siem_reap_places.csv (538 rows)
+  [rank] 50/538 -> siem_reap_top50.csv
+  [1/50] Angkor Wat                                       skip (5 photos)
+  [2/50] Bayon Temple                                     skip (5 photos)
+  [3/50] Ta Prohm Temple                                  skip (5 photos)
+  [4/50] Phare, The Cambodian Circus                      skip (5 photos)
+  [5/50] Preah Khan Temple                                skip (5 photos)
+  [6/50] Lotus Silk Farm                                  skip (5 photos)
+  [7/50] Banteay Srei Temple                              skip (5 photos)
+  [8/50] The River Gallery                                skip (5 photos)
+  [9/50] Kulen Elephant Forest                            skip (5 photos)
+  [10/50] Treeline Urban Resort                            skip (5 photos)
+  [11/50] Wake Park Cambodia                               skip (5 photos)
+  [12/50] VIMEAN SOKHA MUSEUM                              skip (5 photos)
+  [13/50] Prasat Beng Mealea                               skip (5 photos)
+  [14/50] Baphuon Temple                                   skip (5 photos)
+  [15/50] Ta Keo Temple                                    skip (5 photos)
+  [16/50] Banteay Kdei Temple                              skip (5 photos)
+  [17/50] Gate of the Dead                                 skip (5 photos)
+  [18/50] Тheam's Gallery                                  skip (5 photos)
+  [19/50] Travel to Inspire                                skip (5 photos)
+  [20/50] Victory Gate                                     skip (5 photos)
+  [21/50] Sokkhak River Lounge                             skip (5 photos)
+  [22/50] Sombai Cambodian Liqueur and souvenirs           skip (5 photos)
+  [23/50] Thommanon Temple                                 skip (5 photos)
+  [24/50] Angkor Special Tours                             skip (5 photos)
+  [25/50] The Cocoon House - Art Gallery, Concept Store, F skip (5 photos)
+  [26/50] Angkor Zipline                                   skip (5 photos)
+  [27/50] Palilay Temple                                   skip (5 photos)
+  [28/50] Ta Nei Temple                                    skip (5 photos)
+  [29/50] South Gate Angkor Thom                           skip (5 photos)
+  [30/50] WAT CHOCOLATE Store & Cafe Riverside Siem Reap   skip (5 photos)
+  [31/50] La Bastide de Caro                               skip (5 photos)
+  [32/50] Neak Poan Bridge                                 skip (5 photos)
+  [33/50] Flying Foxes                                     skip (5 photos)
+  [34/50] Khmer Ceramics & Fine Arts Centre                skip (5 photos)
+  [35/50] St. John Catholic Church Siem Reap               skip (5 photos)
+  [36/50] Ta Kav Gate (West Gate of Angkor Thom)           skip (5 photos)
+  [37/50] Toptrip Inspire Cambodia                         +5 photos
+  [38/50] NIZIKAI -KARAOKE BAR-                            +5 photos
+  [39/50] Tamara Venn Art Gallery                          +5 photos
+  [40/50] Dei Chnang Gate (Angkor Thom North Gate)         skip (5 photos)
+  [41/50] Terrace of Honor                                 skip (5 photos)
+  [42/50] Angkor Wat - Eastern Entrance                    skip (5 photos)
+  [43/50] WAT CHOCOLATE Store & Cafe AVIARY SQUARE Siem Re +5 photos
+  [44/50] FUJIYAMA BOM-BA-YE (game & karaoke bar)          skip (5 photos)
+  [45/50] Cambodian buggy adventures                       skip (5 photos)
+  [46/50] Phnom Bakheng Temple                             skip (5 photos)
+  [47/50] Hall of a Thousand Gods                          skip (5 photos)
+  [48/50] Churning of the Sea of Milk Gallery              skip (5 photos)
+  [49/50] Cambodia Oil Painting                            +5 photos
+  [50/50] Terrace of the Elephants                         skip (5 photos)
+  [seed] committed: {'inserted': 15, 'reused': 35, 'uploaded': 75, 'skipped': 175}
+
+=== Stung Treng ===
+  [fetch] using existing stung_treng_places.csv (234 rows)
+  [rank] 8/234 -> stung_treng_top50.csv
+  [1/8] កន្លែងកម្សាន្ត កោះហាន                            skip (5 photos)
+  [2/8] រូបសំណាក់កងចក្រ ស្ទឹងត្រែងក្រុង                  +5 photos
+  [3/8] Koh Samseb Community Based Ecotourism            +5 photos
+  [4/8] Prasat Phnom Preah Theat                         +5 photos
+  [5/8] O'Svay Community Based Ecotourism                +5 photos
+  [6/8] Preah Nimith Waterfall                           skip (5 photos)
+  [7/8] KTV​បឹងមាស                                       +5 photos
+  [8/8] Preah Ko Temple                                  skip (5 photos)
+  [seed] committed: {'inserted': 8, 'reused': 0, 'uploaded': 40, 'skipped': 0}
+
+=== Svay Rieng ===
+  [fetch] using existing svay_rieng_places.csv (319 rows)
+  [rank] 13/319 -> svay_rieng_top50.csv
+  [1/13] Srah Vong Park ស្រះវង់                           skip (5 photos)
+  [2/13] Border Post Cambodia–Việt Nam                    +5 photos
+  [3/13] រង្វង់មូលវៃកូ Vai Ko Roundabout                  +5 photos
+  [4/13] វត្តតាគោក                                        +5 photos
+  [5/13] Svay Rieng Stadium                               skip (5 photos)
+  [6/13] The border mark                                  +5 photos
+  [7/13] Phum Sokharavy​ - ភូមិសុខារាវី                   +5 photos
+  [8/13] រីសតកូនកាត់                                      +5 photos
+  [9/13] 柬埔寨木牌                                            +5 photos
+  [10/13] សៀងហៃ​ រីសត                                      +5 photos
+  [11/13] LE MACAU 立马高KTV                                  +5 photos
+  [12/13] Tela Mart,and Gasline Station                    skip (5 photos)
+  [13/13] Golden Galaxy Hotel & Casino                     +5 photos
+  [13/50] reuse Wat Ounalom Monastery                      +0 (skip 10)
+  [14/50] reuse Chew & Bash, Phnom Penh Island Club        +0 (skip 10)
+  [15/50] reuse Masjid al aala Prek Pra                    +0 (skip 5)
+  [16/50] reuse Sra'Art Gallery                            +0 (skip 5)
+  [17/50] reuse SUN & MOON, Riverside Hotel                +0 (skip 9)
+  [18/50] reuse Institut français du Cambodge (IFC)        +0 (skip 10)
+  [19/50] reuse BAZA.Ink Tattoo Studio                     +0 (skip 5)
+  [20/50] reuse Techo Cultural Park                        +0 (skip 5)
+  [21/50] reuse MARA                                       +0 (skip 10)
+  [22/50] reuse Queen of Peace Church                      +0 (skip 10)
+  [23/50] insert Cambodian Buddhist Center                  +5 (skip 0)
+  [24/50] reuse Kingdom Hall of Jehovah's Witnesses        +0 (skip 2)
+  [25/50] reuse 九号国际商务会所                                   +0 (skip 5)
+  [26/50] reuse Nations Church Phnom Penh ក្រុមជំនុំណេសិន  +0 (skip 5)
+  [27/50] insert New Life Fellowship​ Cambodia              +5 (skip 0)
+  [28/50] reuse Riverside                                  +0 (skip 5)
+  [29/50] insert Wat Monisovann                             +5 (skip 0)
+  [30/50] reuse The Gallerist - Contemporary Art Gallery   +0 (skip 5)
+  [31/50] reuse Apsara Art Gallery                         +0 (skip 5)
+  [32/50] reuse FT Gallery                                 +0 (skip 5)
+  [33/50] reuse 一号公馆KTV                                    +0 (skip 5)
+  [34/50] reuse THE FIRST METHODIST CHURCH IN PHNOM PENH(K +0 (skip 5)
+  [35/50] reuse AEON MALL Mean Chey                        +0 (skip 5)
+  [36/50] reuse Pakistani mosque                           +0 (skip 5)
+  [37/50] reuse Saint Joseph Catholic Church               +0 (skip 5)
+  [38/50] reuse Masjid Arrahman Malaysia Cambodia          +0 (skip 5)
+  [39/50] reuse Child Jesus Catholic Church Buoeng Tompun  +0 (skip 5)
+  [40/50] insert YES KTV                                    +5 (skip 0)
+  [41/50] reuse Masjid Darussalam                          +0 (skip 5)
+  [42/50] reuse Ministry of Economy and Finance of Cambodi +0 (skip 10)
+  [43/50] insert Korean Church of Phnom Penh                +5 (skip 0)
+  [44/50] insert Komsan Park Aeon Mall Mean Chey            +5 (skip 0)
+  [45/50] insert TŌKIO CLUB                                 +10 (skip 0)
+  [46/50] insert Ponlea Chey Pavilion                       +5 (skip 0)
+  [47/50] reuse Smart RSN Stadium                          +0 (skip 10)
+  [48/50] insert Cambodian Constitution Monument            +5 (skip 0)
+  [49/50] insert Kingdomcity Cambodia                       +5 (skip 0)
+  [50/50] insert Km 8 Mosque مسجد النورالنعيم               +5 (skip 0)
+  [1/14] reuse Green jungle trekking Tours-Cambodia       +0 (skip 5)
+  [2/14] reuse បឹងយក្សឡោម                                 +0 (skip 5)
+  [3/14] reuse Svay Mountain                              +0 (skip 5)
+  [4/14] reuse Virachey National Park                     +0 (skip 5)
+  [5/14] insert បឹងកន្សែង (Kansaeng Lanke)                 +5 (skip 0)
+  [6/14] reuse O Sinlair Waterfallinlove                  +0 (skip 5)
+  [7/14] insert Moon Ratanak Homstay ផ្ទះស្នាក់ មូនរ័ត្នន: +5 (skip 0)
+  [8/14] insert Sen Sopea Shop                             +5 (skip 0)
+  [9/14] insert Neak Meas KTV                              +5 (skip 0)
+  [10/14] reuse Katieng Waterfall                          +0 (skip 5)
+  [11/14] reuse Kachanh Waterfall                          +0 (skip 5)
+  [12/14] reuse Cha Ong Waterfall, Ratanakiri              +0 (skip 5)
+  [13/14] reuse ផ្សារទំនើបស៊ីត្រា                          +0 (skip 5)
+  [14/14] insert Lumphat Wildlife Sanctuary                 +5 (skip 0)
+  [1/50] reuse Angkor Wat                                 +0 (skip 5)
+  [2/50] reuse Bayon Temple                               +0 (skip 5)
+  [3/50] reuse Ta Prohm Temple                            +0 (skip 5)
+  [4/50] reuse Phare, The Cambodian Circus                +0 (skip 5)
+  [5/50] reuse Preah Khan Temple                          +0 (skip 5)
+  [6/50] reuse Lotus Silk Farm                            +0 (skip 5)
+  [7/50] reuse Banteay Srei Temple                        +0 (skip 5)
+  [8/50] reuse The River Gallery                          +0 (skip 5)
+  [9/50] reuse Kulen Elephant Forest                      +0 (skip 5)
+  [10/50] reuse Treeline Urban Resort                      +0 (skip 5)
+  [11/50] reuse Wake Park Cambodia                         +0 (skip 5)
+  [12/50] insert VIMEAN SOKHA MUSEUM                        +5 (skip 0)
+  [13/50] reuse Prasat Beng Mealea                         +0 (skip 5)
+  [14/50] reuse Baphuon Temple                             +0 (skip 5)
+  [15/50] reuse Ta Keo Temple                              +0 (skip 5)
+  [16/50] reuse Banteay Kdei Temple                        +0 (skip 5)
+  [17/50] reuse Gate of the Dead                           +0 (skip 5)
+  [18/50] reuse Тheam's Gallery                            +0 (skip 5)
+  [19/50] reuse Travel to Inspire                          +0 (skip 5)
+  [20/50] reuse Victory Gate                               +0 (skip 5)
+  [21/50] reuse Sokkhak River Lounge                       +0 (skip 5)
+  [22/50] reuse Sombai Cambodian Liqueur and souvenirs     +0 (skip 5)
+  [23/50] reuse Thommanon Temple                           +0 (skip 5)
+  [24/50] insert Angkor Special Tours                       +5 (skip 0)
+  [25/50] reuse The Cocoon House - Art Gallery, Concept St +0 (skip 5)
+  [26/50] reuse Angkor Zipline                             +0 (skip 5)
+  [27/50] reuse Palilay Temple                             +0 (skip 5)
+  [28/50] reuse Ta Nei Temple                              +0 (skip 5)
+  [29/50] insert South Gate Angkor Thom                     +5 (skip 0)
+  [30/50] reuse WAT CHOCOLATE Store & Cafe Riverside Siem  +0 (skip 5)
+  [31/50] reuse La Bastide de Caro                         +0 (skip 5)
+  [32/50] insert Neak Poan Bridge                           +5 (skip 0)
+  [33/50] reuse Flying Foxes                               +0 (skip 5)
+  [34/50] reuse Khmer Ceramics & Fine Arts Centre          +0 (skip 5)
+  [35/50] reuse St. John Catholic Church Siem Reap         +0 (skip 5)
+  [36/50] reuse Ta Kav Gate (West Gate of Angkor Thom)     +0 (skip 5)
+  [37/50] insert Toptrip Inspire Cambodia                   +5 (skip 0)
+  [38/50] insert NIZIKAI -KARAOKE BAR-                      +5 (skip 0)
+  [39/50] insert Tamara Venn Art Gallery                    +5 (skip 0)
+  [40/50] insert Dei Chnang Gate (Angkor Thom North Gate)   +5 (skip 0)
+  [41/50] reuse Terrace of Honor                           +0 (skip 5)
+  [42/50] insert Angkor Wat - Eastern Entrance              +5 (skip 0)
+  [43/50] insert WAT CHOCOLATE Store & Cafe AVIARY SQUARE S +5 (skip 0)
+  [44/50] insert FUJIYAMA BOM-BA-YE (game & karaoke bar)    +5 (skip 0)
+  [45/50] insert Cambodian buggy adventures                 +5 (skip 0)
+  [46/50] reuse Phnom Bakheng Temple                       +0 (skip 5)
+  [47/50] insert Hall of a Thousand Gods                    +5 (skip 0)
+  [48/50] insert Churning of the Sea of Milk Gallery        +5 (skip 0)
+  [49/50] insert Cambodia Oil Painting                      +5 (skip 0)
+  [50/50] reuse Terrace of the Elephants                   +0 (skip 5)
+  [1/8] insert កន្លែងកម្សាន្ត កោះហាន                      +5 (skip 0)
+  [2/8] insert រូបសំណាក់កងចក្រ ស្ទឹងត្រែងក្រុង            +5 (skip 0)
+  [3/8] insert Koh Samseb Community Based Ecotourism      +5 (skip 0)
+  [4/8] insert Prasat Phnom Preah Theat                   +5 (skip 0)
+  [5/8] insert O'Svay Community Based Ecotourism          +5 (skip 0)
+  [6/8] insert Preah Nimith Waterfall                     +5 (skip 0)
+  [7/8] insert KTV​បឹងមាស                                 +5 (skip 0)
+  [8/8] insert Preah Ko Temple                            +5 (skip 0)
+  [seed] committed: {'inserted': 13, 'reused': 0, 'uploaded': 65, 'skipped': 0}
+
+=== Takeo ===
+  [fetch] using existing takeo_places.csv (495 rows)
+  [rank] 42/495 -> takeo_top50.csv
+  [1/42] Ta Prohm Temple (Takeo)                          skip (5 photos)
+  [2/42] Plaza Premium First Phnom Penh                   skip (5 photos)
+  [3/42] Phnom Tamao Wildlife Sanctuary                   skip (5 photos)
+  [4/42] Chisor Mountain Temple                           skip (5 photos)
+  [5/42] Phnom Da Temple                                  skip (5 photos)
+  [6/42] Phnom Bayang Temple                              skip (5 photos)
+  [7/42] វត្តប៉ាក់ណាម                                     +5 photos
+  [8/42] O'Chambak Roundabout                             +5 photos
+  [9/42] ភ្នំដំរីរមៀល(ខ្នងផ្សាទី២)                        +5 photos
+  [10/42] Asram Moha Eisei Temple                          +5 photos
+  [11/42] Phnom Tamao Pagoda                               skip (5 photos)
+  [12/42] Takéo Park                                       +5 photos
+  [13/42] Phnom Tamao Zoological Park and Wildlife Rescue  skip (5 photos)
+  [14/42] Sen Phouvang Temple                              +5 photos
+  [15/42] Tonle Bati Temple                                +5 photos
+  [16/42] Grand Dragon Resorts                             skip (5 photos)
+  [17/42] Neang Khmao Pagoda                               skip (5 photos)
+  [18/42] កីឡដ្ឋានស្រុកកោះធំ                               +5 photos
+  [19/42] Independence Monument                            skip (5 photos)
+  [20/42] វត្តសីហរតនារាម Seihak Ratanaram Pagoda           +5 photos
+  [21/42] Angkor Borei Museum                              skip (5 photos)
+  [22/42] Preah Theat Pagoda                               +5 photos
+  [23/42] ប្រាសាទ​សែននិមល​ Sen Nimoul Temple               +5 photos
+  [24/42] Chhnat Pagoda                                    +5 photos
+  [25/42] Wat Thnoat Chum                                  +5 photos
+  [26/42] Wat Toek Thla (C. Krang Pongro)                  +5 photos
+  [27/42] PL resort                                        +5 photos
+  [28/42] ហាង បាយ ទានភ្លើង កំចាយមារព្រៃវែង                 +5 photos
+  [29/42] ផ្សារដើមគរ(ក្លោងទ្វាវត្តទុល)                     skip (5 photos)
+  [30/42] Ang Soeng Pagoda                                 +5 photos
+  [31/42] Ang Metrei Pagoda                                +5 photos
+  [32/42] Angk Serei Pagoda                                +5 photos
+  [33/42] Wat Dei Kraham                                   +5 photos
+  [34/42] កំពង់ទូកខេត្តតាកែវ Takeo Boat Port               +5 photos
+  [35/42] Wat Char (វត្តចារ)                               +5 photos
+  [36/42] Baray Vihear Pi Pagoda                           +5 photos
+  [37/42] Royal Doun Kaev KTV                              +0 photos
+  [38/42] Wat Phnom Khleng                                 +5 photos
+  [39/42] Tonle Bati Pagoda                                skip (5 photos)
+  [40/42] Trapang Anderk Market                            skip (5 photos)
+  [41/42] Thnal Tortoeng Market                            skip (5 photos)
+  [42/42] រមណីយដ្ឋាន ទន្លេបាទី                             skip (5 photos)
+  [seed] committed: {'inserted': 39, 'reused': 3, 'uploaded': 194, 'skipped': 15}
+
+=== Tboung Khmum ===
+  [fetch] using existing tboung_khmum_places.csv (425 rows)
+  [rank] 25/425 -> tboung_khmum_top50.csv
+  [1/25] Nokor BaChey temple                              skip (5 photos)
+  [2/25] Cheung Kok Ecotourism Village                    skip (5 photos)
+  [3/25] Masjid Chimoan Lech វិហារឥស្លាម ភូមិជីមាន់លិច    +5 photos
+  [4/25] Moha Leap Pagoda                                 skip (5 photos)
+  [5/25] Hanchey Pagoda                                   skip (5 photos)
+  [6/25] Wat Preah theat                                  skip (5 photos)
+  [7/25] Prasat Cheung Ang                                skip (5 photos)
+  [8/25] Phnom Soporkaley                                 skip (5 photos)
+  [9/25] Independence Monument (Kampong Cham)             skip (5 photos)
+  [10/25] Kampong Cham Peace Park                          skip (5 photos)
+  [11/25] Luong Preah Sdach Kan                            skip (5 photos)
+  [12/25] ក្រុងសួង                                         skip (5 photos)
+  [13/25] Wat Samraong                                     +5 photos
+  [14/25] ជីហែរ                                            skip (5 photos)
+  [15/25] Sei La Vayti Keatchun High School Stadium        skip (5 photos)
+  [16/25] Preah Ang Kuhear Pagoda                          +5 photos
+  [17/25] Raksmey Phkaypich Guest House                    skip (5 photos)
+  [18/25] រមណីយដ្ឋានបឹងធំ                                  skip (5 photos)
+  [19/25] Haong Waterfall                                  skip (5 photos)
+  [20/25] Svay Antor Park                                  skip (5 photos)
+  [21/25] រូបសំណាក់ ហ្លួងព្រះស្ដេចកន                       skip (5 photos)
+  [22/25] Tour des Français                                skip (5 photos)
+  [23/25] Phnom Srei                                       skip (5 photos)
+  [24/25] Phnom Bros Library                               skip (5 photos)
+  [25/25] Kizuna Bridge Roundabout                         skip (5 photos)
+  [seed] committed: {'inserted': 5, 'reused': 20, 'uploaded': 25, 'skipped': 100}
+
+attractions inserted: 453
+attractions reused:   266
+photos uploaded:      2250
+photos skipped:       1557
+  [1/13] insert Srah Vong Park ស្រះវង់                     +5 (skip 0)
+  [2/13] insert Border Post Cambodia–Việt Nam              +5 (skip 0)
+  [3/13] insert រង្វង់មូលវៃកូ Vai Ko Roundabout            +5 (skip 0)
+  [4/13] insert វត្តតាគោក                                  +5 (skip 0)
+  [5/13] insert Svay Rieng Stadium                         +5 (skip 0)
+  [6/13] insert The border mark                            +5 (skip 0)
+  [7/13] insert Phum Sokharavy​ - ភូមិសុខារាវី             +5 (skip 0)
+  [8/13] insert រីសតកូនកាត់                                +5 (skip 0)
+  [9/13] insert 柬埔寨木牌                                      +5 (skip 0)
+  [10/13] insert សៀងហៃ​ រីសត                                +5 (skip 0)
+  [11/13] insert LE MACAU 立马高KTV                            +5 (skip 0)
+  [12/13] insert Tela Mart,and Gasline Station              +5 (skip 0)
+  [13/13] insert Golden Galaxy Hotel & Casino               +5 (skip 0)
+  [1/42] reuse Ta Prohm Temple (Takeo)                    +0 (skip 5)
+  [2/42] reuse Plaza Premium First Phnom Penh             +0 (skip 5)
+  [3/42] reuse Phnom Tamao Wildlife Sanctuary             +0 (skip 5)
+  [4/42] insert Chisor Mountain Temple                     +5 (skip 0)
+  [5/42] insert Phnom Da Temple                            +5 (skip 0)
+  [6/42] insert Phnom Bayang Temple                        +5 (skip 0)
+  [7/42] insert វត្តប៉ាក់ណាម                               +5 (skip 0)
+  [8/42] insert O'Chambak Roundabout                       +5 (skip 0)
+  [9/42] insert ភ្នំដំរីរមៀល(ខ្នងផ្សាទី២)                  +5 (skip 0)
+  [10/42] insert Asram Moha Eisei Temple                    +5 (skip 0)
+  [11/42] insert Phnom Tamao Pagoda                         +5 (skip 0)
+  [12/42] insert Takéo Park                                 +5 (skip 0)
+  [13/42] insert Phnom Tamao Zoological Park and Wildlife R +5 (skip 0)
+  [14/42] insert Sen Phouvang Temple                        +5 (skip 0)
+  [15/42] insert Tonle Bati Temple                          +5 (skip 0)
+  [16/42] insert Grand Dragon Resorts                       +5 (skip 0)
+  [17/42] insert Neang Khmao Pagoda                         +5 (skip 0)
+  [18/42] insert កីឡដ្ឋានស្រុកកោះធំ                         +5 (skip 0)
+  [19/42] insert Independence Monument                      +5 (skip 0)
+  [20/42] insert វត្តសីហរតនារាម Seihak Ratanaram Pagoda     +5 (skip 0)
+  [21/42] insert Angkor Borei Museum                        +5 (skip 0)
+  [22/42] insert Preah Theat Pagoda                         +5 (skip 0)
+  [23/42] insert ប្រាសាទ​សែននិមល​ Sen Nimoul Temple         +5 (skip 0)
+  [24/42] insert Chhnat Pagoda                              +5 (skip 0)
+  [25/42] insert Wat Thnoat Chum                            +5 (skip 0)
+  [26/42] insert Wat Toek Thla (C. Krang Pongro)            +5 (skip 0)
+  [27/42] insert PL resort                                  +5 (skip 0)
+  [28/42] insert ហាង បាយ ទានភ្លើង កំចាយមារព្រៃវែង           +5 (skip 0)
+  [29/42] insert ផ្សារដើមគរ(ក្លោងទ្វាវត្តទុល)               +5 (skip 0)
+  [30/42] insert Ang Soeng Pagoda                           +5 (skip 0)
+  [31/42] insert Ang Metrei Pagoda                          +5 (skip 0)
+  [32/42] insert Angk Serei Pagoda                          +5 (skip 0)
+  [33/42] insert Wat Dei Kraham                             +5 (skip 0)
+  [34/42] insert កំពង់ទូកខេត្តតាកែវ Takeo Boat Port         +5 (skip 0)
+  [35/42] insert Wat Char (វត្តចារ)                         +5 (skip 0)
+  [36/42] insert Baray Vihear Pi Pagoda                     +5 (skip 0)
+  [37/42] insert Royal Doun Kaev KTV                        +4 (skip 0)
+  [38/42] insert Wat Phnom Khleng                           +5 (skip 0)
+  [39/42] insert Tonle Bati Pagoda                          +5 (skip 0)
+  [40/42] insert Trapang Anderk Market                      +5 (skip 0)
+  [41/42] insert Thnal Tortoeng Market                      +5 (skip 0)
+  [42/42] insert រមណីយដ្ឋាន ទន្លេបាទី                       +5 (skip 0)
+  [1/25] reuse Nokor BaChey temple                        +0 (skip 5)
+  [2/25] reuse Cheung Kok Ecotourism Village              +0 (skip 5)
+  [3/25] insert Masjid Chimoan Lech វិហារឥស្លាម ភូមិជីមាន់ +5 (skip 0)
+  [4/25] reuse Moha Leap Pagoda                           +0 (skip 5)
+  [5/25] reuse Hanchey Pagoda                             +0 (skip 5)
+  [6/25] reuse Wat Preah theat                            +0 (skip 5)
+  [7/25] reuse Prasat Cheung Ang                          +0 (skip 5)
+  [8/25] reuse Phnom Soporkaley                           +0 (skip 5)
+  [9/25] reuse Independence Monument (Kampong Cham)       +0 (skip 5)
+  [10/25] reuse Kampong Cham Peace Park                    +0 (skip 5)
+  [11/25] reuse Luong Preah Sdach Kan                      +0 (skip 5)
+  [12/25] reuse ក្រុងសួង                                   +0 (skip 5)
+  [13/25] insert Wat Samraong                               +5 (skip 0)
+  [14/25] reuse ជីហែរ                                      +0 (skip 5)
+  [15/25] reuse Sei La Vayti Keatchun High School Stadium  +0 (skip 5)
+  [16/25] insert Preah Ang Kuhear Pagoda                    +5 (skip 0)
+  [17/25] insert Raksmey Phkaypich Guest House              +5 (skip 0)
+  [18/25] reuse រមណីយដ្ឋានបឹងធំ                            +0 (skip 5)
+  [19/25] insert Haong Waterfall                            +5 (skip 0)
+  [20/25] reuse Svay Antor Park                            +0 (skip 5)
+  [21/25] reuse រូបសំណាក់ ហ្លួងព្រះស្ដេចកន                 +0 (skip 5)
+  [22/25] reuse Tour des Français                          +0 (skip 5)
+  [23/25] reuse Phnom Srei                                 +0 (skip 5)
+  [24/25] reuse Phnom Bros Library                         +0 (skip 5)
+  [25/25] reuse Kizuna Bridge Roundabout                   +0 (skip 5)

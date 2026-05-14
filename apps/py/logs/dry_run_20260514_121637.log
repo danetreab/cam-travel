@@ -1,0 +1,135 @@
+/Users/danet/Developers/cam-travel/apps/py/.venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Provinces: ['Phnom Penh', 'Banteay Meanchey', 'Battambang', 'Kampong Cham', 'Kampong Chhnang', 'Kampong Speu', 'Kampong Thom', 'Kampot', 'Kandal', 'Kep', 'Koh Kong', 'Kratie', 'Mondulkiri', 'Oddar Meanchey', 'Pailin', 'Preah Sihanouk', 'Preah Vihear', 'Pursat', 'Prey Veng', 'Ratanakiri', 'Siem Reap', 'Stung Treng', 'Svay Rieng', 'Takeo', 'Tboung Khmum']
+Mode: fetch=True photos=True seed=True dry_run=True
+DB:    152.42.162.231:5432/cam-travel
+MinIO: minio-dev.rikrey.com/cam-travel
+
+=== Phnom Penh ===
+  [centre] 11.5625,104.916 r=5000m
+    tourist_attraction       20 results, 20 new
+    museum                   20 results, 18 new
+    historical_landmark      20 results, 18 new
+    park                     20 results, 16 new
+    art_gallery              20 results, 20 new
+    hindu_temple              2 results,  2 new
+    buddhist_temple          20 results, 15 new
+    church                   20 results, 20 new
+    mosque                   14 results, 13 new
+    zoo                       2 results,  2 new
+    aquarium                  3 results,  3 new
+    amusement_park            8 results,  7 new
+    stadium                   6 results,  6 new
+    night_club               20 results, 20 new
+    shopping_mall            20 results, 20 new
+  [riverside / Sisowath] 11.568,104.932 r=4000m
+    tourist_attraction       20 results,  0 new
+    museum                   16 results,  0 new
+    historical_landmark      20 results,  2 new
+    park                     20 results,  3 new
+    art_gallery              20 results,  5 new
+    hindu_temple              1 results,  0 new
+    buddhist_temple          20 results,  6 new
+    church                   20 results, 10 new
+    mosque                   14 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  2 results,  0 new
+    amusement_park            8 results,  0 new
+    stadium                   4 results,  0 new
+    night_club               20 results,  5 new
+    shopping_mall            20 results,  6 new
+  [BKK1 / BKK2] 11.547,104.918 r=4000m
+    tourist_attraction       20 results,  1 new
+    museum                   17 results,  0 new
+    historical_landmark      20 results,  1 new
+    park                     20 results,  0 new
+    art_gallery              20 results,  0 new
+    hindu_temple              2 results,  0 new
+    buddhist_temple          20 results,  1 new
+    church                   20 results,  4 new
+    mosque                   10 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  2 results,  1 new
+    amusement_park            4 results,  0 new
+    stadium                   3 results,  0 new
+    night_club               20 results,  0 new
+    shopping_mall            20 results,  0 new
+  [Toul Tom Poung] 11.539,104.918 r=3500m
+    tourist_attraction       20 results,  7 new
+    museum                   15 results,  0 new
+    historical_landmark      19 results,  1 new
+    park                     20 results,  8 new
+    art_gallery              20 results,  0 new
+    hindu_temple              2 results,  0 new
+    buddhist_temple          20 results,  4 new
+    church                   20 results,  3 new
+    mosque                    5 results,  0 new
+    zoo                       0 results,  0 new
+    aquarium                  2 results,  0 new
+    amusement_park            3 results,  0 new
+    stadium                   2 results,  0 new
+    night_club               20 results,  1 new
+    shopping_mall            20 results,  4 new
+  [Chroy Changvar] 11.591,104.932 r=4000m
+    tourist_attraction       20 results,  2 new
+    museum                   11 results,  1 new
+    historical_landmark      20 results,  0 new
+    park                     20 results,  5 new
+    art_gallery              20 results,  4 new
+    hindu_temple              1 results,  0 new
+    buddhist_temple          20 results,  3 new
+    church                   20 results, 15 new
+    mosque                    9 results,  0 new
+    zoo                       1 results,  0 new
+    aquarium                  1 results,  0 new
+    amusement_park            5 results,  0 new
+    stadium                   4 results,  2 new
+    night_club               20 results,  7 new
+    shopping_mall            20 results, 11 new
+  -> 75 API calls, 323 unique places
+  [rank] 50/323 -> phnom_penh_top50.csv
+  [1/50] LOVE - Phnom Penh                                skip (10 photos)
+  [2/50] SOSORO - Preah Srey Içanavarman Museum           skip (10 photos)
+  [3/50] Al-Serkal Mosque                                 skip (10 photos)
+  [4/50] Tuol Sleng Genocide Museum                       skip (10 photos)
+  [5/50] Statue of His Majesty Preah Bat Samdech Preah No skip (10 photos)
+  [6/50] Royal Palace Park                                skip (10 photos)
+  [7/50] Independence Monument                            skip (10 photos)
+  [8/50] Groovy Room - Cocktail Bar                       skip (10 photos)
+  [9/50] Wat Ounalom Monastery                            skip (10 photos)
+  [10/50] SUN & MOON, Riverside Hotel                      skip (9 photos)
+  [11/50] MARA                                             skip (10 photos)
+  [12/50] Mongkol Serei Kien Khleang Pagoda                skip (10 photos)
+  [13/50] Chew & Bash, Phnom Penh Island Club              skip (10 photos)
+  [14/50] Aurora Sky Lounge by Luxcity Hotel & Apartment   +5 photos
+  [15/50] Institut français du Cambodge (IFC)              skip (10 photos)
+  [16/50] WAT CHOCOLATE Store & Cafe BKK1, Phnom Penh      skip (10 photos)
+  [17/50] Langka Lane                                      +5 photos
+  [18/50] Sra'Art Gallery                                  +5 photos
+  [19/50] Queen of Peace Church                            skip (10 photos)
+  [20/50] New Life Fellowship​ Cambodia                    +5 photos
+  [21/50] AEON Mall Phnom Penh                             skip (10 photos)
+  [22/50] Riverside                                        +5 photos
+  [23/50] Wat Phnom Daun Penh                              skip (10 photos)
+  [24/50] Wat Botum Park                                   skip (10 photos)
+  [25/50] Moonlight Pavilion (ព្រះទីនាំងចន្ទឆាយា)          +5 photos
+  [26/50] Sisowath Riverside Park                          skip (10 photos)
+  [27/50] Ministry of Economy and Finance of Cambodia      skip (10 photos)
+  [28/50] Chip Mong Tower                                  skip (10 photos)
+  [29/50] The Gallerist - Contemporary Art Gallery         +5 photos
+  [30/50] Silver Pagoda                                    skip (10 photos)
+  [31/50] TŌKIO CLUB                                       skip (10 photos)
+  [32/50] 一号公馆KTV                                          +5 photos
+  [33/50] Vattanac Capital                                 skip (10 photos)
+  [34/50] Central X Club                                   +5 photos
+  [35/50] Chip Mong 271 Mega Mall                          skip (10 photos)
+  [36/50] La Croisette                                     skip (10 photos)
+  [37/50] Saint Joseph Catholic Church                     +5 photos
+  [38/50] YES KTV                                          +5 photos
+  [39/50] Coconut Park I - Koh Pich                        skip (10 photos)
+  [40/50] Korean Church of Phnom Penh                      +5 photos
+  [41/50] Sansam Kosal Pagoda                              skip (10 photos)
+  [42/50] Wat Langka Preah Kossamaram                      skip (10 photos)
+  [43/50] Sacred Lotus - Vegan - Café x Hostel | Phnom Pen skip (10 photos)
+  [44/50] Tuol Sangkae Pagoda                              skip (10 photos)
+  [45/50] Koh Norea River Bank                             +5 photos

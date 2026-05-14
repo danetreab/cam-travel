@@ -16,6 +16,7 @@ export default defineConfig({
     "./src/schema.ts",
     "./src/items.ts",
     "./src/attractions.ts",
+    "./src/saved-attractions.ts",
     "./src/uploaded-files.ts",
   ],
   out: "./drizzle",

@@ -4,15 +4,34 @@ import type { Attraction, AttractionListResult } from "@/types/attraction"
 // REST-shaped wrapper around the GraphQL HTTP endpoint. Callers get plain
 // async functions; the transport detail stays here. If a true REST surface
 // is added later, only this file changes.
+//
+// 10s ceiling on every call. Loader fetches that run during SSR cannot be
+// allowed to outlive the upstream proxy read timeout — if they do, the
+// connection closes mid-render and React surfaces it as an AbortError that
+// h3 turns into a 502 Bad Gateway.
+const GQL_TIMEOUT_MS = 10000
+
+// The first identifier after `query`/`mutation`/`subscription`. The gateway's
+// AuthGuard consults this name to decide whether a request is in the guest
+// allowlist, so it must be sent on every call — not just when the server is
+// running multiple operations.
+const OPERATION_NAME_RE = /\b(?:query|mutation|subscription)\s+(\w+)/
+
+function extractOperationName(query: string): string | undefined {
+  return query.match(OPERATION_NAME_RE)?.[1]
+}
+
 async function gql<TData>(
   query: string,
   variables?: Record<string, unknown>,
 ): Promise<TData> {
+  const operationName = extractOperationName(query)
   const res = await fetch(envClient.VITE_GRAPHQL_HTTP_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query, variables }),
+    body: JSON.stringify({ query, variables, operationName }),
     credentials: "include",
+    signal: AbortSignal.timeout(GQL_TIMEOUT_MS),
   })
   if (!res.ok) {
     throw new Error(`Network error ${res.status} fetching ${envClient.VITE_GRAPHQL_HTTP_URL}`)
@@ -120,6 +139,113 @@ export async function listTopPerProvince(
     items: data.attractionsTopPerProvince,
     totalCount: data.attractionsTopPerProvince.length,
   }
+}
+
+const MY_SAVED_ATTRACTIONS = `
+  query MySavedAttractions {
+    mySavedAttractions {
+      id
+      name
+      description
+      latitude
+      longitude
+      province
+      activityType
+      cachedRating
+      cachedUserRatingsTotal
+      files {
+        id
+        url
+        thumbnailUrl
+        hasThumbnail
+        mimetype
+      }
+    }
+  }
+`
+
+const MY_SAVED_ATTRACTION_IDS = `
+  query MySavedAttractionIds {
+    mySavedAttractionIds
+  }
+`
+
+const SAVE_ATTRACTION = `
+  mutation SaveAttraction($attractionId: ID!) {
+    saveAttraction(attractionId: $attractionId) {
+      id
+    }
+  }
+`
+
+const UNSAVE_ATTRACTION = `
+  mutation UnsaveAttraction($attractionId: ID!) {
+    unsaveAttraction(attractionId: $attractionId)
+  }
+`
+
+export async function listMySavedAttractions(): Promise<AttractionListResult> {
+  const data = await gql<{ mySavedAttractions: Attraction[] }>(
+    MY_SAVED_ATTRACTIONS,
+  )
+  return {
+    items: data.mySavedAttractions,
+    totalCount: data.mySavedAttractions.length,
+  }
+}
+
+export async function listMySavedAttractionIds(): Promise<string[]> {
+  const data = await gql<{ mySavedAttractionIds: string[] }>(
+    MY_SAVED_ATTRACTION_IDS,
+  )
+  return data.mySavedAttractionIds
+}
+
+export async function saveAttraction(attractionId: string): Promise<string> {
+  const data = await gql<{ saveAttraction: { id: string } }>(SAVE_ATTRACTION, {
+    attractionId,
+  })
+  return data.saveAttraction.id
+}
+
+export async function unsaveAttraction(attractionId: string): Promise<string> {
+  const data = await gql<{ unsaveAttraction: string }>(UNSAVE_ATTRACTION, {
+    attractionId,
+  })
+  return data.unsaveAttraction
+}
+
+const ATTRACTION_BY_ID = `
+  query AttractionById($id: ID!) {
+    attractions(filter: { id: { eq: $id } }, paging: { limit: 1 }) {
+      nodes {
+        id
+        name
+        description
+        latitude
+        longitude
+        province
+        activityType
+        cachedRating
+        cachedUserRatingsTotal
+        files {
+          id
+          url
+          thumbnailUrl
+          hasThumbnail
+          mimetype
+        }
+      }
+    }
+  }
+`
+
+export async function getAttractionById(id: string): Promise<Attraction | null> {
+  const data = await gql<{ attractions: { nodes: Attraction[] } }>(
+    ATTRACTION_BY_ID,
+    { id },
+  )
+  return data.attractions.nodes[0] ?? null
 }
 
 export async function listAttractions(

@@ -31,9 +31,11 @@ Usage (from apps/py/):
     .venv/bin/python pipeline_provinces.py --top 50 --photos-per-place 5
 
 Cost estimate (Google Places API v1, verify current pricing):
-    Per province: ~15 categories * ~1-3 cells = 15-45 Nearby Search calls
-    + 50 Place Details + ~250 photo downloads.
-    Roughly $1-3 per province, ~$25-70 to do all 25 provinces from scratch.
+    Per province: ~15 categories * ~1-6 cells = 15-90 Nearby Search calls
+    + 50 Place Details + ~250 photo downloads. Provinces with many
+    sub-cells (Siem Reap, Koh Kong, Mondulkiri, Ratanakiri) cost more
+    because adventure / rural areas need extra coverage circles.
+    Roughly $1-5 per province, ~$40-120 to do all 25 provinces from scratch.
 """
 
 from __future__ import annotations
@@ -74,7 +76,8 @@ PHOTO_MAX_WIDTH_PX = 1600
 
 # Filter thresholds for the Bayesian ranker.
 MIN_RATING   = 4.0
-MIN_REVIEWS  = 50    # lower than Siem Reap's 100 — outlying provinces have less volume
+MIN_REVIEWS  = 20    # rural adventure spots (waterfalls, NPs, remote temples)
+                     # rarely have >50 Google reviews even when worth visiting
 PRIOR_WEIGHT = 500   # bigger -> more trust in popular places when ranking
 
 # Categories — same set as fetch_siem_reap_places.py.
@@ -119,56 +122,116 @@ NEARBY_FIELD_MASK = ",".join([
 # Centres are rough provincial-capital coordinates. Radii are conservative
 # (Google Nearby Search caps radius at 50_000m).
 PROVINCES: list[tuple[str, list[tuple[str, float, float, int]]]] = [
-    ("Phnom Penh", [
-        ("centre",                11.5625, 104.9160, 5000),
-        ("riverside / Sisowath",  11.5680, 104.9320, 4000),
-        ("BKK1 / BKK2",           11.5470, 104.9180, 4000),
-        ("Toul Tom Poung",        11.5390, 104.9180, 3500),
-        ("Chroy Changvar",        11.5910, 104.9320, 4000),
+    ("Banteay Meanchey", [
+        ("Sisophon",              13.5859, 102.9740, 50000),
+        ("Banteay Chhmar temple", 14.0739, 103.0950, 25000),
+        ("Poipet border",         13.6580, 102.5560, 25000),
     ]),
-    ("Banteay Meanchey", [("Sisophon", 13.5859, 102.9740, 50000)]),
     ("Battambang", [
         ("Battambang town",       13.0957, 103.2022, 30000),
         ("Banan / outlying",      13.0040, 103.0860, 30000),
+        ("Phnom Sampeau",         13.0556, 103.0980, 15000),
+        ("Bamboo train / Ek Phnom",13.1620, 103.1740, 15000),
     ]),
-    ("Kampong Cham", [("Kampong Cham", 11.9934, 105.4636, 50000)]),
-    ("Kampong Chhnang", [("Kampong Chhnang", 12.2505, 104.6660, 50000)]),
-    ("Kampong Speu", [("Kampong Speu", 11.4530, 104.5209, 50000)]),
+    ("Kampong Cham", [
+        ("Kampong Cham",          11.9934, 105.4636, 50000),
+        ("Phnom Pros / Phnom Srei",12.0700, 105.4200, 15000),
+        ("Han Chey / Mekong",     12.0860, 105.4660, 20000),
+    ]),
+    ("Kampong Chhnang", [
+        ("Kampong Chhnang",       12.2505, 104.6660, 50000),
+        ("Tonle Sap floating villages",12.3580, 104.6420, 20000),
+        ("Phnom Santuk approach", 12.0900, 104.7800, 25000),
+    ]),
+    ("Kampong Speu", [
+        ("Kampong Speu",          11.4530, 104.5209, 50000),
+        ("Kirirom National Park", 11.3236, 104.0500, 30000),
+        ("Mount Aural area",      12.0250, 104.1700, 50000),
+    ]),
     ("Kampong Thom", [
         ("Kampong Thom",          12.7111, 104.8887, 50000),
         ("Sambor Prei Kuk",       12.8730, 105.0470, 30000),
+        ("Prasat Andet / Stoung", 12.5900, 104.6800, 25000),
     ]),
     ("Kampot", [
         ("Kampot town",           10.6104, 104.1810, 30000),
         ("Bokor National Park",   10.6510, 104.0270, 30000),
+        ("Pepper farms / La Plantation",10.6360, 104.2470, 15000),
+        ("Phnom Chhnork caves",   10.6570, 104.3050, 10000),
     ]),
-    ("Kandal", [("Ta Khmau", 11.4870, 104.9410, 40000)]),
-    ("Kep", [("Kep town", 10.4830, 104.3163, 20000)]),
+    ("Kandal", [
+        ("Ta Khmau",              11.4870, 104.9410, 40000),
+        ("Koh Dach silk island",  11.6280, 104.9450, 10000),
+        ("Phnom Tamao area",      11.2950, 104.7900, 20000),
+    ]),
+    ("Kep", [
+        ("Kep town",              10.4830, 104.3163, 20000),
+        ("Kep National Park",     10.4970, 104.3300, 8000),
+        ("Rabbit Island / Koh Tonsay",10.4530, 104.3760, 8000),
+    ]),
     ("Koh Kong", [
         ("Koh Kong town",         11.6153, 102.9836, 40000),
         ("Cardamom mountains",    11.7300, 103.4500, 50000),
+        ("Tatai waterfall / river",11.5670, 103.1340, 20000),
+        ("Areng valley",          11.5300, 103.5100, 40000),
+        ("Koh Kong island",       11.3380, 103.0500, 25000),
+        ("Botum Sakor National Park",11.1660, 103.4200, 50000),
     ]),
-    ("Kratie", [("Kratie town", 12.4880, 106.0188, 50000)]),
+    ("Kratie", [
+        ("Kratie town",           12.4880, 106.0188, 50000),
+        ("Kampi dolphin pool",    12.6300, 106.0250, 15000),
+        ("Koh Trong island",      12.4630, 106.0030, 10000),
+        ("Sambor / Mekong north", 12.7720, 106.0220, 25000),
+    ]),
     ("Mondulkiri", [
         ("Sen Monorom",           12.4540, 107.1900, 40000),
         ("North Mondulkiri",      12.7879, 107.1006, 50000),
+        ("Bou Sra waterfall",     12.5680, 107.4630, 25000),
+        ("Sea Forest / Mereuch",  12.3700, 107.1300, 40000),
+        ("Elephant Valley Project",12.4870, 107.1380, 15000),
+        ("Dak Dam / Vietnam border",12.3960, 107.3360, 25000),
     ]),
-    ("Oddar Meanchey", [("Samraong", 14.1810, 103.5111, 50000)]),
-    ("Pailin", [("Pailin town", 12.8489, 102.6093, 30000)]),
+    ("Oddar Meanchey", [
+        ("Samraong",              14.1810, 103.5111, 50000),
+        ("Anlong Veng / Dangrek", 14.2390, 104.0820, 30000),
+        ("Ta Mok lake",           14.2390, 104.0950, 10000),
+    ]),
+    ("Pailin", [
+        ("Pailin town",           12.8489, 102.6093, 30000),
+        ("Phnom Yat",             12.8530, 102.6090, 8000),
+    ]),
     ("Preah Sihanouk", [
         ("Sihanoukville",         10.6253, 103.5224, 25000),
         ("Otres / Ream",          10.5780, 103.6280, 20000),
         ("Koh Rong",              10.7220, 103.2400, 25000),
+        ("Koh Rong Samloem",      10.6020, 103.3140, 15000),
+        ("Ream National Park",    10.5170, 103.6390, 20000),
+        ("Kbal Chhay waterfall",  10.7080, 103.6790, 10000),
     ]),
     ("Preah Vihear", [
         ("Tbeng Meanchey",        13.7903, 104.9810, 50000),
         ("Preah Vihear temple",   14.3870, 104.6800, 30000),
+        ("Koh Ker temple complex",13.7833, 104.5333, 20000),
+        ("Prasat Preah Khan of Kompong Svay",13.4290, 105.0470, 20000),
     ]),
-    ("Pursat", [("Pursat town", 12.5388, 103.9192, 50000)]),
-    ("Prey Veng", [("Prey Veng town", 11.4869, 105.3252, 50000)]),
+    ("Pursat", [
+        ("Pursat town",           12.5388, 103.9192, 50000),
+        ("Kompong Luong floating village",12.5710, 104.2160, 15000),
+        ("Cardamom foothills west",12.2500, 103.4000, 50000),
+        ("Phnom Aural approach",  12.0250, 104.1300, 30000),
+    ]),
+    ("Prey Veng", [
+        ("Prey Veng town",        11.4869, 105.3252, 50000),
+        ("Ba Phnom",              11.2900, 105.5460, 15000),
+        ("Neak Loeung / Mekong",  11.2620, 105.2780, 20000),
+    ]),
     ("Ratanakiri", [
         ("Banlung",               13.7395, 106.9873, 30000),
         ("Virachey area",         13.9000, 107.1500, 50000),
+        ("Yeak Laom Lake",        13.7280, 107.0070, 8000),
+        ("Ka Chanh waterfall",    13.7270, 107.0420, 8000),
+        ("Bokeo / gem mines",     13.7370, 107.2160, 20000),
+        ("Lumphat / Sesan",       13.5060, 106.9810, 25000),
     ]),
     ("Siem Reap", [
         ("Town centre",           13.3550, 103.8550, 2500),
@@ -185,10 +248,27 @@ PROVINCES: list[tuple[str, list[tuple[str, float, float, int]]]] = [
         ("Phnom Kulen",           13.5773, 104.1183, 5000),
         ("Beng Mealea",           13.4756, 104.2375, 5000),
     ]),
-    ("Stung Treng", [("Stung Treng town", 13.5258, 105.9683, 50000)]),
-    ("Svay Rieng", [("Svay Rieng town", 11.0879, 105.7993, 50000)]),
-    ("Takeo", [("Takeo town", 10.9909, 104.7855, 40000)]),
-    ("Tboung Khmum", [("Suong", 11.9000, 105.6886, 50000)]),
+    ("Stung Treng", [
+        ("Stung Treng town",      13.5258, 105.9683, 50000),
+        ("Anlong Cheuteal dolphins",13.9170, 105.9670, 20000),
+        ("Mekong Flooded Forest", 13.8200, 106.0500, 30000),
+        ("Siem Pang / Sekong",    14.1170, 106.3830, 50000),
+    ]),
+    ("Svay Rieng", [
+        ("Svay Rieng town",       11.0879, 105.7993, 50000),
+        ("Bavet border",          11.0930, 106.1700, 25000),
+    ]),
+    ("Takeo", [
+        ("Takeo town",            10.9909, 104.7855, 40000),
+        ("Phnom Chisor",          11.2630, 104.7800, 15000),
+        ("Phnom Da / Angkor Borei",10.8910, 104.8330, 15000),
+        ("Tonle Bati",            11.3680, 104.8420, 10000),
+    ]),
+    ("Tboung Khmum", [
+        ("Suong",                 11.9000, 105.6886, 50000),
+        ("Memot rubber plantations",11.8190, 106.1740, 30000),
+        ("Krek / Vietnam border", 11.7440, 105.9740, 25000),
+    ]),
 ]
 
 
@@ -216,6 +296,39 @@ def sanitize_filename(name: str) -> str:
     name = re.sub(r"^.*[\\/]", "", name)
     name = re.sub(r"[^a-zA-Z0-9._-]", "_", name)
     return name.lower()
+
+
+# Cambodia bounding box — only used as a fallback when address is missing.
+# Border provinces with large radii (Svay Rieng, Tboung Khmum, Prey Veng,
+# Takeo, Pailin, Banteay Meanchey, Oddar Meanchey) can return Vietnamese /
+# Thai / Lao places, so we drop anything that isn't clearly in Cambodia.
+CAMBODIA_LAT_MIN, CAMBODIA_LAT_MAX = 10.0, 14.8
+CAMBODIA_LON_MIN, CAMBODIA_LON_MAX = 102.3, 107.7
+
+# Country markers — case-insensitive substring match against formattedAddress.
+CAMBODIA_MARKERS = ("cambodia", "កម្ពុជា")
+
+
+def is_in_cambodia(addr: str | None, lat=None, lon=None) -> bool:
+    """True if the place is in Cambodia.
+
+    Primary check: the formatted address contains a Cambodia country marker
+    in English ("Cambodia") or Khmer ("កម្ពុជា"). If the address is missing
+    or doesn't include a country (rare), fall back to a bounding-box test
+    on lat/lon. Anything that fails both checks is treated as foreign.
+    """
+    s = (addr or "")
+    sl = s.lower()
+    if any(m in sl or m in s for m in CAMBODIA_MARKERS):
+        return True
+    if s.strip():
+        # Address present but no Cambodia marker -> definitely foreign.
+        return False
+    fl, fo = to_float(lat), to_float(lon)
+    if fl is None or fo is None:
+        return False
+    return (CAMBODIA_LAT_MIN <= fl <= CAMBODIA_LAT_MAX
+            and CAMBODIA_LON_MIN <= fo <= CAMBODIA_LON_MAX)
 
 
 def load_env():
@@ -317,22 +430,31 @@ def nearby_search(lat: float, lng: float, radius: int, included_type: str) -> li
 def fetch_province(province: str, cells: list[tuple[str, float, float, int]]) -> list[dict]:
     seen: dict[str, dict] = {}
     calls = 0
+    dropped_foreign = 0
     for cell_label, lat, lng, radius in cells:
         print(f"  [{cell_label}] {lat},{lng} r={radius}m", file=sys.stderr)
         for cat in CATEGORIES:
             results = nearby_search(lat, lng, radius, cat)
             calls += 1
             new = 0
+            foreign = 0
             for p in results:
                 pid = p.get("id")
                 if not pid:
                     continue
+                row = flatten(p, cat, cell_label)
+                if not is_in_cambodia(row.get("address"), row.get("lat"), row.get("lon")):
+                    foreign += 1
+                    continue
                 if pid not in seen:
-                    seen[pid] = flatten(p, cat, cell_label)
+                    seen[pid] = row
                     new += 1
-            print(f"    {cat:24s} {len(results):>2} results, {new:>2} new", file=sys.stderr)
+            dropped_foreign += foreign
+            tag = f"({foreign} foreign)" if foreign else ""
+            print(f"    {cat:24s} {len(results):>2} results, {new:>2} new {tag}".rstrip(), file=sys.stderr)
             time.sleep(0.05)
-    print(f"  -> {calls} API calls, {len(seen)} unique places", file=sys.stderr)
+    print(f"  -> {calls} API calls, {len(seen)} unique places "
+          f"({dropped_foreign} non-Cambodia dropped)", file=sys.stderr)
     return list(seen.values())
 
 
@@ -355,6 +477,11 @@ def read_csv(path: Path) -> list[dict]:
 # --- phase 2: rank ------------------------------------------------------------
 
 def rank_top_n(rows: list[dict], n: int) -> list[dict]:
+    # Defensive Cambodia filter — handles CSVs generated before is_in_cambodia
+    # was added to the fetch phase.
+    rows = [r for r in rows
+            if is_in_cambodia(r.get("address"), r.get("lat"), r.get("lon"))]
+
     rated = [
         r for r in rows
         if to_float(r.get("rating"), 0.0) >= MIN_RATING

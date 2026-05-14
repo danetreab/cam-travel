@@ -10,16 +10,14 @@ import routerProvider, {
   NavigateToResource,
 } from "@refinedev/react-router";
 import { App as AntdApp, ConfigProvider, theme } from "antd";
+import { Compass, MapPin, Users } from "lucide-react";
+import { ThemeProvider, useTheme } from "next-themes";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import "@refinedev/antd/dist/reset.css";
 
 import { authProvider } from "./auth-provider";
-import { ColorModeProvider, useColorMode } from "./contexts/color-mode";
 import { Header } from "./components/header";
 import { dataProvider, liveProvider, restDataProvider } from "./data-provider";
-import { ItemsCreate } from "./pages/items/create";
-import { ItemsEdit } from "./pages/items/edit";
-import { ItemsList } from "./pages/items/list";
 import { AttractionsCreate } from "./pages/attractions/create";
 import { AttractionsEdit } from "./pages/attractions/edit";
 import { AttractionsList } from "./pages/attractions/list";
@@ -27,12 +25,17 @@ import { LoginPage } from "./pages/login";
 import { UsersList } from "./pages/users/list";
 
 function AppInner() {
-  const { mode } = useColorMode();
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
   return (
     <ConfigProvider
       theme={{
-        algorithm:
-          mode === "dark" ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
+        token: {
+          borderRadius: 2,
+          fontFamily:
+            "'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+        },
       }}
     >
       <AntdApp>
@@ -49,21 +52,21 @@ function AppInner() {
               {
                 name: "users",
                 list: "/users",
-                meta: { label: "Users", canDelete: false },
-              },
-              {
-                name: "items",
-                list: "/items",
-                create: "/items/create",
-                edit: "/items/edit/:id",
-                meta: { label: "Items" },
+                meta: {
+                  label: "Users",
+                  canDelete: false,
+                  icon: <Users size={16} />,
+                },
               },
               {
                 name: "attractions",
                 list: "/attractions",
                 create: "/attractions/create",
                 edit: "/attractions/edit/:id",
-                meta: { label: "Attractions" },
+                meta: {
+                  label: "Attractions",
+                  icon: <MapPin size={16} />,
+                },
               },
             ]}
             options={{
@@ -82,7 +85,11 @@ function AppInner() {
                     <ThemedLayout
                       Header={Header}
                       Title={({ collapsed }) => (
-                        <ThemedTitle collapsed={collapsed} text="Monobase Admin" />
+                        <ThemedTitle
+                          collapsed={collapsed}
+                          text="Domnaer"
+                          icon={<Compass size={24} />}
+                        />
                       )}
                     >
                       <Outlet />
@@ -92,9 +99,6 @@ function AppInner() {
               >
                 <Route index element={<NavigateToResource resource="users" />} />
                 <Route path="/users" element={<UsersList />} />
-                <Route path="/items" element={<ItemsList />} />
-                <Route path="/items/create" element={<ItemsCreate />} />
-                <Route path="/items/edit/:id" element={<ItemsEdit />} />
                 <Route path="/attractions" element={<AttractionsList />} />
                 <Route path="/attractions/create" element={<AttractionsCreate />} />
                 <Route path="/attractions/edit/:id" element={<AttractionsEdit />} />
@@ -119,9 +123,9 @@ function AppInner() {
 function App() {
   return (
     <BrowserRouter>
-      <ColorModeProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
         <AppInner />
-      </ColorModeProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

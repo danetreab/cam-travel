@@ -11,8 +11,11 @@
 import { Route as rootRouteImport } from "./routes/__root"
 import { Route as GuestRouteRouteImport } from "./routes/_guest/route"
 import { Route as AuthedRouteRouteImport } from "./routes/_authed/route"
-import { Route as AuthedIndexRouteImport } from "./routes/_authed/index"
 import { Route as GuestLoginRouteImport } from "./routes/_guest/login"
+import { Route as AuthedSavedRouteImport } from "./routes/_authed/saved"
+import { Route as AuthedExploreRouteRouteImport } from "./routes/_authed/_explore/route"
+import { Route as AuthedExploreIndexRouteImport } from "./routes/_authed/_explore/index"
+import { Route as AuthedExploreAttractionAttractionIdRouteImport } from "./routes/_authed/_explore/attraction.$attractionId"
 
 const GuestRouteRoute = GuestRouteRouteImport.update({
   id: "/_guest",
@@ -22,38 +25,68 @@ const AuthedRouteRoute = AuthedRouteRouteImport.update({
   id: "/_authed",
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthedIndexRoute = AuthedIndexRouteImport.update({
-  id: "/",
-  path: "/",
-  getParentRoute: () => AuthedRouteRoute,
-} as any)
 const GuestLoginRoute = GuestLoginRouteImport.update({
   id: "/login",
   path: "/login",
   getParentRoute: () => GuestRouteRoute,
 } as any)
+const AuthedSavedRoute = AuthedSavedRouteImport.update({
+  id: "/saved",
+  path: "/saved",
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
+const AuthedExploreRouteRoute = AuthedExploreRouteRouteImport.update({
+  id: "/_explore",
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
+const AuthedExploreIndexRoute = AuthedExploreIndexRouteImport.update({
+  id: "/",
+  path: "/",
+  getParentRoute: () => AuthedExploreRouteRoute,
+} as any)
+const AuthedExploreAttractionAttractionIdRoute =
+  AuthedExploreAttractionAttractionIdRouteImport.update({
+    id: "/attraction/$attractionId",
+    path: "/attraction/$attractionId",
+    getParentRoute: () => AuthedExploreRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof AuthedIndexRoute
+  "/": typeof AuthedExploreIndexRoute
+  "/saved": typeof AuthedSavedRoute
   "/login": typeof GuestLoginRoute
+  "/attraction/$attractionId": typeof AuthedExploreAttractionAttractionIdRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof AuthedIndexRoute
+  "/": typeof AuthedExploreIndexRoute
+  "/saved": typeof AuthedSavedRoute
   "/login": typeof GuestLoginRoute
+  "/attraction/$attractionId": typeof AuthedExploreAttractionAttractionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/_authed": typeof AuthedRouteRouteWithChildren
   "/_guest": typeof GuestRouteRouteWithChildren
+  "/_authed/_explore": typeof AuthedExploreRouteRouteWithChildren
+  "/_authed/saved": typeof AuthedSavedRoute
   "/_guest/login": typeof GuestLoginRoute
-  "/_authed/": typeof AuthedIndexRoute
+  "/_authed/_explore/": typeof AuthedExploreIndexRoute
+  "/_authed/_explore/attraction/$attractionId": typeof AuthedExploreAttractionAttractionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/" | "/login"
+  fullPaths: "/" | "/saved" | "/login" | "/attraction/$attractionId"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/login"
-  id: "__root__" | "/_authed" | "/_guest" | "/_guest/login" | "/_authed/"
+  to: "/" | "/saved" | "/login" | "/attraction/$attractionId"
+  id:
+    | "__root__"
+    | "/_authed"
+    | "/_guest"
+    | "/_authed/_explore"
+    | "/_authed/saved"
+    | "/_guest/login"
+    | "/_authed/_explore/"
+    | "/_authed/_explore/attraction/$attractionId"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,13 +110,6 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    "/_authed/": {
-      id: "/_authed/"
-      path: "/"
-      fullPath: "/"
-      preLoaderRoute: typeof AuthedIndexRouteImport
-      parentRoute: typeof AuthedRouteRoute
-    }
     "/_guest/login": {
       id: "/_guest/login"
       path: "/login"
@@ -91,15 +117,59 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof GuestRouteRoute
     }
+    "/_authed/saved": {
+      id: "/_authed/saved"
+      path: "/saved"
+      fullPath: "/saved"
+      preLoaderRoute: typeof AuthedSavedRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
+    "/_authed/_explore": {
+      id: "/_authed/_explore"
+      path: ""
+      fullPath: "/"
+      preLoaderRoute: typeof AuthedExploreRouteRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
+    "/_authed/_explore/": {
+      id: "/_authed/_explore/"
+      path: "/"
+      fullPath: "/"
+      preLoaderRoute: typeof AuthedExploreIndexRouteImport
+      parentRoute: typeof AuthedExploreRouteRoute
+    }
+    "/_authed/_explore/attraction/$attractionId": {
+      id: "/_authed/_explore/attraction/$attractionId"
+      path: "/attraction/$attractionId"
+      fullPath: "/attraction/$attractionId"
+      preLoaderRoute: typeof AuthedExploreAttractionAttractionIdRouteImport
+      parentRoute: typeof AuthedExploreRouteRoute
+    }
   }
 }
 
+interface AuthedExploreRouteRouteChildren {
+  AuthedExploreIndexRoute: typeof AuthedExploreIndexRoute
+  AuthedExploreAttractionAttractionIdRoute: typeof AuthedExploreAttractionAttractionIdRoute
+}
+
+const AuthedExploreRouteRouteChildren: AuthedExploreRouteRouteChildren = {
+  AuthedExploreIndexRoute: AuthedExploreIndexRoute,
+  AuthedExploreAttractionAttractionIdRoute:
+    AuthedExploreAttractionAttractionIdRoute,
+}
+
+const AuthedExploreRouteRouteWithChildren =
+  AuthedExploreRouteRoute._addFileChildren(AuthedExploreRouteRouteChildren)
+
 interface AuthedRouteRouteChildren {
-  AuthedIndexRoute: typeof AuthedIndexRoute
+  AuthedExploreRouteRoute: typeof AuthedExploreRouteRouteWithChildren
+  AuthedSavedRoute: typeof AuthedSavedRoute
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
-  AuthedIndexRoute: AuthedIndexRoute,
+  AuthedExploreRouteRoute: AuthedExploreRouteRouteWithChildren,
+  AuthedSavedRoute: AuthedSavedRoute,
 }
 
 const AuthedRouteRouteWithChildren = AuthedRouteRoute._addFileChildren(

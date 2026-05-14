@@ -1,5 +1,6 @@
 import { queryOptions } from "@tanstack/react-query"
 import {
+  getAttractionById,
   listAttractions,
   listTopPerProvince,
   type ListAttractionsParams,
@@ -21,5 +22,12 @@ export const attractionsTopPerProvinceQueryOptions = (
   queryOptions({
     queryKey: ["attractions", "top-per-province", params],
     queryFn: () => listTopPerProvince(params),
+    staleTime: 60_000,
+  })
+
+export const attractionByIdQueryOptions = (id: string) =>
+  queryOptions({
+    queryKey: ["attractions", "by-id", id],
+    queryFn: () => getAttractionById(id),
     staleTime: 60_000,
   })

@@ -6,11 +6,15 @@ import { cn } from "@/lib/utils"
 
 interface LoginFormProps extends React.ComponentProps<"div"> {
   redirectTo?: string
+  // Skip the inline "Welcome / Sign in to continue" block — used when the
+  // surrounding container already provides a heading (e.g. dialog header).
+  hideHeading?: boolean
 }
 
 export function LoginForm({
   className,
   redirectTo = "/",
+  hideHeading = false,
   ...props
 }: LoginFormProps) {
   const handleLoginWithGoogle = async () => {
@@ -28,12 +32,12 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-xl font-bold">Welcome</h1>
-        <p className="text-muted-foreground text-sm">
-          Sign in to continue to Cam Travel
-        </p>
-      </div>
+      {!hideHeading && (
+        <div className="flex flex-col items-center gap-2 text-center">
+          <h1 className="text-xl font-bold">Welcome</h1>
+          <p className="text-sm text-muted-foreground">Sign in to continue</p>
+        </div>
+      )}
       <Button onClick={handleLoginWithGoogle} variant="outline" type="button">
         <FcGoogle className="mr-2 size-5" />
         Continue with Google

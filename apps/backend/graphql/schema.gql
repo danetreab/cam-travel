@@ -142,6 +142,8 @@ type Query {
   attractions(filter: AttractionFilter! = {}, paging: OffsetPaging! = {limit: 10, offset: 0}, sorting: [AttractionSort!]! = []): AttractionConnection!
   attraction(id: ID!): Attraction
   attractionsTopPerProvince(input: AttractionsTopPerProvinceInput!): [Attraction!]!
+  mySavedAttractions: [Attraction!]!
+  mySavedAttractionIds: [ID!]!
 }
 
 input UserFilter {
@@ -347,6 +349,8 @@ type Mutation {
   createManyAttraction(input: CreateManyAttractionInput!): [Attraction!]!
   updateOneAttraction(input: UpdateOneAttractionInput!): Attraction!
   updateManyAttraction(input: UpdateManyAttractionInput!): UpdateManyResponse!
+  saveAttraction(attractionId: ID!): Attraction!
+  unsaveAttraction(attractionId: ID!): ID!
 }
 
 input DeleteOneUserInput {

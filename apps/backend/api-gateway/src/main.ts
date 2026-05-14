@@ -17,21 +17,28 @@ async function bootstrap() {
     .filter(Boolean);
   app.enableCors({ origin: corsOrigins, credentials: true });
 
-  // Auth still goes over HTTP — better-auth requires HTTP semantics
-  // (cookies, OAuth redirects). Proxy /api/auth/* straight through.
+  // /api/auth/** proxies to the auth service over Docker-internal networking.
+  // The frontends only know about this gateway — they never call auth
+  // directly. better-auth on the auth service must have BETTER_AUTH_URL set
+  // to this gateway's public URL so it sets cookies and computes OAuth
+  // callback URLs against the domain the browser actually sees.
+  const authServiceUrl =
+    process.env.AUTH_SERVICE_URL ?? "http://localhost:3001";
   app.use(
     createProxyMiddleware({
-      pathFilter: "/api/auth/**",
-      target: process.env.AUTH_SERVICE_URL ?? "http://localhost:3001",
+      // Predicate form rather than an array literal: http-proxy-middleware v3
+      // rejects mixed string + glob arrays and silently drops requests when
+      // the matcher throws — the symptom was a 404 on the OAuth callback.
+      pathFilter: (pathname) => pathname.startsWith("/api/auth"),
+      target: authServiceUrl,
       changeOrigin: true,
-      xfwd: true,
     }),
   );
 
   // Multipart file upload endpoints live on the graphql service. They can't
-  // be sent over the Redis/TCP microservice transport (which is JSON-only),
-  // so we HTTP-proxy them like /api/auth/*. Browser requests stay same-origin
-  // and the better-auth session cookie still applies.
+  // be sent over the TCP microservice transport (which is JSON-only), so we
+  // HTTP-proxy them. The session cookie rides along via the shared
+  // parent-domain cookie set by auth.
   const graphqlHttpUrl =
     process.env.GRAPHQL_HTTP_URL ?? "http://localhost:3002";
   app.use(
@@ -45,12 +52,12 @@ async function bootstrap() {
       ],
       target: graphqlHttpUrl,
       changeOrigin: true,
-      xfwd: true,
     }),
   );
 
-  // /graphql is no longer HTTP-proxied. It's handled by GraphqlController,
-  // which forwards the query to the graphql service over Redis transport.
+  // /graphql/v1 is no longer HTTP-proxied. It's handled by GraphqlController,
+  // which forwards the query to the graphql service over the TCP microservice
+  // transport.
 
   await app.listen(process.env.PORT ?? 3000);
 }

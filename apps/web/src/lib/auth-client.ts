@@ -2,7 +2,7 @@ import { createAuthClient } from "better-auth/react"
 import { envClient } from "@/env"
 
 export const authClient = createAuthClient({
-  baseURL: envClient.VITE_API_URL,
+  baseURL: envClient.VITE_AUTH_URL,
   fetchOptions: {
     credentials: "include",
   },
@@ -14,6 +14,6 @@ export async function signOutRedirect() {
   } catch {
     // swallow — we still want to navigate away
   } finally {
-    window.location.href = "/login"
+    window.location.href = "/"
   }
 }

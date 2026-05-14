@@ -1,15 +1,24 @@
 import { useEffect, useRef, useState } from "react"
 import { useQuery, keepPreviousData } from "@tanstack/react-query"
+import { useNavigate, useRouterState } from "@tanstack/react-router"
 import {
+  ColorScheme,
   Map,
   useMap,
   type MapCameraChangedEvent,
 } from "@vis.gl/react-google-maps"
+import { useTheme } from "next-themes"
 import type { Layout } from "react-resizable-panels"
-import { ListIcon, MapTrifoldIcon } from "@phosphor-icons/react"
+import {
+  CrosshairIcon,
+  ListIcon,
+  MapTrifoldIcon,
+  SpinnerIcon,
+} from "@phosphor-icons/react"
 
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { useUserLocation } from "@/hooks/use-user-location"
 import {
   attractionsListQueryOptions,
   attractionsTopPerProvinceQueryOptions,
@@ -24,8 +33,10 @@ import {
 } from "@/components/ui/resizable"
 import { AttractionMarker } from "./attraction-marker"
 import { AttractionListCard } from "./attraction-list-card"
-import { AttractionDetailDialog } from "./attraction-detail-dialog"
+import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
+import { UserLocationMarker } from "./user-location-marker"
 import { Badge } from "@/components/ui/badge"
+import { toast } from "sonner"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
 const DEFAULT_ZOOM = 7
@@ -45,7 +56,13 @@ function limitForZoom(zoom: number): number {
   return 250
 }
 
-const PER_PROVINCE_COUNT = 20
+const PER_PROVINCE_COUNT = 4
+
+// Hard cap for the country/region zoom path. The per-province SQL can emit
+// more rows than the user can usefully scan — province strings in the data
+// have variants/duplicates, so 4 × distinct_provinces blows past 100. Cap to
+// keep marker render + sidebar list snappy on first paint.
+const COUNTRY_VIEW_CAP = 100
 
 const FOCUS_ZOOM = 15
 
@@ -76,38 +93,45 @@ function readStoredLayout(): Layout | undefined {
 
 export function ExploreView() {
   const map = useMap()
+  const { resolvedTheme } = useTheme()
+  const mapColorScheme =
+    resolvedTheme === "dark" ? ColorScheme.DARK : ColorScheme.LIGHT
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const [mobileView, setMobileView] = useState<"map" | "list">("map")
   const [defaultLayout] = useState<Layout | undefined>(readStoredLayout)
   const [bounds, setBounds] = useState<MapBounds | null>(null)
   const [zoom, setZoom] = useState<number>(DEFAULT_ZOOM)
-  const [searchOnMove, setSearchOnMove] = useState(true)
   const [activityType, setActivityType] = useState<string | null>(null)
   const debouncedBounds = useDebouncedValue(bounds, BOUNDS_DEBOUNCE_MS)
   const debouncedZoom = useDebouncedValue(zoom, BOUNDS_DEBOUNCE_MS)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const [selected, setSelected] = useState<Attraction | null>(null)
+  const navigate = useNavigate()
+  // Selection lives in the URL (`/attraction/$attractionId`). Reading the
+  // param from the child match keeps marker/list highlighting in sync with
+  // the modal route without duplicating state.
+  const selectedId = useRouterState({
+    select: (s) => {
+      const m = s.matches.find(
+        (m) => m.routeId === "/_authed/_explore/attraction/$attractionId"
+      )
+      return (m?.params as { attractionId?: string } | undefined)?.attractionId
+    },
+  })
   const listRef = useRef<HTMLDivElement>(null)
 
-  // When "search as I move" is off, freeze the bounds/zoom passed to the query.
-  const [frozenBounds, setFrozenBounds] = useState<MapBounds | null>(null)
-  const [frozenZoom, setFrozenZoom] = useState<number>(DEFAULT_ZOOM)
-  const effectiveBounds = searchOnMove ? debouncedBounds : frozenBounds
-  const effectiveZoom = searchOnMove ? debouncedZoom : frozenZoom
-
-  const usePerProvince = effectiveZoom <= PER_PROVINCE_ZOOM_THRESHOLD
+  const usePerProvince = debouncedZoom <= PER_PROVINCE_ZOOM_THRESHOLD
 
   const boundsQuery = useQuery({
     ...attractionsListQueryOptions(
-      effectiveBounds
+      debouncedBounds
         ? {
-            bounds: effectiveBounds,
-            limit: limitForZoom(effectiveZoom),
+            bounds: debouncedBounds,
+            limit: limitForZoom(debouncedZoom),
             activityType: activityType ?? undefined,
           }
         : {}
     ),
-    enabled: effectiveBounds != null && !usePerProvince,
+    enabled: debouncedBounds != null && !usePerProvince,
     placeholderData: keepPreviousData,
   })
 
@@ -117,29 +141,62 @@ export function ExploreView() {
   const perProvinceQuery = useQuery({
     ...attractionsTopPerProvinceQueryOptions({
       perProvince: PER_PROVINCE_COUNT,
-      bounds: effectiveBounds ?? undefined,
+      bounds: debouncedBounds ?? undefined,
       activityType: activityType ?? undefined,
     }),
-    enabled: effectiveBounds != null && usePerProvince,
+    enabled: debouncedBounds != null && usePerProvince,
     placeholderData: keepPreviousData,
   })
 
-  const { data, isFetching, error } = usePerProvince
+  const { data, isFetching, isLoading, error } = usePerProvince
     ? perProvinceQuery
     : boundsQuery
 
-  const items = data?.items ?? []
+  const rawItems = data?.items ?? []
+  // At country/region zoom, keep the most-popular ~100 across all provinces.
+  // The per-province SQL already caps to N per province; this trims the long
+  // tail of low-traffic provinces so the first paint is fast without losing
+  // the marquee places.
+  const items = usePerProvince
+    ? [...rawItems]
+        .sort(
+          (a, b) =>
+            (b.cachedUserRatingsTotal ?? 0) - (a.cachedUserRatingsTotal ?? 0),
+        )
+        .slice(0, COUNTRY_VIEW_CAP)
+    : rawItems
+
+  const userLocation = useUserLocation()
+
+  const handleLocateMe = () => {
+    userLocation.locate()
+  }
+
+  // Surface geolocation errors as a toast and pan the map when we get a fix.
+  useEffect(() => {
+    if (userLocation.status === "granted" && userLocation.position && map) {
+      map.panTo(userLocation.position)
+      const current = map.getZoom() ?? FOCUS_ZOOM
+      if (current < 13) map.setZoom(13)
+    }
+  }, [userLocation.status, userLocation.position, map])
 
   useEffect(() => {
-    if (!selected) return
+    if (userLocation.error && userLocation.status !== "loading") {
+      toast.error(userLocation.error)
+    }
+  }, [userLocation.error, userLocation.status])
+
+  useEffect(() => {
+    if (!selectedId) return
     // The list is off-screen on mobile while the map is showing; calling
     // scrollIntoView on a translated element can scroll the page itself.
     if (!isDesktop && mobileView !== "list") return
     const el = listRef.current?.querySelector<HTMLElement>(
-      `[data-attr-id="${selected.id}"]`
+      `[data-attr-id="${selectedId}"]`
     )
     el?.scrollIntoView({ behavior: "smooth", block: "nearest" })
-  }, [selected, isDesktop, mobileView])
+  }, [selectedId, isDesktop, mobileView])
 
   const handleCameraChanged = (ev: MapCameraChangedEvent) => {
     const b = ev.detail.bounds
@@ -151,8 +208,15 @@ export function ExploreView() {
     }
   }
 
+  const openAttraction = (a: Attraction) => {
+    navigate({
+      to: "/attraction/$attractionId",
+      params: { attractionId: a.id },
+    })
+  }
+
   const handleCardClick = (a: Attraction) => {
-    setSelected(a)
+    openAttraction(a)
     if (map) {
       map.panTo({ lat: a.latitude, lng: a.longitude })
       // Never zoom out — if user is already closer in, keep their zoom.
@@ -165,12 +229,17 @@ export function ExploreView() {
     <>
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold tracking-tight">
-          {effectiveBounds == null
+          {debouncedBounds == null
             ? "Move the map to explore"
-            : `${items.length} place${items.length === 1 ? "" : "s"} in view`}
+            : isLoading
+              ? "Finding places…"
+              : `${items.length} place${items.length === 1 ? "" : "s"} in view`}
         </h2>
         {isFetching && (
-          <span className="text-xs text-muted-foreground">Updating…</span>
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+            <SpinnerIcon className="size-3 animate-spin" />
+            Updating…
+          </span>
         )}
       </div>
 
@@ -214,18 +283,22 @@ export function ExploreView() {
       </div>
 
       <div className="flex flex-col gap-2">
-        {items.map((a) => (
-          <div key={a.id} data-attr-id={a.id}>
-            <AttractionListCard
-              attraction={a}
-              active={hoveredId === a.id || selected?.id === a.id}
-              onClick={() => handleCardClick(a)}
-              onHover={() => setHoveredId(a.id)}
-              onLeave={() => setHoveredId(null)}
-            />
-          </div>
-        ))}
-        {!isFetching && effectiveBounds != null && items.length === 0 && (
+        {isLoading && items.length === 0
+          ? Array.from({ length: 6 }).map((_, i) => (
+              <AttractionListCardSkeleton key={i} />
+            ))
+          : items.map((a) => (
+              <div key={a.id} data-attr-id={a.id}>
+                <AttractionListCard
+                  attraction={a}
+                  active={hoveredId === a.id || selectedId === a.id}
+                  onClick={() => handleCardClick(a)}
+                  onHover={() => setHoveredId(a.id)}
+                  onLeave={() => setHoveredId(null)}
+                />
+              </div>
+            ))}
+        {!isFetching && debouncedBounds != null && items.length === 0 && (
           <p className="text-sm text-muted-foreground">
             No attractions in this area. Try panning or zooming out.
           </p>
@@ -240,43 +313,58 @@ export function ExploreView() {
       defaultCenter={DEFAULT_CENTER}
       defaultZoom={DEFAULT_ZOOM}
       gestureHandling="greedy"
-      disableDefaultUI={false}
+      disableDefaultUI
       onCameraChanged={handleCameraChanged}
+      colorScheme={mapColorScheme}
       className="h-full w-full"
     >
       {items.map((a) => (
         <AttractionMarker
           key={a.id}
           attraction={a}
-          active={hoveredId === a.id || selected?.id === a.id}
-          onClick={() => setSelected(a)}
+          active={hoveredId === a.id || selectedId === a.id}
+          onClick={() => openAttraction(a)}
         />
       ))}
+      {userLocation.position && (
+        <UserLocationMarker position={userLocation.position} />
+      )}
     </Map>
   )
 
-  const searchAsIMoveLabel = (
-    <label className="flex cursor-pointer items-center gap-2 rounded-full border bg-white px-4 py-2 text-xs font-medium shadow-md select-none">
-      <input
-        type="checkbox"
-        checked={searchOnMove}
-        onChange={(e) => {
-          const next = e.target.checked
-          setSearchOnMove(next)
-          if (!next && bounds) {
-            setFrozenBounds(bounds)
-            setFrozenZoom(zoom)
-          }
-        }}
-        className="align-middle"
-      />
-      Search as I move the map
-    </label>
+  const locateMeButton = (
+    <button
+      type="button"
+      onClick={handleLocateMe}
+      disabled={userLocation.status === "loading"}
+      aria-label="Show my location"
+      title="Show my location"
+      className={cn(
+        "bg-background text-foreground flex h-11 w-11 items-center justify-center rounded-full border shadow-md transition-colors",
+        "hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60",
+        userLocation.status === "granted" && "text-blue-600 dark:text-blue-400",
+      )}
+    >
+      {userLocation.status === "loading" ? (
+        <SpinnerIcon className="h-5 w-5 animate-spin" />
+      ) : (
+        <CrosshairIcon className="h-5 w-5" weight="bold" />
+      )}
+    </button>
+  )
+
+  const mapFetchingOverlay = isFetching && (
+    <div className="pointer-events-none absolute top-4 left-1/2 z-10 -translate-x-1/2">
+      <div className="bg-background/95 text-foreground flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur">
+        <SpinnerIcon className="size-3.5 animate-spin" />
+        Updating…
+      </div>
+    </div>
   )
 
   if (isDesktop) {
     return (
-      <div className="h-[calc(100svh-3.5rem)]">
+      <div className="h-svh md:h-[calc(100svh-3.5rem)]">
         <ResizablePanelGroup
           orientation="horizontal"
           defaultLayout={defaultLayout}
@@ -311,17 +399,13 @@ export function ExploreView() {
           <ResizablePanel id={MAP_PANEL_ID} defaultSize="64%" minSize="30%">
             <div className="relative h-full">
               {mapElement}
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2">
-                {searchAsIMoveLabel}
+              {mapFetchingOverlay}
+              <div className="absolute right-4 bottom-6 z-10">
+                {locateMeButton}
               </div>
             </div>
           </ResizablePanel>
         </ResizablePanelGroup>
-
-        <AttractionDetailDialog
-          attraction={selected}
-          onOpenChange={(open) => !open && setSelected(null)}
-        />
       </div>
     )
   }
@@ -330,13 +414,13 @@ export function ExploreView() {
   // Airbnb-style pill button at the bottom. Keep the map mounted underneath
   // so its viewport state survives toggling and Google Maps doesn't reload.
   return (
-    <div className="relative h-[calc(100svh-3.5rem)] overflow-hidden">
+    <div className="relative h-svh overflow-hidden md:h-[calc(100svh-3.5rem)]">
       <div className="absolute inset-0">{mapElement}</div>
 
+      {mobileView === "map" && mapFetchingOverlay}
+
       {mobileView === "map" && (
-        <div className="pointer-events-none absolute top-4 right-4 left-4 flex justify-center">
-          <div className="pointer-events-auto">{searchAsIMoveLabel}</div>
-        </div>
+        <div className="absolute right-4 bottom-24 z-10">{locateMeButton}</div>
       )}
 
       <aside
@@ -367,11 +451,6 @@ export function ExploreView() {
           </>
         )}
       </button>
-
-      <AttractionDetailDialog
-        attraction={selected}
-        onOpenChange={(open) => !open && setSelected(null)}
-      />
     </div>
   )
 }

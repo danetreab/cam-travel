@@ -221,12 +221,16 @@ function AttractionGallery({
 }) {
   const sections = buildSections(attraction.files, attraction.name)
   return (
-    // On mobile, the bottom sheet animates up under the user's finger after
-    // the pin tap. Without this guard the synthesized click lands on the
-    // hero image (wrapped in PhotoView) and opens the lightbox instead of
-    // showing details. Block pointer events until the open animation has
-    // settled.
-    <div className={`mt-2 ${galleryArmed ? "" : "pointer-events-none"}`}>
+    // `data-vaul-no-drag` tells the parent vaul Drawer to ignore pointer-
+    // downs that originate inside the gallery — without it, tapping an image
+    // gets interpreted as the start of a drag-to-dismiss gesture and the
+    // PhotoView lightbox never opens (and once open, swipe/zoom is hijacked).
+    // The galleryArmed guard still blocks the synthesized click that lands
+    // on the hero image right after the drawer animates in.
+    <div
+      data-vaul-no-drag
+      className={`mt-2 ${galleryArmed ? "" : "pointer-events-none"}`}
+    >
       {sections.length === 0 ? (
         <div className="bg-muted text-muted-foreground flex h-72 items-center justify-center text-sm">
           No photos or videos yet

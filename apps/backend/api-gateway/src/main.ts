@@ -1,7 +1,7 @@
 import "dotenv/config";
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
-import { createProxyMiddleware } from "http-proxy-middleware";
+import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
@@ -32,6 +32,17 @@ async function bootstrap() {
       pathFilter: (pathname) => pathname.startsWith("/api/auth"),
       target: authServiceUrl,
       changeOrigin: true,
+      // NestJS's default Express body parser consumes the request stream
+      // before the proxy runs, so every JSON POST to /api/auth/** would
+      // forward an empty body upstream — better-auth then throws on the
+      // missing fields and Express's default error handler returns a bare
+      // "Internal Server Error" with no CORS headers (verified against prod:
+      // curl direct-to-auth returned 200 + the OAuth URL, but via the proxy
+      // returned the 21-byte plain-text 500). fixRequestBody re-serializes
+      // req.body onto the upstream request and fixes Content-Length.
+      // We can't disable bodyParser globally because the gateway has its
+      // own controllers (graphql.controller.ts) that use @Body().
+      on: { proxyReq: fixRequestBody },
     }),
   );
 

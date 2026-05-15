@@ -4,7 +4,7 @@ import { ColorScheme, Map, useMap } from "@vis.gl/react-google-maps"
 import { ListIcon, MapTrifoldIcon, SpinnerIcon } from "@phosphor-icons/react"
 import { useTheme } from "next-themes"
 
-import { AttractionDetailDialog } from "@/components/features/explore/attraction-detail-dialog"
+import { AttractionDetailView } from "@/components/features/explore/attraction-detail-view"
 import { AttractionListCard } from "@/components/features/explore/attraction-list-card"
 import { AttractionListCardSkeleton } from "@/components/features/explore/attraction-list-card-skeleton"
 import { AttractionMarker } from "@/components/features/explore/attraction-marker"
@@ -176,7 +176,7 @@ export function SavedView() {
           </ResizablePanel>
         </ResizablePanelGroup>
 
-        <AttractionDetailDialog
+        <AttractionDetailView
           attraction={selected}
           onOpenChange={(open) => !open && setSelected(null)}
         />
@@ -217,7 +217,7 @@ export function SavedView() {
         )}
       </button>
 
-      <AttractionDetailDialog
+      <AttractionDetailView
         attraction={selected}
         onOpenChange={(open) => !open && setSelected(null)}
       />

@@ -1,12 +1,16 @@
 import { useEffect, useMemo, useState } from "react"
-import { Bookmark, ExternalLink, Share2, Star, X } from "lucide-react"
-import { toast } from "sonner"
 import {
-  SaveAttractionButton,
-  useSaveAttraction,
-} from "./save-attraction-button"
-import type { GalleryItem, GallerySection } from "@/components/ui/gallery"
-import type { Attraction, AttractionFile } from "@/types/attraction"
+  ArrowLeft,
+  Bookmark,
+  ExternalLink,
+  Share2,
+  Star,
+  X,
+} from "lucide-react"
+import { PhotoSlider } from "react-photo-view"
+import "react-photo-view/dist/react-photo-view.css"
+import { toast } from "sonner"
+
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -16,10 +20,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import Gallery from "@/components/ui/gallery"
-import { Lightbox, type LightboxImage } from "@/components/ui/lightbox"
+import Gallery, {
+  type GalleryItem,
+  type GallerySection,
+} from "@/components/ui/gallery"
+import { Spinner } from "@/components/ui/spinner"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils"
+import type { Attraction, AttractionFile } from "@/types/attraction"
+import {
+  SaveAttractionButton,
+  useSaveAttraction,
+} from "./save-attraction-button"
 
 function toGalleryItem(file: AttractionFile, name: string): GalleryItem | null {
   if (file.mimetype.startsWith("image/")) {
@@ -34,13 +46,13 @@ function toGalleryItem(file: AttractionFile, name: string): GalleryItem | null {
 // Alternate hero (1 item) and grid (4 items) sections so each attraction gets
 // the same visual rhythm regardless of photo count.
 function buildSections(
-  files: Array<AttractionFile>,
+  files: AttractionFile[],
   name: string,
-): Array<GallerySection> {
+): GallerySection[] {
   const items = files
     .map((f) => toGalleryItem(f, name))
     .filter((x): x is GalleryItem => x != null)
-  const sections: Array<GallerySection> = []
+  const sections: GallerySection[] = []
   let i = 0
   let hero = true
   while (i < items.length) {
@@ -56,23 +68,27 @@ function buildSections(
   return sections
 }
 
-interface AttractionDetailDialogProps {
+interface AttractionDetailViewProps {
   attraction: Attraction | null
   isLoading?: boolean
   onOpenChange: (open: boolean) => void
 }
 
+// Fills the available column with a centered spinner — used by both the
+// mobile shell (where it occupies the entire scrollable area after a pin
+// tap) and the desktop dialog. Mobile users tap a pin and see this
+// immediately, so it has to look intentional, not "blank screen".
 function AttractionLoading() {
   return (
-    <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
-      Loading…
+    <div className="flex flex-1 min-h-[12rem] items-center justify-center py-12 text-muted-foreground">
+      <Spinner className="size-8" />
     </div>
   )
 }
 
 function AttractionMeta({ attraction }: { attraction: Attraction }) {
   return (
-    <span className="flex flex-wrap items-center gap-2 pt-1">
+    <span className="flex flex-wrap items-center gap-2 pt-1 text-xs text-muted-foreground">
       {attraction.province && <span>{attraction.province}</span>}
       {attraction.cachedRating != null && (
         <>
@@ -89,7 +105,9 @@ function AttractionMeta({ attraction }: { attraction: Attraction }) {
         </>
       )}
       {attraction.activityType && (
-        <Badge variant="secondary">{attraction.activityType}</Badge>
+        <Badge variant="secondary" className="ml-1">
+          {attraction.activityType}
+        </Badge>
       )}
     </span>
   )
@@ -102,7 +120,6 @@ function TabBarTab({
   disabled = false,
   onClick,
   href,
-  className,
 }: {
   icon: React.ReactNode
   label: string
@@ -110,7 +127,6 @@ function TabBarTab({
   disabled?: boolean
   onClick?: () => void
   href?: string
-  className?: string
 }) {
   const inner = (
     <>
@@ -120,15 +136,12 @@ function TabBarTab({
       <span className="text-[10px] leading-none tracking-wide">{label}</span>
     </>
   )
-
   const base = cn(
     "flex flex-1 flex-col items-center justify-center gap-1 py-2 transition-colors",
     active ? "text-primary" : "text-muted-foreground",
     !disabled && "active:bg-muted/40",
     disabled && "opacity-50",
-    className,
   )
-
   if (href) {
     return (
       <a
@@ -167,7 +180,7 @@ function AttractionTabBar({
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
 
   return (
-    <div className="border-t bg-popover/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] supports-backdrop-filter:bg-popover/80 supports-backdrop-filter:backdrop-blur">
+    <div className="border-t bg-background/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] supports-backdrop-filter:bg-background/80 supports-backdrop-filter:backdrop-blur">
       <div className="mx-auto flex max-w-md items-stretch">
         <TabBarTab
           icon={
@@ -203,27 +216,22 @@ function AttractionTabBar({
 
 function AttractionGallery({
   attraction,
-  galleryArmed,
   onOpenImage,
 }: {
   attraction: Attraction
-  galleryArmed: boolean
   onOpenImage: (imageIndex: number) => void
 }) {
   const sections = buildSections(attraction.files, attraction.name)
+  if (sections.length === 0) {
+    return (
+      <div className="mt-2 bg-muted text-muted-foreground flex h-72 items-center justify-center text-sm">
+        No photos or videos yet
+      </div>
+    )
+  }
   return (
-    // `galleryArmed` swallows the synthesized click that lands here right
-    // after the page mounts (from the same tap that opened the route — the
-    // ~300ms ghost click otherwise lands on the freshly-rendered hero image
-    // and immediately opens the lightbox).
-    <div className={cn("mt-2", !galleryArmed && "pointer-events-none")}>
-      {sections.length === 0 ? (
-        <div className="bg-muted text-muted-foreground flex h-72 items-center justify-center text-sm">
-          No photos or videos yet
-        </div>
-      ) : (
-        <Gallery sections={sections} onOpenImage={onOpenImage} />
-      )}
+    <div className="mt-2">
+      <Gallery sections={sections} onOpenImage={onOpenImage} />
     </div>
   )
 }
@@ -242,15 +250,11 @@ async function shareAttraction(attraction: Attraction) {
     typeof window !== "undefined"
       ? `${window.location.origin}/attraction/${attraction.id}`
       : `/attraction/${attraction.id}`
-  // Use Web Share on platforms that support it (mostly mobile + Safari) so
-  // the user picks their own target (Messages, AirDrop, etc.); fall back to
-  // clipboard with a toast confirmation everywhere else.
   if (typeof navigator !== "undefined" && "share" in navigator) {
     try {
       await navigator.share({ title: attraction.name, url })
       return
     } catch (err) {
-      // User-cancelled share — silent. Anything else falls through to copy.
       if (err instanceof Error && err.name === "AbortError") return
     }
   }
@@ -262,7 +266,7 @@ async function shareAttraction(attraction: Attraction) {
   }
 }
 
-function AttractionInlineActions({ attraction }: { attraction: Attraction }) {
+function DesktopActions({ attraction }: { attraction: Attraction }) {
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
   return (
     <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -288,160 +292,149 @@ function AttractionInlineActions({ attraction }: { attraction: Attraction }) {
   )
 }
 
-// Body content shared by both the mobile full-screen page and the desktop
-// dialog: title, gallery, description. The action surface (tab bar vs inline
-// buttons) is rendered by the wrapper since it needs to know about the close
-// affordance.
-function AttractionBody({
+// Full-screen mobile shell. Replaces the previous vaul Drawer entirely:
+// since vaul installed document-level pointer/touch handlers, every
+// react-photo-view gesture had to fight it. Without vaul, the lightbox
+// just works.
+function MobileShell({
   attraction,
-  galleryArmed,
+  isLoading,
+  onClose,
   onOpenImage,
 }: {
-  attraction: Attraction
-  galleryArmed: boolean
+  attraction: Attraction | null
+  isLoading: boolean
+  onClose: () => void
   onOpenImage: (imageIndex: number) => void
 }) {
-  return (
-    <>
-      <AttractionGallery
-        attraction={attraction}
-        galleryArmed={galleryArmed}
-        onOpenImage={onOpenImage}
-      />
-      <AttractionDescription attraction={attraction} />
-    </>
-  )
-}
-
-export function AttractionDetailDialog({
-  attraction,
-  isLoading = false,
-  onOpenChange,
-}: AttractionDetailDialogProps) {
-  // Tablets and up get the centered Dialog; phones get a dedicated full-
-  // screen page. Two surfaces, no shared modal wrapper, no vaul gesture
-  // arbitration to fight with the photo lightbox.
-  const isDesktop = useMediaQuery("(min-width: 768px)")
-  // Stay open while the route is mounted, even before data arrives — the
-  // direct-link case (e.g. shared URL) hits the modal route with no cached
-  // data, and closing the dialog while it loads would be jarring.
-  const open = attraction != null || isLoading
-
-  // See AttractionGallery for why this exists.
-  const [galleryArmed, setGalleryArmed] = useState(false)
-  // Lightbox state lives here so the lightbox can be a sibling of the modal
-  // surface — keeps its synthetic events out of the surrounding React tree
-  // and prevents any parent gesture handlers from intercepting taps on it.
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
-
-  const lightboxImages = useMemo<LightboxImage[]>(() => {
-    if (!attraction) return []
-    return attraction.files
-      .filter((f) => f.mimetype.startsWith("image/"))
-      .map((f) => ({ src: f.url, alt: attraction.name }))
-  }, [attraction])
-
+  // Lock the body so the page underneath (map) doesn't scroll while the
+  // detail view is up. Keep this scoped to mount — the cleanup restores
+  // whatever the body had before.
   useEffect(() => {
-    if (!open) {
-      setGalleryArmed(false)
-      setLightboxIndex(null)
-      return
-    }
-    if (isDesktop) {
-      setGalleryArmed(true)
-      return
-    }
-    const t = window.setTimeout(() => setGalleryArmed(true), 250)
-    return () => window.clearTimeout(t)
-  }, [open, isDesktop])
-
-  // ESC closes the mobile full-screen page. Lightbox owns its own ESC and
-  // is checked first so closing the lightbox doesn't also dismiss the page.
-  useEffect(() => {
-    if (isDesktop || !open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && lightboxIndex === null) onOpenChange(false)
-    }
-    window.addEventListener("keydown", onKey)
-    return () => window.removeEventListener("keydown", onKey)
-  }, [isDesktop, open, lightboxIndex, onOpenChange])
-
-  // Lock body scroll while the mobile page is up (Dialog already does this
-  // on desktop). Prevents the layer behind from scrolling on rubber-band.
-  useEffect(() => {
-    if (isDesktop || !open) return
     const prev = document.body.style.overflow
     document.body.style.overflow = "hidden"
     return () => {
       document.body.style.overflow = prev
     }
-  }, [isDesktop, open])
+  }, [])
+
+  // ESC closes — matches the desktop Dialog behavior so the close affordance
+  // is consistent across breakpoints when a hardware keyboard is attached.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose()
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [onClose])
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label={attraction?.name ?? "Attraction details"}
+      className="fixed inset-0 z-50 flex flex-col bg-background"
+    >
+      <header className="sticky top-0 z-10 flex items-center gap-2 border-b bg-background/95 px-2 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2 supports-backdrop-filter:bg-background/80 supports-backdrop-filter:backdrop-blur">
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Back"
+          className="-ml-1 rounded-md p-2 text-foreground active:bg-muted/40"
+        >
+          <ArrowLeft className="size-5" />
+        </button>
+        <div className="min-w-0 flex-1">
+          {attraction ? (
+            <>
+              <h1 className="truncate text-base font-semibold leading-tight">
+                {attraction.name}
+              </h1>
+              <AttractionMeta attraction={attraction} />
+            </>
+          ) : (
+            <div className="h-5 w-32 animate-pulse rounded bg-muted" />
+          )}
+        </div>
+      </header>
+
+      <main className="flex-1 overflow-y-auto overscroll-contain px-4 pb-4">
+        {attraction ? (
+          <>
+            <AttractionGallery
+              attraction={attraction}
+              onOpenImage={onOpenImage}
+            />
+            <AttractionDescription attraction={attraction} />
+          </>
+        ) : isLoading ? (
+          <AttractionLoading />
+        ) : null}
+      </main>
+
+      {attraction && (
+        <AttractionTabBar attraction={attraction} onClose={onClose} />
+      )}
+    </div>
+  )
+}
+
+export function AttractionDetailView({
+  attraction,
+  isLoading = false,
+  onOpenChange,
+}: AttractionDetailViewProps) {
+  const isDesktop = useMediaQuery("(min-width: 768px)")
+  // Stay open while the route is mounted, even before data arrives — direct-
+  // link case (shared URL) hits with no cached data and closing during load
+  // would be jarring.
+  const open = attraction != null || isLoading
+
+  // Lightbox state lives here; the slider itself renders as a sibling of
+  // the shell so its events never bubble through any modal library's React
+  // tree (no gesture conflicts).
+  const [lightboxIndex, setLightboxIndex] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+
+  const lightboxImages = useMemo(() => {
+    if (!attraction) return []
+    return attraction.files
+      .filter((f) => f.mimetype.startsWith("image/"))
+      .map((f, i) => ({ key: i, src: f.url }))
+  }, [attraction])
+
+  useEffect(() => {
+    if (!open) setLightboxOpen(false)
+  }, [open])
+
+  const openLightboxAt = (index: number) => {
+    setLightboxIndex(index)
+    setLightboxOpen(true)
+  }
+
+  const close = () => onOpenChange(false)
 
   const lightbox = (
-    <Lightbox
+    <PhotoSlider
       images={lightboxImages}
       index={lightboxIndex}
-      onClose={() => setLightboxIndex(null)}
       onIndexChange={setLightboxIndex}
+      visible={lightboxOpen}
+      onClose={() => setLightboxOpen(false)}
     />
   )
 
+  if (!open) return lightbox
+
   if (!isDesktop) {
-    if (!open) return null
     return (
       <>
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={attraction?.name ?? "Attraction details"}
-          className="fixed inset-0 z-50 flex flex-col bg-background animate-in fade-in slide-in-from-bottom-4 duration-200"
-        >
-          {/* Sticky header so the title + close X stay accessible while
-              the body scrolls. Safe-area padding handles iOS notches. */}
-          <header className="sticky top-0 z-10 flex items-start gap-3 border-b bg-background/95 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 supports-backdrop-filter:bg-background/80 supports-backdrop-filter:backdrop-blur">
-            <div className="min-w-0 flex-1">
-              {attraction ? (
-                <>
-                  <h1 className="truncate text-base font-semibold leading-tight">
-                    {attraction.name}
-                  </h1>
-                  <div className="mt-0.5 text-xs text-muted-foreground">
-                    <AttractionMeta attraction={attraction} />
-                  </div>
-                </>
-              ) : (
-                <span className="text-sm text-muted-foreground">Loading…</span>
-              )}
-            </div>
-            <button
-              type="button"
-              onClick={() => onOpenChange(false)}
-              aria-label="Close"
-              className="-mr-1 -mt-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground active:bg-muted/60"
-            >
-              <X className="size-5" />
-            </button>
-          </header>
-
-          <main className="flex-1 overflow-y-auto px-4 pb-6">
-            {attraction ? (
-              <AttractionBody
-                attraction={attraction}
-                galleryArmed={galleryArmed}
-                onOpenImage={setLightboxIndex}
-              />
-            ) : (
-              <AttractionLoading />
-            )}
-          </main>
-
-          {attraction && (
-            <AttractionTabBar
-              attraction={attraction}
-              onClose={() => onOpenChange(false)}
-            />
-          )}
-        </div>
+        <MobileShell
+          attraction={attraction}
+          isLoading={isLoading}
+          onClose={close}
+          onOpenImage={openLightboxAt}
+        />
         {lightbox}
       </>
     )
@@ -459,12 +452,12 @@ export function AttractionDetailDialog({
                   <AttractionMeta attraction={attraction} />
                 </DialogDescription>
               </DialogHeader>
-              <AttractionBody
+              <AttractionGallery
                 attraction={attraction}
-                galleryArmed={galleryArmed}
-                onOpenImage={setLightboxIndex}
+                onOpenImage={openLightboxAt}
               />
-              <AttractionInlineActions attraction={attraction} />
+              <AttractionDescription attraction={attraction} />
+              <DesktopActions attraction={attraction} />
             </>
           ) : (
             <AttractionLoading />

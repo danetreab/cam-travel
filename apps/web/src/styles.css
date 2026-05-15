@@ -146,3 +146,11 @@
     @apply font-sans;
     }
 }
+
+/* react-photo-view portals into document.body. Radix Dialog's
+   react-remove-scroll disables pointer events on body while open, which the
+   portal would otherwise inherit — making taps inside the lightbox fall
+   through to whatever sits behind it. Opt the lightbox back in. */
+.PhotoView-Portal {
+  pointer-events: auto;
+}

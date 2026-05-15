@@ -1,82 +1,109 @@
-import { PhotoProvider, PhotoView } from "react-photo-view"
-import "react-photo-view/dist/react-photo-view.css"
 import { cn } from "@/lib/utils"
 
-type GalleryItem = {
+export type GalleryItem = {
   src: string
   alt: string
   kind?: "image" | "video"
 }
 
-type GallerySection = {
+export type GallerySection = {
   type?: "grid"
-  images: GalleryItem[]
+  items: Array<GalleryItem>
 }
 
 const Gallery = ({
   sections,
-  onVisibleChange,
+  onOpenImage,
 }: {
-  sections: GallerySection[]
-  onVisibleChange?: (visible: boolean) => void
+  sections: Array<GallerySection>
+  // Index into the flat list of *images* (videos excluded), matching what's
+  // passed to the controlled PhotoSlider.
+  onOpenImage?: (imageIndex: number) => void
 }) => {
+  // Walk sections in render order and assign each image its position in the
+  // flat image-only list, so the lightbox opens on the right photo.
+  let cursor = 0
   return (
-    <PhotoProvider
-      onVisibleChange={(visible) => onVisibleChange?.(visible)}
-    >
-      <section>
-        <div className="grid gap-4 md:grid-cols-2">
-          {sections.map((section, sectionIndex) => {
-            const isGrid = section.type === "grid"
-            return (
-              <div
-                key={sectionIndex}
-                className={cn({ "grid grid-cols-2 gap-4": isGrid })}
-              >
-                {section.images.map((item, imageIndex) => (
-                  <GalleryTile
-                    key={imageIndex}
+    <section>
+      <div className="grid gap-4 md:grid-cols-2">
+        {sections.map((section, sectionIndex) => {
+          const isGrid = section.type === "grid"
+          const aspect = isGrid ? "aspect-square" : "aspect-[16/9]"
+          return (
+            <div
+              key={sectionIndex}
+              className={cn({ "grid grid-cols-2 gap-4": isGrid })}
+            >
+              {section.items.map((item, itemIndex) => {
+                if (item.kind === "video") {
+                  return (
+                    <VideoTile
+                      key={itemIndex}
+                      item={item}
+                      aspect={aspect}
+                    />
+                  )
+                }
+                const imageIndex = cursor++
+                return (
+                  <ImageTile
+                    key={itemIndex}
                     item={item}
-                    aspect={isGrid ? "aspect-square" : "aspect-[16/9]"}
+                    aspect={aspect}
+                    onClick={() => onOpenImage?.(imageIndex)}
                   />
-                ))}
-              </div>
-            )
-          })}
-        </div>
-      </section>
-    </PhotoProvider>
+                )
+              })}
+            </div>
+          )
+        })}
+      </div>
+    </section>
   )
 }
 
-function GalleryTile({
+function ImageTile({
+  item,
+  aspect,
+  onClick,
+}: {
+  item: GalleryItem
+  aspect: string
+  onClick: () => void
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn("block h-full w-full overflow-hidden", aspect)}
+      aria-label={`Open ${item.alt}`}
+    >
+      <img
+        src={item.src}
+        alt={item.alt}
+        loading="lazy"
+        draggable={false}
+        className="h-full w-full cursor-zoom-in bg-muted object-cover"
+      />
+    </button>
+  )
+}
+
+function VideoTile({
   item,
   aspect,
 }: {
   item: GalleryItem
   aspect: string
 }) {
-  const className = cn("h-full w-full bg-muted object-cover", aspect)
-  if (item.kind === "video") {
-    return (
-      <video
-        src={item.src}
-        controls
-        playsInline
-        className={className}
-        aria-label={item.alt}
-      />
-    )
-  }
   return (
-    <PhotoView src={item.src}>
-      <img
-        src={item.src}
-        alt={item.alt}
-        loading="lazy"
-        className={cn(className, "cursor-zoom-in")}
-      />
-    </PhotoView>
+    <video
+      src={item.src}
+      controls
+      playsInline
+      className={cn("h-full w-full bg-muted object-cover", aspect)}
+      aria-label={item.alt}
+    />
   )
 }
 

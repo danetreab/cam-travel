@@ -57,13 +57,8 @@ export function useSaveAttraction(attractionId: string) {
 
   const loginDialog = useLoginDialog()
 
-  const promptSignIn = () =>
-    toast("Sign in to save", {
-      action: { label: "Sign in", onClick: () => loginDialog.open() },
-    })
-
   const toggle = () => {
-    if (!signedIn) return promptSignIn()
+    if (!signedIn) return loginDialog.open()
     mutation.mutate(!saved)
   }
 

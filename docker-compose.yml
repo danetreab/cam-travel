@@ -55,19 +55,19 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       REDIS_URL: redis://default:${REDIS_PASSWORD}@redis:6379/0
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
-      # BETTER_AUTH_URL must be the gateway's public URL, not auth's own
-      # hostname. Browsers reach auth only via the gateway's /api/auth/**
-      # proxy, so cookies and OAuth callback URLs must be computed against
-      # the gateway domain or the browser will reject Set-Cookie / Google
-      # will reject the redirect URI.
+      # Auth's own public URL (e.g. https://auth.example.com). Browsers
+      # call auth directly — frontends point VITE_AUTH_URL at this same
+      # host. Going direct (not via the gateway proxy) avoids the
+      # body-parser / proxy gesture that silently corrupted POST bodies.
+      # The Google OAuth redirect URI is computed as
+      # `${BETTER_AUTH_URL}/api/auth/callback/google` and must be
+      # registered in Google Cloud Console for this exact URL.
       BETTER_AUTH_URL: ${BETTER_AUTH_URL}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       CORS_ORIGINS: ${CORS_ORIGINS}
-      # Scopes the session cookie to a parent domain so the gateway and the
-      # web/dashboard subdomains all see it. The auth service itself does
-      # not need a public Coolify domain anymore — traffic comes in through
-      # the gateway's internal /api/auth proxy.
+      # Scopes the session cookie to a parent domain so auth, gateway,
+      # web, and dashboard subdomains all see it (e.g. ".example.com").
       AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN}
     expose:
       - "3001"
@@ -142,13 +142,15 @@ services:
   # VITE_* values are baked into the bundle at BUILD time via `args:` below.
   # In Coolify these come from variables flagged "Available at Buildtime".
   #
-  # All browser traffic — including auth — goes through the api-gateway. So
-  # VITE_AUTH_URL, VITE_API_URL, VITE_GRAPHQL_HTTP_URL should all point at
-  # the gateway's public host (e.g. https://cam-travel-dev-api.rikrey.com).
-  # The auth service has no public domain; only the gateway routes to it via
-  # the /api/auth/** proxy on the Docker-internal network. AUTH_COOKIE_DOMAIN
-  # remains useful because web/dashboard live on sibling subdomains and need
-  # the session cookie visible on both their origin and the gateway's.
+  # Each backend service has its own public subdomain (Coolify routes via
+  # SERVICE_FQDN_<svc>): VITE_API_URL → api-gateway, VITE_AUTH_URL → auth,
+  # VITE_GRAPHQL_HTTP_URL → api-gateway's /graphql/v1 controller. The
+  # browser hits each one directly. Auth used to sit behind the gateway's
+  # /api/auth/** proxy, but NestJS's body parser silently consumed POST
+  # bodies before the proxy could forward them — going direct sidesteps
+  # that whole class of bugs.
+  # AUTH_COOKIE_DOMAIN scopes the session cookie to the parent domain
+  # (e.g. .example.com) so all subdomains see it.
   web:
     build:
       context: .

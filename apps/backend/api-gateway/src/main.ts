@@ -1,7 +1,7 @@
 import "dotenv/config";
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
-import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
+import { createProxyMiddleware } from "http-proxy-middleware";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
@@ -17,34 +17,17 @@ async function bootstrap() {
     .filter(Boolean);
   app.enableCors({ origin: corsOrigins, credentials: true });
 
-  // /api/auth/** proxies to the auth service over Docker-internal networking.
-  // The frontends only know about this gateway — they never call auth
-  // directly. better-auth on the auth service must have BETTER_AUTH_URL set
-  // to this gateway's public URL so it sets cookies and computes OAuth
-  // callback URLs against the domain the browser actually sees.
-  const authServiceUrl =
-    process.env.AUTH_SERVICE_URL ?? "http://localhost:3001";
-  app.use(
-    createProxyMiddleware({
-      // Predicate form rather than an array literal: http-proxy-middleware v3
-      // rejects mixed string + glob arrays and silently drops requests when
-      // the matcher throws — the symptom was a 404 on the OAuth callback.
-      pathFilter: (pathname) => pathname.startsWith("/api/auth"),
-      target: authServiceUrl,
-      changeOrigin: true,
-      // NestJS's default Express body parser consumes the request stream
-      // before the proxy runs, so every JSON POST to /api/auth/** would
-      // forward an empty body upstream — better-auth then throws on the
-      // missing fields and Express's default error handler returns a bare
-      // "Internal Server Error" with no CORS headers (verified against prod:
-      // curl direct-to-auth returned 200 + the OAuth URL, but via the proxy
-      // returned the 21-byte plain-text 500). fixRequestBody re-serializes
-      // req.body onto the upstream request and fixes Content-Length.
-      // We can't disable bodyParser globally because the gateway has its
-      // own controllers (graphql.controller.ts) that use @Body().
-      on: { proxyReq: fixRequestBody },
-    }),
-  );
+  // NOTE: /api/auth/** is no longer proxied through here. The auth service
+  // is exposed on its own subdomain (VITE_AUTH_URL → https://auth.<host>)
+  // and browsers call it directly. We tried proxying through this gateway
+  // and it silently broke every JSON POST: NestJS's default Express body
+  // parser consumes the request stream before http-proxy-middleware can
+  // forward it, so better-auth received an empty body and returned a bare
+  // "Internal Server Error" (no CORS, no Content-Type). If you ever bring
+  // auth back behind this gateway, you must re-serialize the body via
+  // `fixRequestBody` from http-proxy-middleware AND keep NestJS's body
+  // parser enabled (other controllers like GraphqlController use @Body()).
+  // See git history for the working proxy + fixRequestBody config.
 
   // Multipart file upload endpoints live on the graphql service. They can't
   // be sent over the TCP microservice transport (which is JSON-only), so we

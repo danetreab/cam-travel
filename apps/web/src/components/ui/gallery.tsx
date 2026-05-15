@@ -13,9 +13,17 @@ type GallerySection = {
   images: GalleryItem[]
 }
 
-const Gallery = ({ sections }: { sections: GallerySection[] }) => {
+const Gallery = ({
+  sections,
+  onVisibleChange,
+}: {
+  sections: GallerySection[]
+  onVisibleChange?: (visible: boolean) => void
+}) => {
   return (
-    <PhotoProvider>
+    <PhotoProvider
+      onVisibleChange={(visible) => onVisibleChange?.(visible)}
+    >
       <section>
         <div className="grid gap-4 md:grid-cols-2">
           {sections.map((section, sectionIndex) => {

@@ -215,18 +215,20 @@ function AttractionTabBar({
 function AttractionGallery({
   attraction,
   galleryArmed,
+  onPhotoVisibleChange,
 }: {
   attraction: Attraction
   galleryArmed: boolean
+  onPhotoVisibleChange?: (visible: boolean) => void
 }) {
   const sections = buildSections(attraction.files, attraction.name)
   return (
     // `data-vaul-no-drag` tells the parent vaul Drawer to ignore pointer-
     // downs that originate inside the gallery — without it, tapping an image
     // gets interpreted as the start of a drag-to-dismiss gesture and the
-    // PhotoView lightbox never opens (and once open, swipe/zoom is hijacked).
-    // The galleryArmed guard still blocks the synthesized click that lands
-    // on the hero image right after the drawer animates in.
+    // PhotoView lightbox never opens. The galleryArmed guard still blocks
+    // the synthesized click that lands on the hero image right after the
+    // drawer animates in.
     <div
       data-vaul-no-drag
       className={`mt-2 ${galleryArmed ? "" : "pointer-events-none"}`}
@@ -236,7 +238,7 @@ function AttractionGallery({
           No photos or videos yet
         </div>
       ) : (
-        <Gallery sections={sections} />
+        <Gallery sections={sections} onVisibleChange={onPhotoVisibleChange} />
       )}
     </div>
   )
@@ -332,6 +334,11 @@ export function AttractionDetailDialog({
   // tapping a pin on mobile lands the synthesized click on the freshly-rendered
   // hero image and immediately opens the photo lightbox.
   const [galleryArmed, setGalleryArmed] = useState(false)
+  // While the PhotoView lightbox is open we disable vaul's drag-to-dismiss
+  // and the swipe-down close gesture, so the swipe gestures on the
+  // lightbox (next/prev photo, pinch-zoom) aren't interpreted as drawer
+  // dismiss attempts.
+  const [photoOpen, setPhotoOpen] = useState(false)
   useEffect(() => {
     if (!open) {
       setGalleryArmed(false)
@@ -347,7 +354,13 @@ export function AttractionDetailDialog({
 
   if (!isDesktop) {
     return (
-      <Drawer open={open} onOpenChange={onOpenChange}>
+      <Drawer
+        open={open}
+        onOpenChange={onOpenChange}
+        // Pause vaul's drag-to-dismiss while the photo lightbox is open so
+        // its swipe gestures aren't stolen as drawer-close attempts.
+        dismissible={!photoOpen}
+      >
         {/*
           The vaul drawer ships with a drag-handle and rounded top. The body
           is a flex column: the top wrapper scrolls (title, gallery,
@@ -369,6 +382,7 @@ export function AttractionDetailDialog({
                 <AttractionGallery
                   attraction={attraction}
                   galleryArmed={galleryArmed}
+                  onPhotoVisibleChange={setPhotoOpen}
                 />
                 <AttractionDescription attraction={attraction} />
               </div>

@@ -1,19 +1,24 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
 
-import { AttractionDetailDialog } from "@/components/features/explore/attraction-detail-dialog"
+import { AttractionDetailView } from "@/components/features/explore/attraction-detail-view"
 import { attractionByIdQueryOptions } from "@/queries/attractions.query"
 
 export const Route = createFileRoute("/_authed/_explore/attraction/$attractionId")({
   component: AttractionRoute,
-  // prefetch (not ensure) so SSR survives an unauthenticated upstream call —
-  // the GraphQL endpoint needs auth cookies that aren't forwarded during SSR,
-  // and we don't want a 401 there to crash the render. The client-side
-  // useQuery in the component refetches with cookies after hydration.
-  loader: ({ context, params }) =>
-    context.queryClient.prefetchQuery(
+  // Fire-and-forget the prefetch — don't return the promise. If we returned
+  // it, TanStack Router would await it before mounting the route, so on
+  // mobile a tap on a pin would sit silent until the network round-trip
+  // finished. By not awaiting, the route mounts instantly and the in-
+  // component useQuery (same key, request coalesced) drives the loading
+  // state inside MobileShell. Still using prefetch (not ensure) so an
+  // unauthenticated SSR call can't crash the render — auth cookies aren't
+  // forwarded server-side.
+  loader: ({ context, params }) => {
+    void context.queryClient.prefetchQuery(
       attractionByIdQueryOptions(params.attractionId),
-    ),
+    )
+  },
 })
 
 function AttractionRoute() {
@@ -22,7 +27,7 @@ function AttractionRoute() {
   const { data, isLoading } = useQuery(attractionByIdQueryOptions(attractionId))
 
   return (
-    <AttractionDetailDialog
+    <AttractionDetailView
       attraction={data ?? null}
       isLoading={isLoading}
       onOpenChange={(open) => {

@@ -248,12 +248,40 @@ export async function getAttractionById(id: string): Promise<Attraction | null> 
   return data.attractions.nodes[0] ?? null
 }
 
+export interface SearchAttractionsParams {
+  query: string
+  limit?: number
+}
+
+export async function searchAttractions(
+  params: SearchAttractionsParams,
+): Promise<AttractionListResult> {
+  const q = params.query.trim()
+  if (!q) return { items: [], totalCount: 0 }
+  // `%` is the SQL wildcard for iLike; bracketing the term gives substring
+  // matching so "ang" finds "Battambang".
+  const filter = { name: { iLike: `%${q}%` } }
+  const paging = { limit: params.limit ?? 8 }
+  const sorting = [
+    { field: "cachedUserRatingsTotal", direction: "DESC", nulls: "NULLS_LAST" },
+  ]
+  const data = await gql<{
+    attractions: { nodes: Attraction[]; totalCount: number }
+  }>(ATTRACTIONS_LIST, { filter, paging, sorting })
+  return {
+    items: data.attractions.nodes,
+    totalCount: data.attractions.totalCount,
+  }
+}
+
 export async function listAttractions(
   params: ListAttractionsParams = {},
 ): Promise<AttractionListResult> {
   const and: Array<Record<string, unknown>> = []
   if (params.province) {
-    and.push({ province: { eq: params.province } })
+    // iLike absorbs spelling variants in the data ("Siem Reap" vs
+    // "Siem Reap Province") that an `eq` match would miss.
+    and.push({ province: { iLike: `%${params.province}%` } })
   }
   if (params.activityType) {
     and.push({ activityType: { eq: params.activityType } })

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { useQuery, keepPreviousData } from "@tanstack/react-query"
-import { useNavigate, useRouterState } from "@tanstack/react-router"
+import { getRouteApi, useNavigate, useRouterState } from "@tanstack/react-router"
 import {
   ColorScheme,
   Map,
@@ -19,6 +19,7 @@ import {
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { useUserLocation } from "@/hooks/use-user-location"
+import { findProvince } from "@/data/provinces"
 import {
   attractionsListQueryOptions,
   attractionsTopPerProvinceQueryOptions,
@@ -81,6 +82,8 @@ const LAYOUT_STORAGE_KEY = "explore-layout:v2"
 const SIDEBAR_PANEL_ID = "explore-sidebar"
 const MAP_PANEL_ID = "explore-map"
 
+const exploreRouteApi = getRouteApi("/_authed/_explore")
+
 function readStoredLayout(): Layout | undefined {
   if (typeof window === "undefined") return undefined
   try {
@@ -106,6 +109,7 @@ export function ExploreView() {
   const debouncedZoom = useDebouncedValue(zoom, BOUNDS_DEBOUNCE_MS)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const navigate = useNavigate()
+  const { province: provinceParam } = exploreRouteApi.useSearch()
   // Selection lives in the URL (`/attraction/$attractionId`). Reading the
   // param from the child match keeps marker/list highlighting in sync with
   // the modal route without duplicating state.
@@ -119,7 +123,10 @@ export function ExploreView() {
   })
   const listRef = useRef<HTMLDivElement>(null)
 
-  const usePerProvince = debouncedZoom <= PER_PROVINCE_ZOOM_THRESHOLD
+  // A picked province pins the result set to that province across zooms;
+  // the per-province query (used at country zoom) ignores province filters,
+  // so route through the bounds query to keep filtering honest.
+  const usePerProvince = !provinceParam && debouncedZoom <= PER_PROVINCE_ZOOM_THRESHOLD
 
   const boundsQuery = useQuery({
     ...attractionsListQueryOptions(
@@ -128,6 +135,7 @@ export function ExploreView() {
             bounds: debouncedBounds,
             limit: limitForZoom(debouncedZoom),
             activityType: activityType ?? undefined,
+            province: provinceParam,
           }
         : {}
     ),
@@ -186,6 +194,21 @@ export function ExploreView() {
       toast.error(userLocation.error)
     }
   }, [userLocation.error, userLocation.status])
+
+  // When the user picks a province from the global search bar (`?province=…`),
+  // pan/zoom the map to that province. We key off `provinceParam` so reloads
+  // and deep links work too.
+  useEffect(() => {
+    if (!map || !provinceParam) return
+    const p = findProvince(provinceParam)
+    if (!p) return
+    map.panTo({ lat: p.lat, lng: p.lng })
+    map.setZoom(p.zoom)
+  }, [map, provinceParam])
+
+  const clearProvince = () => {
+    navigate({ to: "/", search: {} })
+  }
 
   useEffect(() => {
     if (!selectedId) return
@@ -247,6 +270,21 @@ export function ExploreView() {
         <Badge variant="destructive">
           Failed to load: {(error as Error).message}
         </Badge>
+      )}
+
+      {provinceParam && (
+        <div className="mb-3 flex items-center gap-2">
+          <span className="text-xs text-muted-foreground">Province:</span>
+          <button
+            type="button"
+            onClick={clearProvince}
+            className="inline-flex items-center gap-1.5 rounded-full border border-foreground bg-foreground px-3 py-1 text-xs font-medium text-background hover:opacity-90"
+            aria-label={`Clear ${provinceParam} filter`}
+          >
+            {provinceParam}
+            <span aria-hidden>×</span>
+          </button>
+        </div>
       )}
 
       <div className="mb-3 flex gap-2 overflow-x-auto pb-1">

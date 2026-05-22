@@ -5,7 +5,7 @@ import {
   SunIcon,
 } from "@phosphor-icons/react"
 import { Link } from "@tanstack/react-router"
-import { Bookmark, Compass, Menu } from "lucide-react"
+import { Bookmark, Compass, Menu, Search } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -46,9 +46,10 @@ const THEMES = [
 
 interface MobileMenuProps {
   user?: { name?: string | null; email?: string | null; image?: string | null } | null
+  onOpenSearch?: () => void
 }
 
-export function MobileMenu({ user }: MobileMenuProps) {
+export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
   const [open, setOpen] = useState(false)
   const { t, i18n } = useTranslation()
   const { theme, setTheme, resolvedTheme } = useTheme()
@@ -62,6 +63,17 @@ export function MobileMenu({ user }: MobileMenuProps) {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
+      {onOpenSearch && (
+        <Button
+          variant="default"
+          size="icon"
+          aria-label="Open search"
+          className="fixed top-4 right-20 z-50 size-11 rounded-full shadow-lg md:hidden"
+          onClick={onOpenSearch}
+        >
+          <Search className="size-5" />
+        </Button>
+      )}
       <Button
         variant="default"
         size="icon"

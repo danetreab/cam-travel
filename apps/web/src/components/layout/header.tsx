@@ -29,6 +29,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { authClient, signOutRedirect } from "@/lib/auth-client"
+import { GlobalSearch, SearchTrigger } from "@/components/features/search/global-search"
 import { MobileMenu } from "./mobile-menu"
 
 function initials(name: string | null | undefined) {
@@ -53,16 +54,30 @@ export function Header() {
   const { t, i18n } = useTranslation()
   const { theme, setTheme, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const loginDialog = useLoginDialog()
 
   useEffect(() => setMounted(true), [])
+
+  // Global ⌘K / Ctrl-K to open search, matching the hint in the trigger pill.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault()
+        setSearchOpen((v) => !v)
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  }, [])
 
   const activeTheme = mounted ? (theme ?? resolvedTheme ?? "system") : "system"
   const activeLanguage = i18n.resolvedLanguage ?? i18n.language ?? "en"
 
   return (
     <>
-      <MobileMenu user={user} />
+      <MobileMenu user={user} onOpenSearch={() => setSearchOpen(true)} />
+      <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
       <header className="sticky top-0 z-40 hidden border-b bg-background md:block">
         <div className="flex h-14 items-center justify-between gap-4 px-4">
         <Link
@@ -89,6 +104,13 @@ export function Header() {
             </Link>
           )}
         </nav>
+
+        <div className="hidden flex-1 justify-center md:flex">
+          <SearchTrigger
+            onClick={() => setSearchOpen(true)}
+            className="w-full max-w-md"
+          />
+        </div>
 
         {!user ? (
           <Button

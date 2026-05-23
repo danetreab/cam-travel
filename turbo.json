@@ -25,7 +25,10 @@
         "MINIO_BUCKET",
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
-        "VITE_GOOGLE_CLIENT_ID"
+        "VITE_GOOGLE_CLIENT_ID",
+        "ADMIN_EMAIL",
+        "ADMIN_PASSWORD",
+        "ADMIN_NAME"
       ]
     },
     "lint": {
@@ -57,7 +60,10 @@
         "MINIO_BUCKET",
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
-        "VITE_GOOGLE_CLIENT_ID"
+        "VITE_GOOGLE_CLIENT_ID",
+        "ADMIN_EMAIL",
+        "ADMIN_PASSWORD",
+        "ADMIN_NAME"
       ]
     }
   }

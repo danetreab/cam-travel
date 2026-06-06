@@ -24,27 +24,9 @@
 name: cam-travel
 
 services:
-  # --- data stores ----------------------------------------------------------
-  # Bundled Redis on the same compose network as the backends. Consumers reach
-  # it as `redis:6379`. Deploying Redis as a separate Coolify resource puts it
-  # on a different Docker bridge — its internal hostname doesn't resolve from
-  # the app containers, and falling back to the public IP NAT-hairpins through
-  # Coolify's proxy, which silently drops idle TCP and surfaces as
-  # "Command timed out" warnings on better-auth's session lookups.
-  redis:
-    image: redis:7-alpine
-    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes"]
-    volumes:
-      - redis-data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "PING"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-      start_period: 5s
-    restart: unless-stopped
-
   # --- backend services -----------------------------------------------------
+  # Redis is provided externally; backends connect via the REDIS_URL env var
+  # (set in the Coolify UI to point at your existing Redis instance).
   auth:
     build:
       context: .
@@ -53,7 +35,7 @@ services:
     environment:
       PORT: "3001"
       DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: redis://default:${REDIS_PASSWORD}@redis:6379/0
+      REDIS_URL: ${REDIS_URL}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       # Auth's own public URL (e.g. https://auth.example.com). Browsers
       # call auth directly — frontends point VITE_AUTH_URL at this same
@@ -77,9 +59,6 @@ services:
     expose:
       - "3001"
     restart: unless-stopped
-    depends_on:
-      redis:
-        condition: service_healthy
 
   graphql:
     build:
@@ -91,7 +70,7 @@ services:
       GRAPHQL_TCP_HOST: "0.0.0.0"
       GRAPHQL_TCP_PORT: "4002"
       DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: redis://default:${REDIS_PASSWORD}@redis:6379/0
+      REDIS_URL: ${REDIS_URL}
       CORS_ORIGINS: ${CORS_ORIGINS}
       MINIO_ENDPOINT: ${MINIO_ENDPOINT}
       MINIO_PORT: ${MINIO_PORT}
@@ -108,8 +87,6 @@ services:
     depends_on:
       auth:
         condition: service_started
-      redis:
-        condition: service_healthy
 
   api-gateway:
     build:
@@ -128,7 +105,7 @@ services:
       # these, AuthGuard.canActivate() hangs on Redis retries when a session
       # cookie is present (manifests as a "pending" /graphql/v1 request).
       DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: redis://default:${REDIS_PASSWORD}@redis:6379/0
+      REDIS_URL: ${REDIS_URL}
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
       BETTER_AUTH_URL: ${BETTER_AUTH_URL}
       AUTH_COOKIE_DOMAIN: ${AUTH_COOKIE_DOMAIN}
@@ -140,8 +117,6 @@ services:
         condition: service_started
       graphql:
         condition: service_started
-      redis:
-        condition: service_healthy
 
   # --- frontends ------------------------------------------------------------
   # VITE_* values are baked into the bundle at BUILD time via `args:` below.
@@ -185,6 +160,3 @@ services:
     expose:
       - "80"
     restart: unless-stopped
-
-volumes:
-  redis-data:

@@ -41,6 +41,10 @@ import { toast } from "sonner"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
 const DEFAULT_ZOOM = 7
+
+// Trim camera values before writing them to the URL so panning doesn't churn
+// out 15-decimal query strings. 6 dp ≈ 0.1 m, plenty for restoring position.
+const round = (n: number, dp: number) => Number(n.toFixed(dp))
 const MAP_ID = "DEMO_MAP_ID"
 const BOUNDS_DEBOUNCE_MS = 400
 
@@ -103,13 +107,25 @@ export function ExploreView() {
   const [mobileView, setMobileView] = useState<"map" | "list">("map")
   const [defaultLayout] = useState<Layout | undefined>(readStoredLayout)
   const [bounds, setBounds] = useState<MapBounds | null>(null)
-  const [zoom, setZoom] = useState<number>(DEFAULT_ZOOM)
+  const navigate = useNavigate()
+  const { province: provinceParam, ...viewParams } = exploreRouteApi.useSearch()
+  // Restore the camera from the URL on mount (refresh / deep link). Read once
+  // via the initializer so later writebacks to ?lat&lng&zoom don't feed back
+  // in and fight the user's gestures — the <Map> is uncontrolled after this.
+  const [initialView] = useState(() => ({
+    center:
+      viewParams.lat != null && viewParams.lng != null
+        ? { lat: viewParams.lat, lng: viewParams.lng }
+        : DEFAULT_CENTER,
+    zoom: viewParams.zoom ?? DEFAULT_ZOOM,
+  }))
+  const [zoom, setZoom] = useState<number>(initialView.zoom)
+  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(null)
   const [activityType, setActivityType] = useState<string | null>(null)
   const debouncedBounds = useDebouncedValue(bounds, BOUNDS_DEBOUNCE_MS)
   const debouncedZoom = useDebouncedValue(zoom, BOUNDS_DEBOUNCE_MS)
+  const debouncedCenter = useDebouncedValue(center, BOUNDS_DEBOUNCE_MS)
   const [hoveredId, setHoveredId] = useState<string | null>(null)
-  const navigate = useNavigate()
-  const { province: provinceParam } = exploreRouteApi.useSearch()
   // Selection lives in the URL (`/attraction/$attractionId`). Reading the
   // param from the child match keeps marker/list highlighting in sync with
   // the modal route without duplicating state.
@@ -207,7 +223,11 @@ export function ExploreView() {
   }, [map, provinceParam])
 
   const clearProvince = () => {
-    navigate({ to: "/", search: {} })
+    // Drop the province filter but keep the current viewport in the URL.
+    navigate({
+      to: "/",
+      search: ({ province: _province, ...rest }) => rest,
+    })
   }
 
   useEffect(() => {
@@ -229,12 +249,35 @@ export function ExploreView() {
     if (typeof ev.detail.zoom === "number") {
       setZoom(ev.detail.zoom)
     }
+    if (ev.detail.center) {
+      setCenter({ lat: ev.detail.center.lat, lng: ev.detail.center.lng })
+    }
   }
+
+  // Persist the camera to the URL (debounced, history-replacing) so a refresh
+  // reopens on the same spot. Relative `to: "."` keeps the attraction modal
+  // open if it's showing; the functional updater preserves ?province.
+  useEffect(() => {
+    if (!debouncedCenter) return
+    navigate({
+      to: ".",
+      replace: true,
+      search: (prev) => ({
+        ...prev,
+        lat: round(debouncedCenter.lat, 6),
+        lng: round(debouncedCenter.lng, 6),
+        zoom: round(debouncedZoom, 2),
+      }),
+    })
+  }, [debouncedCenter, debouncedZoom, navigate])
 
   const openAttraction = (a: Attraction) => {
     navigate({
       to: "/attraction/$attractionId",
       params: { attractionId: a.id },
+      // Keep ?lat&lng&zoom (and ?province) so the map behind the modal — and a
+      // refresh while it's open — stays on the current viewport.
+      search: (prev) => prev,
     })
   }
 
@@ -348,8 +391,8 @@ export function ExploreView() {
   const mapElement = (
     <Map
       mapId={MAP_ID}
-      defaultCenter={DEFAULT_CENTER}
-      defaultZoom={DEFAULT_ZOOM}
+      defaultCenter={initialView.center}
+      defaultZoom={initialView.zoom}
       gestureHandling="greedy"
       disableDefaultUI
       onCameraChanged={handleCameraChanged}

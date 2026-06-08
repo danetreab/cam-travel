@@ -1,0 +1,11 @@
+# Copy to terraform.tfvars and fill in. terraform.tfvars is gitignored.
+# The API token is NOT set here — export it in the environment instead:
+#   export CLOUDFLARE_API_TOKEN="cfut_..."
+#
+# The zone ID is the 32-character hex string from:
+#   Cloudflare dashboard > rikrey.com > Overview > right sidebar "API" > Zone ID
+
+cloudflare_zone_id = "0000000000000000000000000000abcd"
+
+# Optional — defaults to domnaer.rikrey.com (the web frontend host).
+# web_hostname = "domnaer.rikrey.com"

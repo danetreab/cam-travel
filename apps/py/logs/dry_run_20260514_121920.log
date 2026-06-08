@@ -2,7 +2,7 @@
   warnings.warn(
 Provinces: ['Banteay Meanchey', 'Battambang', 'Kampong Cham', 'Kampong Chhnang', 'Kampong Speu', 'Kampong Thom', 'Kampot', 'Kandal', 'Kep', 'Koh Kong', 'Kratie', 'Mondulkiri', 'Oddar Meanchey', 'Pailin', 'Preah Sihanouk', 'Preah Vihear', 'Pursat', 'Prey Veng', 'Ratanakiri', 'Siem Reap', 'Stung Treng', 'Svay Rieng', 'Takeo', 'Tboung Khmum']
 Mode: fetch=True photos=True seed=True dry_run=True
-DB:    152.42.162.231:5432/cam-travel
+DB:    38.54.93.72:5432/cam-travel
 MinIO: minio-dev.rikrey.com/cam-travel
 
 === Banteay Meanchey ===

@@ -27,7 +27,7 @@ services:
   # --- backend services -----------------------------------------------------
   # Redis is provided externally; backends connect via the REDIS_URL env var
   # (set in the Coolify UI to point at your existing Redis instance).
-  auth:
+  cam-travel-auth:
     build:
       context: .
       dockerfile: Dockerfile
@@ -60,7 +60,7 @@ services:
       - "3001"
     restart: unless-stopped
 
-  graphql:
+  cam-travel-graphql:
     build:
       context: .
       dockerfile: Dockerfile
@@ -85,19 +85,19 @@ services:
       - "4002"
     restart: unless-stopped
     depends_on:
-      auth:
+      cam-travel-auth:
         condition: service_started
 
-  api-gateway:
+  cam-travel-api-gateway:
     build:
       context: .
       dockerfile: Dockerfile
       target: api-gateway
     environment:
       PORT: "3000"
-      AUTH_SERVICE_URL: "http://auth:3001"
-      GRAPHQL_HTTP_URL: "http://graphql:3002"
-      GRAPHQL_TCP_HOST: "graphql"
+      AUTH_SERVICE_URL: "http://cam-travel-auth:3001"
+      GRAPHQL_HTTP_URL: "http://cam-travel-graphql:3002"
+      GRAPHQL_TCP_HOST: "cam-travel-graphql"
       GRAPHQL_TCP_PORT: "4002"
       CORS_ORIGINS: ${CORS_ORIGINS}
       # The gateway runs its own better-auth instance for the AuthGuard, so
@@ -113,9 +113,9 @@ services:
       - "3000"
     restart: unless-stopped
     depends_on:
-      auth:
+      cam-travel-auth:
         condition: service_started
-      graphql:
+      cam-travel-graphql:
         condition: service_started
 
   # --- frontends ------------------------------------------------------------
@@ -131,7 +131,7 @@ services:
   # that whole class of bugs.
   # AUTH_COOKIE_DOMAIN scopes the session cookie to the parent domain
   # (e.g. .example.com) so all subdomains see it.
-  web:
+  cam-travel-web:
     build:
       context: .
       dockerfile: Dockerfile
@@ -146,7 +146,7 @@ services:
       - "3000"
     restart: unless-stopped
 
-  dashboard:
+  cam-travel-dashboard:
     build:
       context: .
       dockerfile: Dockerfile

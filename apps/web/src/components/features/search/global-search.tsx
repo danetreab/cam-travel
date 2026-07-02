@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
-import { MagnifyingGlassIcon, MapPinIcon, CompassIcon } from "@phosphor-icons/react"
+import { CompassIcon, MagnifyingGlassIcon, MapPinIcon } from "@phosphor-icons/react"
 
+import type { ProvinceEntry } from "@/data/provinces"
+import { PROVINCES } from "@/data/provinces"
 import {
   Command,
   CommandDialog,
@@ -14,7 +16,6 @@ import {
   CommandSeparator,
 } from "@/components/ui/command"
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
-import { PROVINCES, type ProvinceEntry } from "@/data/provinces"
 import { attractionsSearchQueryOptions } from "@/queries/attractions.query"
 
 interface GlobalSearchProps {
@@ -22,7 +23,7 @@ interface GlobalSearchProps {
   onOpenChange: (open: boolean) => void
 }
 
-function matchProvinces(query: string): ProvinceEntry[] {
+function matchProvinces(query: string): Array<ProvinceEntry> {
   const q = query.trim().toLowerCase()
   if (!q) return PROVINCES.slice(0, 6)
   return PROVINCES.filter((p) => p.name.toLowerCase().includes(q)).slice(0, 8)
@@ -63,7 +64,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
       onOpenChange={onOpenChange}
       title="Search"
       description="Search provinces or attractions"
-      className="sm:max-w-xl"
+      className="top-4 max-h-[calc(100dvh-2rem)] translate-y-0 sm:top-1/3 sm:max-w-xl"
     >
       {/* cmdk's built-in fuzzy filter would hide our async attraction results
           before they finish loading, so we filter the lists ourselves. */}
@@ -74,7 +75,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
           placeholder="Search provinces or attractions…"
           autoFocus
         />
-        <CommandList>
+        <CommandList className="max-h-[calc(100dvh-7rem)] sm:max-h-72">
           {provinces.length === 0 && attractions.length === 0 && (
             <CommandEmpty>
               {attractionsQuery.isFetching ? "Searching…" : "No results."}
@@ -109,7 +110,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
                   <MapPinIcon weight="bold" />
                   <span className="truncate">{a.name}</span>
                   {a.province && (
-                    <span className="ml-auto text-xs text-muted-foreground">
+                    <span className="ml-auto hidden shrink-0 text-xs text-muted-foreground min-[380px]:inline">
                       {a.province}
                     </span>
                   )}

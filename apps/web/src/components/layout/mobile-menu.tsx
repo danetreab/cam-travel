@@ -52,27 +52,27 @@ interface MobileMenuProps {
 export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
   const [open, setOpen] = useState(false)
   const { t, i18n } = useTranslation()
-  const { theme, setTheme, resolvedTheme } = useTheme()
+  const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
   const loginDialog = useLoginDialog()
 
   useEffect(() => setMounted(true), [])
 
-  const activeTheme = mounted ? (theme ?? resolvedTheme ?? "system") : "system"
-  const activeLanguage = i18n.resolvedLanguage ?? i18n.language ?? "en"
+  const activeTheme = mounted ? theme : "system"
+  const activeLanguage = i18n.resolvedLanguage
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       {onOpenSearch && (
-        <Button
-          variant="default"
-          size="icon"
+        <button
+          type="button"
           aria-label="Open search"
-          className="fixed top-4 right-20 z-50 size-11 rounded-full shadow-lg md:hidden"
+          className="fixed top-4 right-20 left-4 z-50 flex h-11 min-w-0 items-center gap-2 rounded-full border bg-background px-4 text-left text-sm text-muted-foreground shadow-lg transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none md:hidden"
           onClick={onOpenSearch}
         >
-          <Search className="size-5" />
-        </Button>
+          <Search className="size-5 shrink-0" />
+          <span className="min-w-0 truncate">Search provinces or places...</span>
+        </button>
       )}
       <Button
         variant="default"
@@ -89,13 +89,13 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
           {user ? (
             <SheetTitle className="flex items-center gap-3 text-left text-base normal-case tracking-normal">
               <Avatar className="size-10">
-                <AvatarImage src={user?.image ?? undefined} alt={user?.name ?? ""} />
-                <AvatarFallback>{initials(user?.name)}</AvatarFallback>
+                <AvatarImage src={user.image ?? undefined} alt={user.name ?? ""} />
+                <AvatarFallback>{initials(user.name)}</AvatarFallback>
               </Avatar>
               <span className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-medium">{user?.name}</span>
+                <span className="truncate text-sm font-medium">{user.name}</span>
                 <span className="text-muted-foreground truncate text-xs">
-                  {user?.email}
+                  {user.email}
                 </span>
               </span>
             </SheetTitle>

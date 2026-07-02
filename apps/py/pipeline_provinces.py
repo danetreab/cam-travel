@@ -24,6 +24,7 @@ Usage (from apps/py/):
     .venv/bin/python pipeline_provinces.py                       # all provinces
     .venv/bin/python pipeline_provinces.py --province "Kampot"   # one province
     .venv/bin/python pipeline_provinces.py --provinces "Kampot,Kep"
+    .venv/bin/python pipeline_provinces.py --coffee-only --traveler-coffee-provinces
     .venv/bin/python pipeline_provinces.py --skip-fetch          # use existing CSV
     .venv/bin/python pipeline_provinces.py --skip-photos
     .venv/bin/python pipeline_provinces.py --skip-seed
@@ -98,6 +99,26 @@ CATEGORIES = [
     "night_club",
     "shopping_mall",
 ]
+
+COFFEE_PLACE_TYPES = [
+    "coffee_shop",
+    "cafe",
+]
+
+TRAVELER_COFFEE_PROVINCES = [
+    "Kampot",
+    "Siem Reap",
+    "Phnom Penh",
+    "Preah Sihanouk",
+    "Kep",
+    "Battambang",
+]
+
+PROVINCE_ALIASES = {
+    "sihanoukville": "Preah Sihanouk",
+    "preah_sihanoukville": "Preah Sihanouk",
+    "preah_sihanouk": "Preah Sihanouk",
+}
 
 NEARBY_FIELD_MASK = ",".join([
     "places.id",
@@ -199,6 +220,22 @@ PROVINCES: list[tuple[str, list[tuple[str, float, float, int]]]] = [
     ("Pailin", [
         ("Pailin town",           12.8489, 102.6093, 30000),
         ("Phnom Yat",             12.8530, 102.6090, 8000),
+    ]),
+    ("Phnom Penh", [
+        ("Daun Penh / Riverside",  11.5680, 104.9300, 2500),
+        ("Chamkarmon / BKK",       11.5450, 104.9220, 2500),
+        ("Toul Kork",              11.5750, 104.8950, 2500),
+        ("7 Makara / Olympic",     11.5550, 104.9080, 2000),
+        ("Mean Chey",              11.5180, 104.9100, 3000),
+        ("Russey Keo",             11.6050, 104.9100, 3000),
+        ("Sen Sok",                11.5950, 104.8700, 3000),
+        ("Pou Senchey",            11.5400, 104.8500, 3500),
+        ("Chbar Ampov / east bank",11.5400, 104.9550, 3000),
+        ("Chroy Changvar",         11.5950, 104.9450, 2500),
+        ("Diamond Island / south", 11.5400, 104.9350, 1500),
+        ("Stueng Mean Chey",       11.5250, 104.8850, 3000),
+        ("Boeung Keng Kang",       11.5500, 104.9270, 1500),
+        ("Phnom Penh airport",     11.5500, 104.8470, 2500),
     ]),
     ("Preah Sihanouk", [
         ("Sihanoukville",         10.6253, 103.5224, 25000),
@@ -370,18 +407,22 @@ def derive_activities(types) -> str:
     return ";".join(sorted(set(out)))
 
 
-def flatten(place: dict, source_category: str, source_cell: str) -> dict:
+def flatten(place: dict, source_category: str, source_cell: str,
+            activity_type_override: str | None = None) -> dict:
     loc = place.get("location") or {}
     name = (place.get("displayName") or {}).get("text", "")
     primary_type_disp = (place.get("primaryTypeDisplayName") or {}).get("text", "")
     types = place.get("types") or []
+    activity_type = activity_type_override or ""
+    activities = activity_type_override or derive_activities(types)
     return {
         "google_place_id":   place.get("id", ""),
         "name":              name,
-        "category":          derive_category(types),
+        "category":          activity_type_override or derive_category(types),
         "primary_type":      place.get("primaryType", ""),
         "primary_type_name": primary_type_disp,
-        "activities":        derive_activities(types),
+        "activities":        activities,
+        "activity_type":     activity_type,
         "lat":               loc.get("latitude", ""),
         "lon":               loc.get("longitude", ""),
         "address":           place.get("formattedAddress", ""),
@@ -427,13 +468,15 @@ def nearby_search(lat: float, lng: float, radius: int, included_type: str) -> li
         return []
 
 
-def fetch_province(province: str, cells: list[tuple[str, float, float, int]]) -> list[dict]:
+def fetch_province(province: str, cells: list[tuple[str, float, float, int]],
+                   categories: list[str],
+                   activity_type_override: str | None = None) -> list[dict]:
     seen: dict[str, dict] = {}
     calls = 0
     dropped_foreign = 0
     for cell_label, lat, lng, radius in cells:
         print(f"  [{cell_label}] {lat},{lng} r={radius}m", file=sys.stderr)
-        for cat in CATEGORIES:
+        for cat in categories:
             results = nearby_search(lat, lng, radius, cat)
             calls += 1
             new = 0
@@ -442,7 +485,7 @@ def fetch_province(province: str, cells: list[tuple[str, float, float, int]]) ->
                 pid = p.get("id")
                 if not pid:
                     continue
-                row = flatten(p, cat, cell_label)
+                row = flatten(p, cat, cell_label, activity_type_override)
                 if not is_in_cambodia(row.get("address"), row.get("lat"), row.get("lon")):
                     foreign += 1
                     continue
@@ -609,12 +652,19 @@ def find_attraction_by_place_id(cur, place_id: str):
     return row[0] if row else None
 
 
-def insert_attraction(cur, row: dict, province: str | None) -> str:
+def row_activity_type(row: dict) -> str | None:
+    explicit = (row.get("activity_type") or "").strip()
+    if explicit:
+        return explicit
     activities = (row.get("activities") or "").split(";")
-    activity_type = (
+    return (
         activities[0].strip() if activities and activities[0].strip()
         else (row.get("category") or None)
     )
+
+
+def insert_attraction(cur, row: dict, province: str | None) -> str:
+    activity_type = row_activity_type(row)
     aid = str(uuid.uuid4())
     cur.execute(
         """
@@ -637,6 +687,29 @@ def insert_attraction(cur, row: dict, province: str | None) -> str:
         ),
     )
     return aid
+
+
+def update_existing_attraction(cur, attraction_id: str, row: dict) -> None:
+    activity_type = (row.get("activity_type") or "").strip()
+    if not activity_type:
+        return
+    cur.execute(
+        """
+        UPDATE attraction
+        SET activity_type = %s,
+            cached_rating = %s,
+            cached_user_ratings_total = %s,
+            places_refreshed_at = NOW(),
+            updated_at = NOW()
+        WHERE id = %s
+        """,
+        (
+            activity_type,
+            to_float(row.get("rating")),
+            to_int(row.get("rating_count")),
+            attraction_id,
+        ),
+    )
 
 
 def insert_uploaded_file(cur, *, filename, original, mimetype, size,
@@ -677,6 +750,8 @@ def seed_province(cur, minio_client: Minio, bucket: str,
         existing_id = find_attraction_by_place_id(cur, pid)
         if existing_id:
             aid = existing_id
+            if not dry_run:
+                update_existing_attraction(cur, aid, row)
             reused += 1
             tag = "reuse"
         else:
@@ -741,18 +816,27 @@ def seed_province(cur, minio_client: Minio, bucket: str,
 
 # --- orchestrator -------------------------------------------------------------
 
+def canonical_province_key(name: str) -> str:
+    key = slugify(name)
+    alias = PROVINCE_ALIASES.get(key)
+    return slugify(alias) if alias else key
+
+
 def select_provinces(args) -> list[tuple[str, list]]:
-    if args.province:
-        targets = {args.province.strip().lower()}
+    if args.traveler_coffee_provinces:
+        targets = {canonical_province_key(x) for x in TRAVELER_COFFEE_PROVINCES}
+    elif args.province:
+        targets = {canonical_province_key(args.province)}
     elif args.provinces:
-        targets = {x.strip().lower() for x in args.provinces.split(",") if x.strip()}
+        targets = {canonical_province_key(x) for x in args.provinces.split(",") if x.strip()}
     else:
         return PROVINCES
-    chosen = [p for p in PROVINCES if p[0].lower() in targets]
-    missing = targets - {p[0].lower() for p in chosen}
+    chosen = [p for p in PROVINCES if canonical_province_key(p[0]) in targets]
+    missing = targets - {canonical_province_key(p[0]) for p in chosen}
     if missing:
         sys.exit(f"Unknown province(s): {sorted(missing)}\n"
-                 f"Valid: {[p[0] for p in PROVINCES]}")
+                 f"Valid: {[p[0] for p in PROVINCES]} "
+                 f"(alias accepted: Sihanoukville)")
     return chosen
 
 
@@ -811,7 +895,11 @@ def run(args) -> None:
     photo_root.mkdir(exist_ok=True)
 
     targets = select_provinces(args)
+    categories = COFFEE_PLACE_TYPES if args.coffee_only else CATEGORIES
+    activity_type_override = "coffee" if args.coffee_only else None
+    csv_suffix = "_coffee" if args.coffee_only else ""
     print(f"Provinces: {[p[0] for p in targets]}", file=sys.stderr)
+    print(f"Place types: {categories}", file=sys.stderr)
     print(f"Mode: fetch={not args.skip_fetch} photos={not args.skip_photos} "
           f"seed={not args.skip_seed} dry_run={args.dry_run}", file=sys.stderr)
 
@@ -838,15 +926,20 @@ def run(args) -> None:
     for province, cells in targets:
         slug = slugify(province)
         print(f"\n=== {province} ===", file=sys.stderr)
-        places_csv = csv_root / f"{slug}_places.csv"
-        top_csv    = csv_root / f"{slug}_top{args.top}.csv"
+        places_csv = csv_root / f"{slug}{csv_suffix}_places.csv"
+        top_csv    = csv_root / f"{slug}{csv_suffix}_top{args.top}.csv"
 
         # 1. fetch
         if args.skip_fetch and places_csv.exists():
             rows = read_csv(places_csv)
             print(f"  [fetch] using existing {places_csv.name} ({len(rows)} rows)", file=sys.stderr)
         else:
-            rows = fetch_province(province, cells)
+            rows = fetch_province(
+                province,
+                cells,
+                categories=categories,
+                activity_type_override=activity_type_override,
+            )
             write_csv(places_csv, rows)
 
         # 2. rank
@@ -898,6 +991,10 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--provinces", help="Comma-separated province names")
     ap.add_argument("--top", type=int, default=50, help="Top-N per province (default 50)")
     ap.add_argument("--photos-per-place", type=int, default=5, help="Photos per place (default 5)")
+    ap.add_argument("--coffee-only", action="store_true",
+                    help="Fetch only Google coffee place types and seed them as activity_type='coffee'")
+    ap.add_argument("--traveler-coffee-provinces", action="store_true",
+                    help="Use the traveler coffee province set: Kampot, Siem Reap, Phnom Penh, Sihanoukville/Preah Sihanouk, Kep, Battambang")
     ap.add_argument("--skip-fetch", action="store_true", help="Reuse existing _places.csv")
     ap.add_argument("--skip-photos", action="store_true", help="Don't download photos")
     ap.add_argument("--skip-seed", action="store_true", help="Don't write to DB / MinIO")

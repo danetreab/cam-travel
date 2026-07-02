@@ -118,9 +118,19 @@ def find_attraction_by_place_id(cur, place_id: str):
     return row[0] if row else None
 
 
-def insert_attraction(cur, row: dict, province: str | None) -> str:
+def row_activity_type(row: dict) -> str | None:
+    explicit = (row.get("activity_type") or "").strip()
+    if explicit:
+        return explicit
     activities = (row.get("activities") or "").split(";")
-    activity_type = activities[0].strip() if activities and activities[0].strip() else (row.get("category") or None)
+    return (
+        activities[0].strip() if activities and activities[0].strip()
+        else (row.get("category") or None)
+    )
+
+
+def insert_attraction(cur, row: dict, province: str | None) -> str:
+    activity_type = row_activity_type(row)
 
     aid = str(uuid.uuid4())
     cur.execute(

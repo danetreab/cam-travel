@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { useQuery, keepPreviousData } from "@tanstack/react-query"
-import { getRouteApi, useNavigate, useRouterState } from "@tanstack/react-router"
+import {
+  getRouteApi,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router"
 import {
   ColorScheme,
   Map,
@@ -73,6 +77,7 @@ const FOCUS_ZOOM = 15
 
 const ACTIVITY_TYPES = [
   "attraction",
+  "coffee",
   "cultural",
   "nightlife",
   "rides",
@@ -120,7 +125,9 @@ export function ExploreView() {
     zoom: viewParams.zoom ?? DEFAULT_ZOOM,
   }))
   const [zoom, setZoom] = useState<number>(initialView.zoom)
-  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(null)
+  const [center, setCenter] = useState<{ lat: number; lng: number } | null>(
+    null
+  )
   const [activityType, setActivityType] = useState<string | null>(null)
   const debouncedBounds = useDebouncedValue(bounds, BOUNDS_DEBOUNCE_MS)
   const debouncedZoom = useDebouncedValue(zoom, BOUNDS_DEBOUNCE_MS)
@@ -142,7 +149,8 @@ export function ExploreView() {
   // A picked province pins the result set to that province across zooms;
   // the per-province query (used at country zoom) ignores province filters,
   // so route through the bounds query to keep filtering honest.
-  const usePerProvince = !provinceParam && debouncedZoom <= PER_PROVINCE_ZOOM_THRESHOLD
+  const usePerProvince =
+    !provinceParam && debouncedZoom <= PER_PROVINCE_ZOOM_THRESHOLD
 
   const boundsQuery = useQuery({
     ...attractionsListQueryOptions(
@@ -185,7 +193,7 @@ export function ExploreView() {
     ? [...rawItems]
         .sort(
           (a, b) =>
-            (b.cachedUserRatingsTotal ?? 0) - (a.cachedUserRatingsTotal ?? 0),
+            (b.cachedUserRatingsTotal ?? 0) - (a.cachedUserRatingsTotal ?? 0)
         )
         .slice(0, COUNTRY_VIEW_CAP)
     : rawItems
@@ -421,9 +429,9 @@ export function ExploreView() {
       aria-label="Show my location"
       title="Show my location"
       className={cn(
-        "bg-background text-foreground flex h-11 w-11 items-center justify-center rounded-full border shadow-md transition-colors",
+        "flex h-11 w-11 items-center justify-center rounded-full border bg-background text-foreground shadow-md transition-colors",
         "hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60",
-        userLocation.status === "granted" && "text-blue-600 dark:text-blue-400",
+        userLocation.status === "granted" && "text-blue-600 dark:text-blue-400"
       )}
     >
       {userLocation.status === "loading" ? (
@@ -436,7 +444,7 @@ export function ExploreView() {
 
   const mapFetchingOverlay = isFetching && (
     <div className="pointer-events-none absolute top-4 left-1/2 z-10 -translate-x-1/2">
-      <div className="bg-background/95 text-foreground flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium shadow-md backdrop-blur">
+      <div className="flex items-center gap-2 rounded-full border bg-background/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-md backdrop-blur">
         <SpinnerIcon className="size-3.5 animate-spin" />
         Updating…
       </div>

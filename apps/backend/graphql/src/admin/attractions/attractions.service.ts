@@ -5,6 +5,8 @@ import { DrizzleQueryService } from "../../lib/nestjs-query-drizzle";
 import type { AttractionDto } from "./dto/attraction.dto";
 import type { AttractionsTopPerProvinceInput } from "./dto/top-per-province.input";
 
+const FILTER_ONLY_ACTIVITY_TYPES = ["coffee"];
+
 @Injectable()
 export class AttractionsService extends DrizzleQueryService<AttractionDto> {
   constructor(@Inject(DRIZZLE_DB) private readonly drizzle: Db) {
@@ -26,12 +28,16 @@ export class AttractionsService extends DrizzleQueryService<AttractionDto> {
       conditions.push(
         sql`${attraction.latitude} BETWEEN ${south} AND ${north}`,
       );
-      conditions.push(
-        sql`${attraction.longitude} BETWEEN ${west} AND ${east}`,
-      );
+      conditions.push(sql`${attraction.longitude} BETWEEN ${west} AND ${east}`);
     }
     if (input.activityType) {
       conditions.push(sql`${attraction.activityType} = ${input.activityType}`);
+    } else {
+      for (const activityType of FILTER_ONLY_ACTIVITY_TYPES) {
+        conditions.push(
+          sql`${attraction.activityType} IS DISTINCT FROM ${activityType}`,
+        );
+      }
     }
 
     const where = sql.join(conditions, sql` AND `);

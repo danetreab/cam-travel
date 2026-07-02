@@ -10,6 +10,7 @@ import type { Attraction, AttractionListResult } from "@/types/attraction"
 // connection closes mid-render and React surfaces it as an AbortError that
 // h3 turns into a 502 Bad Gateway.
 const GQL_TIMEOUT_MS = 10000
+const FILTER_ONLY_ACTIVITY_TYPES = ["coffee"]
 
 // The first identifier after `query`/`mutation`/`subscription`. The gateway's
 // AuthGuard consults this name to decide whether a request is in the guest
@@ -23,7 +24,7 @@ function extractOperationName(query: string): string | undefined {
 
 async function gql<TData>(
   query: string,
-  variables?: Record<string, unknown>,
+  variables?: Record<string, unknown>
 ): Promise<TData> {
   const operationName = extractOperationName(query)
   const res = await fetch(envClient.VITE_GRAPHQL_HTTP_URL, {
@@ -34,7 +35,9 @@ async function gql<TData>(
     signal: AbortSignal.timeout(GQL_TIMEOUT_MS),
   })
   if (!res.ok) {
-    throw new Error(`Network error ${res.status} fetching ${envClient.VITE_GRAPHQL_HTTP_URL}`)
+    throw new Error(
+      `Network error ${res.status} fetching ${envClient.VITE_GRAPHQL_HTTP_URL}`
+    )
   }
   const json = (await res.json()) as {
     data?: TData
@@ -123,7 +126,7 @@ export interface ListTopPerProvinceParams {
 }
 
 export async function listTopPerProvince(
-  params: ListTopPerProvinceParams = {},
+  params: ListTopPerProvinceParams = {}
 ): Promise<AttractionListResult> {
   const input: Record<string, unknown> = {
     perProvince: params.perProvince ?? 20,
@@ -133,7 +136,7 @@ export async function listTopPerProvince(
 
   const data = await gql<{ attractionsTopPerProvince: Attraction[] }>(
     ATTRACTIONS_TOP_PER_PROVINCE,
-    { input },
+    { input }
   )
   return {
     items: data.attractionsTopPerProvince,
@@ -186,7 +189,7 @@ const UNSAVE_ATTRACTION = `
 
 export async function listMySavedAttractions(): Promise<AttractionListResult> {
   const data = await gql<{ mySavedAttractions: Attraction[] }>(
-    MY_SAVED_ATTRACTIONS,
+    MY_SAVED_ATTRACTIONS
   )
   return {
     items: data.mySavedAttractions,
@@ -196,7 +199,7 @@ export async function listMySavedAttractions(): Promise<AttractionListResult> {
 
 export async function listMySavedAttractionIds(): Promise<string[]> {
   const data = await gql<{ mySavedAttractionIds: string[] }>(
-    MY_SAVED_ATTRACTION_IDS,
+    MY_SAVED_ATTRACTION_IDS
   )
   return data.mySavedAttractionIds
 }
@@ -240,10 +243,12 @@ const ATTRACTION_BY_ID = `
   }
 `
 
-export async function getAttractionById(id: string): Promise<Attraction | null> {
+export async function getAttractionById(
+  id: string
+): Promise<Attraction | null> {
   const data = await gql<{ attractions: { nodes: Attraction[] } }>(
     ATTRACTION_BY_ID,
-    { id },
+    { id }
   )
   return data.attractions.nodes[0] ?? null
 }
@@ -254,13 +259,15 @@ export interface SearchAttractionsParams {
 }
 
 export async function searchAttractions(
-  params: SearchAttractionsParams,
+  params: SearchAttractionsParams
 ): Promise<AttractionListResult> {
   const q = params.query.trim()
   if (!q) return { items: [], totalCount: 0 }
   // `%` is the SQL wildcard for iLike; bracketing the term gives substring
   // matching so "ang" finds "Battambang".
-  const filter = { name: { iLike: `%${q}%` } }
+  const filter = {
+    and: [{ name: { iLike: `%${q}%` } }, ...filterOnlyActivityExclusions()],
+  }
   const paging = { limit: params.limit ?? 8 }
   const sorting = [
     { field: "cachedUserRatingsTotal", direction: "DESC", nulls: "NULLS_LAST" },
@@ -275,7 +282,7 @@ export async function searchAttractions(
 }
 
 export async function listAttractions(
-  params: ListAttractionsParams = {},
+  params: ListAttractionsParams = {}
 ): Promise<AttractionListResult> {
   const and: Array<Record<string, unknown>> = []
   if (params.province) {
@@ -285,13 +292,16 @@ export async function listAttractions(
   }
   if (params.activityType) {
     and.push({ activityType: { eq: params.activityType } })
+  } else {
+    and.push(...filterOnlyActivityExclusions())
   }
   if (params.bounds) {
     const { south, west, north, east } = params.bounds
     and.push({ latitude: { gte: south, lte: north } })
     and.push({ longitude: { gte: west, lte: east } })
   }
-  const filter = and.length === 0 ? undefined : and.length === 1 ? and[0] : { and }
+  const filter =
+    and.length === 0 ? undefined : and.length === 1 ? and[0] : { and }
   const paging = { limit: params.limit ?? 200 }
   // Bias toward Google-popular places so that when the limit truncates the
   // result set (e.g. zoomed out), the survivors are the ones a visitor most
@@ -308,4 +318,13 @@ export async function listAttractions(
     items: data.attractions.nodes,
     totalCount: data.attractions.totalCount,
   }
+}
+
+function filterOnlyActivityExclusions(): Array<Record<string, unknown>> {
+  return FILTER_ONLY_ACTIVITY_TYPES.map((activityType) => ({
+    or: [
+      { activityType: { neq: activityType } },
+      { activityType: { is: null } },
+    ],
+  }))
 }

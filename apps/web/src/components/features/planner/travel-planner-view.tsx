@@ -1879,9 +1879,9 @@ function PlannerPlaceSuggestions({
         {remainingCount > 0 && (
           <Button
             type="button"
-            variant="outline"
-            size="sm"
-            className="h-8 w-full rounded-md text-xs"
+            variant="ghost"
+            size="xs"
+            className="h-8 w-full rounded-md"
             onClick={() => setShowAllPlaces((current) => !current)}
           >
             {showAllPlaces

@@ -3,13 +3,17 @@ import { Pool, type PoolConfig } from "pg";
 import * as authSchema from "./schema";
 import * as itemsSchema from "./items";
 import * as attractionsSchema from "./attractions";
+import * as savedAttractionsSchema from "./saved-attractions";
 import * as uploadedFilesSchema from "./uploaded-files";
+import * as aiTravelPlansSchema from "./ai-travel-plans";
 
 const schema = {
   ...authSchema,
   ...itemsSchema,
   ...attractionsSchema,
+  ...savedAttractionsSchema,
   ...uploadedFilesSchema,
+  ...aiTravelPlansSchema,
 };
 
 export type Schema = typeof schema;

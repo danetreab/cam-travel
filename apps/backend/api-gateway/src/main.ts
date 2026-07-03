@@ -42,6 +42,8 @@ async function bootstrap() {
         "/api/v1/items/*/files/**",
         "/api/v1/attractions/*/files",
         "/api/v1/attractions/*/files/**",
+        "/api/v1/attractions/*/photos",
+        "/api/v1/attractions/*/photos/**",
         "/api/v1/uploaded-files/**",
       ],
       target: graphqlHttpUrl,

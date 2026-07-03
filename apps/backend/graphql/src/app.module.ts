@@ -12,6 +12,7 @@ import { ItemsModule } from "./admin/items/items.module";
 import { AttractionsModule } from "./admin/attractions/attractions.module";
 import { SavedAttractionsModule } from "./admin/saved-attractions/saved-attractions.module";
 import { UploadsModule } from "./uploads/uploads.module";
+import { AiTravelModule } from "./ai/ai-travel.module";
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { UploadsModule } from "./uploads/uploads.module";
     AttractionsModule,
     SavedAttractionsModule,
     UploadsModule,
+    AiTravelModule,
   ],
   controllers: [GraphqlMicroserviceController],
 })

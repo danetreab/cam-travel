@@ -11,6 +11,7 @@ export {
 export { item } from "./items";
 export { attraction } from "./attractions";
 export { savedAttraction } from "./saved-attractions";
+export { aiTravelPlan, aiTravelPlanPlace } from "./ai-travel-plans";
 export { uploadedFile } from "./uploaded-files";
 export type { UploadedFile, NewUploadedFile } from "./uploaded-files";
 export { createDb, DRIZZLE_DB } from "./client";

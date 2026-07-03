@@ -13,6 +13,7 @@ import { Route as GuestRouteRouteImport } from "./routes/_guest/route"
 import { Route as AuthedRouteRouteImport } from "./routes/_authed/route"
 import { Route as GuestLoginRouteImport } from "./routes/_guest/login"
 import { Route as AuthedSavedRouteImport } from "./routes/_authed/saved"
+import { Route as AuthedPlannerRouteImport } from "./routes/_authed/planner"
 import { Route as AuthedExploreRouteRouteImport } from "./routes/_authed/_explore/route"
 import { Route as AuthedExploreIndexRouteImport } from "./routes/_authed/_explore/index"
 import { Route as AuthedExploreAttractionAttractionIdRouteImport } from "./routes/_authed/_explore/attraction.$attractionId"
@@ -35,6 +36,11 @@ const AuthedSavedRoute = AuthedSavedRouteImport.update({
   path: "/saved",
   getParentRoute: () => AuthedRouteRoute,
 } as any)
+const AuthedPlannerRoute = AuthedPlannerRouteImport.update({
+  id: "/planner",
+  path: "/planner",
+  getParentRoute: () => AuthedRouteRoute,
+} as any)
 const AuthedExploreRouteRoute = AuthedExploreRouteRouteImport.update({
   id: "/_explore",
   getParentRoute: () => AuthedRouteRoute,
@@ -53,12 +59,14 @@ const AuthedExploreAttractionAttractionIdRoute =
 
 export interface FileRoutesByFullPath {
   "/": typeof AuthedExploreIndexRoute
+  "/planner": typeof AuthedPlannerRoute
   "/saved": typeof AuthedSavedRoute
   "/login": typeof GuestLoginRoute
   "/attraction/$attractionId": typeof AuthedExploreAttractionAttractionIdRoute
 }
 export interface FileRoutesByTo {
   "/": typeof AuthedExploreIndexRoute
+  "/planner": typeof AuthedPlannerRoute
   "/saved": typeof AuthedSavedRoute
   "/login": typeof GuestLoginRoute
   "/attraction/$attractionId": typeof AuthedExploreAttractionAttractionIdRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   "/_authed": typeof AuthedRouteRouteWithChildren
   "/_guest": typeof GuestRouteRouteWithChildren
   "/_authed/_explore": typeof AuthedExploreRouteRouteWithChildren
+  "/_authed/planner": typeof AuthedPlannerRoute
   "/_authed/saved": typeof AuthedSavedRoute
   "/_guest/login": typeof GuestLoginRoute
   "/_authed/_explore/": typeof AuthedExploreIndexRoute
@@ -75,14 +84,20 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: "/" | "/saved" | "/login" | "/attraction/$attractionId"
+  fullPaths:
+    | "/"
+    | "/planner"
+    | "/saved"
+    | "/login"
+    | "/attraction/$attractionId"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/saved" | "/login" | "/attraction/$attractionId"
+  to: "/" | "/planner" | "/saved" | "/login" | "/attraction/$attractionId"
   id:
     | "__root__"
     | "/_authed"
     | "/_guest"
     | "/_authed/_explore"
+    | "/_authed/planner"
     | "/_authed/saved"
     | "/_guest/login"
     | "/_authed/_explore/"
@@ -122,6 +137,13 @@ declare module "@tanstack/react-router" {
       path: "/saved"
       fullPath: "/saved"
       preLoaderRoute: typeof AuthedSavedRouteImport
+      parentRoute: typeof AuthedRouteRoute
+    }
+    "/_authed/planner": {
+      id: "/_authed/planner"
+      path: "/planner"
+      fullPath: "/planner"
+      preLoaderRoute: typeof AuthedPlannerRouteImport
       parentRoute: typeof AuthedRouteRoute
     }
     "/_authed/_explore": {
@@ -164,11 +186,13 @@ const AuthedExploreRouteRouteWithChildren =
 
 interface AuthedRouteRouteChildren {
   AuthedExploreRouteRoute: typeof AuthedExploreRouteRouteWithChildren
+  AuthedPlannerRoute: typeof AuthedPlannerRoute
   AuthedSavedRoute: typeof AuthedSavedRoute
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
   AuthedExploreRouteRoute: AuthedExploreRouteRouteWithChildren,
+  AuthedPlannerRoute: AuthedPlannerRoute,
   AuthedSavedRoute: AuthedSavedRoute,
 }
 

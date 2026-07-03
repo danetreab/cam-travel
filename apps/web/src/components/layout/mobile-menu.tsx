@@ -5,7 +5,7 @@ import {
   SunIcon,
 } from "@phosphor-icons/react"
 import { Link } from "@tanstack/react-router"
-import { Bookmark, Compass, Menu, Search } from "lucide-react"
+import { Bookmark, Compass, Menu, Search, Sparkles } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -129,17 +129,30 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
             Explore
           </Link>
           {user && (
-            <Link
-              to="/saved"
-              onClick={() => setOpen(false)}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "justify-start gap-2",
-              )}
-            >
-              <Bookmark className="size-4" />
-              Saved
-            </Link>
+            <>
+              <Link
+                to="/planner"
+                onClick={() => setOpen(false)}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "justify-start gap-2",
+                )}
+              >
+                <Sparkles className="size-4" />
+                Planner
+              </Link>
+              <Link
+                to="/saved"
+                onClick={() => setOpen(false)}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "justify-start gap-2",
+                )}
+              >
+                <Bookmark className="size-4" />
+                Saved
+              </Link>
+            </>
           )}
         </nav>
 

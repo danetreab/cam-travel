@@ -18,6 +18,7 @@ export default defineConfig({
     "./src/attractions.ts",
     "./src/saved-attractions.ts",
     "./src/uploaded-files.ts",
+    "./src/ai-travel-plans.ts",
   ],
   out: "./drizzle",
   dialect: "postgresql",

@@ -43,6 +43,13 @@
       "when": 1778693608690,
       "tag": "0005_optimal_the_leader",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1783009284008,
+      "tag": "0006_polite_hairball",
+      "breakpoints": true
     }
   ]
 }

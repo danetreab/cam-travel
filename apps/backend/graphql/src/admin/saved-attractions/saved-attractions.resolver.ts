@@ -11,6 +11,7 @@ type GqlContext = {
 
 function requireUserId(ctx: GqlContext): string {
   const id = ctx.user?.id;
+  console.log(ctx);
   if (!id) throw new UnauthorizedException("Sign in required");
   return id;
 }

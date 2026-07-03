@@ -10,6 +10,11 @@ import tailwindcss from "@tailwindcss/vite"
 // runs the bun-native `server.ts` against the default tanstackStart build
 // output at ./dist/client + ./dist/server/server.js.
 const config = defineConfig({
+  resolve: {
+    alias: {
+      "lucide-react": "lucide-react/dist/cjs/lucide-react.js",
+    },
+  },
   plugins: [
     devtools(),
     // this is the plugin that enables path aliases

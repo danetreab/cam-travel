@@ -7,7 +7,7 @@ import {
   TranslateIcon,
 } from "@phosphor-icons/react"
 import { Link } from "@tanstack/react-router"
-import { Compass } from "lucide-react"
+import { Compass, Sparkles } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
@@ -96,12 +96,21 @@ export function Header() {
             Explore
           </Link>
           {user && (
-            <Link
-              to="/saved"
-              className={buttonVariants({ variant: "ghost", size: "sm" })}
-            >
-              Saved
-            </Link>
+            <>
+              <Link
+                to="/planner"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+              >
+                <Sparkles className="size-4" />
+                Planner
+              </Link>
+              <Link
+                to="/saved"
+                className={buttonVariants({ variant: "ghost", size: "sm" })}
+              >
+                Saved
+              </Link>
+            </>
           )}
         </nav>
 

@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ClientsModule, Transport } from "@nestjs/microservices";
+import { AiController } from "../v1/ai.controller";
 import { GraphqlController } from "./graphql.controller";
 import { GRAPHQL_CLIENT } from "./graphql.tokens";
 
@@ -16,6 +17,6 @@ import { GRAPHQL_CLIENT } from "./graphql.tokens";
       },
     ]),
   ],
-  controllers: [GraphqlController],
+  controllers: [GraphqlController, AiController],
 })
 export class GraphqlModule {}

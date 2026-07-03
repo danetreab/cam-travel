@@ -6,6 +6,8 @@ import type {
   AiTravelRequest,
   AiTravelResponse,
   AiTravelRpcPayload,
+  AiTravelSessionDetail,
+  AiTravelSessionSummary,
 } from "./ai-travel.types";
 
 type GetPlanBody = { planId: string };
@@ -43,6 +45,27 @@ export class AiTravelController {
       this.aiTravel.getPlan(
         this.aiTravel.requireUserId(payload.user),
         payload.body.planId,
+      ),
+    );
+  }
+
+  @MessagePattern("ai.sessions.list")
+  listSessions(
+    @Payload() payload: AiTravelRpcPayload,
+  ): Promise<AiRpcResult<AiTravelSessionSummary[]>> {
+    return this.run(() =>
+      this.aiTravel.listSessions(this.aiTravel.requireUserId(payload.user)),
+    );
+  }
+
+  @MessagePattern("ai.session.get")
+  getSession(
+    @Payload() payload: AiTravelRpcPayload<{ sessionId: string }>,
+  ): Promise<AiRpcResult<AiTravelSessionDetail>> {
+    return this.run(() =>
+      this.aiTravel.getSession(
+        this.aiTravel.requireUserId(payload.user),
+        payload.body.sessionId,
       ),
     );
   }

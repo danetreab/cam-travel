@@ -1,5 +1,10 @@
 import { envClient } from "@/env"
-import type { AiTravelRequest, AiTravelResponse } from "@/types/ai-travel"
+import type {
+  AiTravelRequest,
+  AiTravelResponse,
+  AiTravelSessionDetail,
+  AiTravelSessionSummary,
+} from "@/types/ai-travel"
 
 const AI_TIMEOUT_MS = 45000
 
@@ -44,6 +49,18 @@ export function planAiTravel(
 export function getAiTravelPlan(planId: string): Promise<AiTravelResponse> {
   return aiFetch<AiTravelResponse>(
     `/api/v1/ai/plans/${encodeURIComponent(planId)}`,
+  )
+}
+
+export function listAiTravelSessions(): Promise<AiTravelSessionSummary[]> {
+  return aiFetch<AiTravelSessionSummary[]>("/api/v1/ai/sessions")
+}
+
+export function getAiTravelSession(
+  sessionId: string,
+): Promise<AiTravelSessionDetail> {
+  return aiFetch<AiTravelSessionDetail>(
+    `/api/v1/ai/sessions/${encodeURIComponent(sessionId)}`,
   )
 }
 

@@ -14,8 +14,8 @@ export const Route = createFileRoute("/_guest/login")({
 function RouteComponent() {
   const { redirect } = Route.useSearch()
   return (
-    <div className="bg-background flex min-h-svh flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm">
+    <div className="flex min-h-svh flex-col items-center justify-center p-6">
+      <div className="glass-panel-strong w-full max-w-sm rounded-lg p-6">
         <LoginForm redirectTo={redirect} />
       </div>
     </div>

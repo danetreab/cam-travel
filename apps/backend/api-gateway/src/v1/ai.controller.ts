@@ -26,6 +26,7 @@ type AuthedRequest = Request & {
 type AiTravelRequest = {
   message: string;
   planId?: string;
+  sessionId?: string;
   userLocation?: { lat: number; lng: number } | null;
   language?: string;
 };
@@ -52,6 +53,16 @@ export class AiController {
   @Get("plans/:id")
   getPlan(@Param("id") planId: string, @Req() req: AuthedRequest) {
     return this.send("ai.plan.get", { planId }, req);
+  }
+
+  @Get("sessions")
+  listSessions(@Req() req: AuthedRequest) {
+    return this.send("ai.sessions.list", {}, req);
+  }
+
+  @Get("sessions/:id")
+  getSession(@Param("id") sessionId: string, @Req() req: AuthedRequest) {
+    return this.send("ai.session.get", { sessionId }, req);
   }
 
   @Patch("plans/:planId/places/:googlePlaceId")

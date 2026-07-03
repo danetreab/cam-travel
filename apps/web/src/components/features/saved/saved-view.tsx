@@ -163,7 +163,7 @@ export function SavedView() {
           >
             <aside
               ref={listRef}
-              className="relative h-full overflow-y-auto p-4"
+              className="glass-panel relative m-3 h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg p-4"
             >
               {sidebarInner}
             </aside>
@@ -191,7 +191,7 @@ export function SavedView() {
       <aside
         ref={listRef}
         className={cn(
-          "bg-background absolute inset-0 overflow-y-auto p-4 transition-transform duration-300 ease-out",
+          "glass-panel-strong mobile-chrome-pt absolute inset-0 overflow-y-auto rounded-t-lg px-4 pb-28 transition-transform duration-300 ease-out",
           mobileView === "list" ? "translate-y-0" : "translate-y-full",
         )}
         aria-hidden={mobileView !== "list"}
@@ -202,7 +202,7 @@ export function SavedView() {
       <button
         type="button"
         onClick={() => setMobileView((v) => (v === "map" ? "list" : "map"))}
-        className="bg-foreground text-background absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-lg"
+        className="mobile-action-bottom glass-panel-strong absolute left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background"
       >
         {mobileView === "map" ? (
           <>

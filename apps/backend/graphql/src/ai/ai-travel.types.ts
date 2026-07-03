@@ -25,6 +25,7 @@ export type FollowUpAction = (typeof FOLLOW_UP_ACTIONS)[number];
 export interface AiTravelRequest {
   message: string;
   planId?: string;
+  sessionId?: string;
   userLocation?: { lat: number; lng: number } | null;
   language?: string;
 }
@@ -70,6 +71,7 @@ export interface AiTravelItineraryDay {
 
 export interface AiTravelResponse {
   planId: string;
+  sessionId: string;
   intent: TripIntent;
   destination: string | null;
   title: string;
@@ -96,6 +98,32 @@ export interface AiTravelResponse {
 export interface AiTravelPlacePatch {
   saved?: boolean;
   removed?: boolean;
+}
+
+export type AiTravelChatRole = "assistant" | "user";
+
+export interface AiTravelChatMessage {
+  id: string;
+  role: AiTravelChatRole;
+  content: string;
+  planId: string | null;
+  error: boolean;
+  createdAt: string;
+}
+
+export interface AiTravelSessionSummary {
+  id: string;
+  title: string;
+  destination: string | null;
+  activePlanId: string | null;
+  messageCount: number;
+  updatedAt: string;
+  createdAt: string;
+}
+
+export interface AiTravelSessionDetail extends AiTravelSessionSummary {
+  messages: AiTravelChatMessage[];
+  plan: AiTravelResponse | null;
 }
 
 export interface AiTravelRpcPayload<TBody = unknown> {

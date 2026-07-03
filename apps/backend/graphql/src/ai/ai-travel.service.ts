@@ -10,22 +10,27 @@ import {
 import { google } from "@ai-sdk/google";
 import { generateText, Output } from "ai";
 import { z } from "zod";
-import { and, asc, eq, inArray } from "drizzle-orm";
+import { and, asc, count, desc, eq, inArray, sql } from "drizzle-orm";
 import {
   DRIZZLE_DB,
   type Db,
+  aiTravelChatMessage,
   aiTravelPlan,
   aiTravelPlanPlace,
+  aiTravelSession,
   attraction,
 } from "@repo/db";
 import {
   FOLLOW_UP_ACTIONS,
   TRIP_INTENTS,
+  type AiTravelChatMessage,
   type AiTravelItineraryDay,
   type AiTravelPlace,
   type AiTravelPlacePatch,
   type AiTravelRequest,
   type AiTravelResponse,
+  type AiTravelSessionDetail,
+  type AiTravelSessionSummary,
   type FollowUpAction,
   type TripIntent,
 } from "./ai-travel.types";
@@ -33,6 +38,7 @@ import { ConfigService } from "@nestjs/config";
 
 type ExistingPlan = typeof aiTravelPlan.$inferSelect;
 type ExistingPlanPlace = typeof aiTravelPlanPlace.$inferSelect;
+type ExistingSession = typeof aiTravelSession.$inferSelect;
 
 interface PlacePhoto {
   name: string;
@@ -156,12 +162,27 @@ export class AiTravelService {
     const existingPlan = request.planId
       ? await this.requirePlan(userId, request.planId)
       : null;
+    const language = request.language?.trim() || existingPlan?.language || "en";
+    const session = await this.ensureSession(
+      userId,
+      request.sessionId,
+      message,
+      language,
+    );
+    await this.appendChatMessage({
+      userId,
+      sessionId: session.id,
+      role: "user",
+      content: message,
+      planId: existingPlan?.id ?? null,
+      error: false,
+    });
+
     const existingPlaces = existingPlan
       ? await this.listPlanPlaces(existingPlan.id)
       : [];
     const classification = await this.classify(message, request, existingPlan);
     const planId = existingPlan?.id ?? crypto.randomUUID();
-    const language = request.language?.trim() || existingPlan?.language || "en";
 
     let candidates =
       existingPlan && this.shouldReusePlanPlaces(classification.intent)
@@ -192,6 +213,7 @@ export class AiTravelService {
       candidates,
       draft,
       placeStates,
+      session.id,
     );
 
     await this.savePlan({
@@ -204,6 +226,15 @@ export class AiTravelService {
       response,
     });
     await this.savePlanPlaces(userId, planId, response.places, candidates);
+    await this.updateSessionFromPlan(userId, session.id, response, language);
+    await this.appendChatMessage({
+      userId,
+      sessionId: session.id,
+      role: "assistant",
+      content: "Here is a plan you can keep refining in this chat.",
+      planId,
+      error: false,
+    });
 
     return response;
   }
@@ -212,6 +243,39 @@ export class AiTravelService {
     const plan = await this.requirePlan(userId, planId);
     const places = await this.listPlanPlaces(plan.id);
     return this.mergePlaceState(plan.response as AiTravelResponse, places);
+  }
+
+  async listSessions(userId: string): Promise<AiTravelSessionSummary[]> {
+    const sessions = await this.db
+      .select()
+      .from(aiTravelSession)
+      .where(eq(aiTravelSession.userId, userId))
+      .orderBy(desc(aiTravelSession.updatedAt))
+      .limit(20);
+
+    return Promise.all(
+      sessions.map(async (session) => ({
+        ...this.toSessionSummary(session),
+        messageCount: await this.countSessionMessages(userId, session.id),
+      })),
+    );
+  }
+
+  async getSession(
+    userId: string,
+    sessionId: string,
+  ): Promise<AiTravelSessionDetail> {
+    const session = await this.requireSession(userId, sessionId);
+    const messages = await this.listSessionMessages(userId, session.id);
+    const plan = session.activePlanId
+      ? await this.getSessionPlan(userId, session.activePlanId, session.id)
+      : null;
+
+    return {
+      ...this.toSessionSummary(session, messages.length),
+      messages,
+      plan,
+    };
   }
 
   async patchPlace(
@@ -479,6 +543,7 @@ export class AiTravelService {
     candidates: CandidatePlace[],
     draft: AiTravelDraft,
     states: Map<string, { saved: boolean; removed: boolean }>,
+    sessionId: string,
   ): AiTravelResponse {
     const candidateMap = new Map(candidates.map((p) => [p.googlePlaceId, p]));
     const seen = new Set<string>();
@@ -535,6 +600,7 @@ export class AiTravelService {
 
     return {
       planId,
+      sessionId,
       intent: classification.intent,
       destination: classification.destination,
       title: draft.title || this.defaultTitle(classification),
@@ -663,6 +729,190 @@ export class AiTravelService {
     return { center, zoom: pins.length === 1 ? 14 : 12, pins };
   }
 
+  private async ensureSession(
+    userId: string,
+    requestedSessionId: string | undefined,
+    message: string,
+    language: string,
+  ): Promise<ExistingSession> {
+    const sessionId = requestedSessionId?.trim();
+    if (sessionId) {
+      const rows = await this.db
+        .select()
+        .from(aiTravelSession)
+        .where(eq(aiTravelSession.id, sessionId))
+        .limit(1);
+      const existing = rows[0];
+      if (existing) {
+        if (existing.userId !== userId) {
+          throw new NotFoundException("AI travel session not found");
+        }
+        return existing;
+      }
+    }
+
+    const id = sessionId || crypto.randomUUID();
+    const title = this.defaultSessionTitle(message);
+    const rows = await this.db
+      .insert(aiTravelSession)
+      .values({
+        id,
+        userId,
+        title,
+        language,
+      })
+      .returning();
+    return rows[0]!;
+  }
+
+  private async updateSessionFromPlan(
+    userId: string,
+    sessionId: string,
+    response: AiTravelResponse,
+    language: string,
+  ): Promise<void> {
+    await this.db
+      .update(aiTravelSession)
+      .set({
+        activePlanId: response.planId,
+        title: response.title,
+        destination: response.destination,
+        language,
+        updatedAt: new Date(),
+      })
+      .where(
+        and(
+          eq(aiTravelSession.id, sessionId),
+          eq(aiTravelSession.userId, userId),
+        ),
+      );
+  }
+
+  private async appendChatMessage(input: {
+    userId: string;
+    sessionId: string;
+    role: "assistant" | "user";
+    content: string;
+    planId: string | null;
+    error: boolean;
+  }): Promise<void> {
+    const positionRows = await this.db
+      .select({
+        nextPosition:
+          sql<number>`coalesce(max(${aiTravelChatMessage.position}), -1) + 1`.as(
+            "next_position",
+          ),
+      })
+      .from(aiTravelChatMessage)
+      .where(eq(aiTravelChatMessage.sessionId, input.sessionId));
+    const position = Number(positionRows[0]?.nextPosition ?? 0);
+
+    await this.db.insert(aiTravelChatMessage).values({
+      sessionId: input.sessionId,
+      userId: input.userId,
+      planId: input.planId,
+      role: input.role,
+      content: input.content,
+      error: input.error,
+      position,
+    });
+  }
+
+  private async countSessionMessages(
+    userId: string,
+    sessionId: string,
+  ): Promise<number> {
+    const rows = await this.db
+      .select({ value: count() })
+      .from(aiTravelChatMessage)
+      .where(
+        and(
+          eq(aiTravelChatMessage.userId, userId),
+          eq(aiTravelChatMessage.sessionId, sessionId),
+        ),
+      );
+    return Number(rows[0]?.value ?? 0);
+  }
+
+  private async listSessionMessages(
+    userId: string,
+    sessionId: string,
+  ): Promise<AiTravelChatMessage[]> {
+    const rows = await this.db
+      .select()
+      .from(aiTravelChatMessage)
+      .where(
+        and(
+          eq(aiTravelChatMessage.userId, userId),
+          eq(aiTravelChatMessage.sessionId, sessionId),
+        ),
+      )
+      .orderBy(asc(aiTravelChatMessage.position));
+
+    return rows.map((message) => ({
+      id: message.id,
+      role: message.role === "user" ? "user" : "assistant",
+      content: message.content,
+      planId: message.planId,
+      error: message.error,
+      createdAt: this.toIsoString(message.createdAt),
+    }));
+  }
+
+  private async requireSession(
+    userId: string,
+    sessionId: string,
+  ): Promise<ExistingSession> {
+    const rows = await this.db
+      .select()
+      .from(aiTravelSession)
+      .where(
+        and(eq(aiTravelSession.id, sessionId), eq(aiTravelSession.userId, userId)),
+      )
+      .limit(1);
+    if (!rows[0]) throw new NotFoundException("AI travel session not found");
+    return rows[0];
+  }
+
+  private async getSessionPlan(
+    userId: string,
+    planId: string,
+    sessionId: string,
+  ): Promise<AiTravelResponse> {
+    const plan = await this.requirePlan(userId, planId);
+    const places = await this.listPlanPlaces(plan.id);
+    return this.mergePlaceState(
+      plan.response as AiTravelResponse,
+      places,
+      sessionId,
+    );
+  }
+
+  private toSessionSummary(
+    session: ExistingSession,
+    messageCount = 0,
+  ): AiTravelSessionSummary {
+    return {
+      id: session.id,
+      title: session.title,
+      destination: session.destination,
+      activePlanId: session.activePlanId,
+      messageCount,
+      updatedAt: this.toIsoString(session.updatedAt),
+      createdAt: this.toIsoString(session.createdAt),
+    };
+  }
+
+  private defaultSessionTitle(message: string): string {
+    const collapsed = message.replace(/\s+/g, " ").trim();
+    if (collapsed.length <= 80) return collapsed || "New AI travel chat";
+    return `${collapsed.slice(0, 77)}...`;
+  }
+
+  private toIsoString(value: Date | string): string {
+    return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+  }
+
   private async savePlan(input: {
     userId: string;
     planId: string;
@@ -770,6 +1020,7 @@ export class AiTravelService {
   private mergePlaceState(
     response: AiTravelResponse,
     places: ExistingPlanPlace[],
+    sessionId = response.sessionId ?? "",
   ): AiTravelResponse {
     const stateMap = new Map(
       places.map((place) => [
@@ -790,6 +1041,7 @@ export class AiTravelService {
     const responsePlaces = groups.flatMap((group) => group.places);
     return {
       ...response,
+      sessionId,
       groups,
       places: responsePlaces,
       map: this.buildMap(responsePlaces),

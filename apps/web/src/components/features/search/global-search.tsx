@@ -147,7 +147,7 @@ export function SearchTrigger({
       onClick={onClick}
       aria-label="Open search"
       className={
-        "flex h-9 items-center gap-2 rounded-full border bg-background px-3 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-muted " +
+        "glass-control flex h-9 items-center gap-2 rounded-full px-3 text-sm text-muted-foreground transition-colors hover:bg-muted " +
         (className ?? "")
       }
     >

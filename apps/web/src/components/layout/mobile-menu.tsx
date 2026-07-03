@@ -67,7 +67,7 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
         <button
           type="button"
           aria-label="Open search"
-          className="fixed top-4 right-20 left-4 z-50 flex h-11 min-w-0 items-center gap-2 rounded-full border bg-background px-4 text-left text-sm text-muted-foreground shadow-lg transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none md:hidden"
+          className="glass-control fixed top-[max(1rem,env(safe-area-inset-top))] right-20 left-4 z-50 flex h-11 min-w-0 items-center gap-2 rounded-full px-4 text-left text-sm text-muted-foreground transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none md:hidden"
           onClick={onOpenSearch}
         >
           <Search className="size-5 shrink-0" />
@@ -78,7 +78,7 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
         variant="default"
         size="icon"
         aria-label="Open menu"
-        className="fixed top-4 right-4 z-50 size-11 rounded-full shadow-lg md:hidden"
+        className="fixed top-[max(1rem,env(safe-area-inset-top))] right-4 z-50 size-11 rounded-full shadow-lg md:hidden"
         onClick={() => setOpen(true)}
       >
         <Menu className="size-5" />
@@ -116,7 +116,7 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
           )}
         </SheetHeader>
 
-        <nav className="flex flex-col gap-1 border-b p-3">
+        <nav className="flex flex-col gap-1 border-b border-border/60 p-3">
           <Link
             to="/"
             onClick={() => setOpen(false)}
@@ -156,8 +156,8 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
           )}
         </nav>
 
-        <div className="border-b p-3">
-          <p className="text-muted-foreground px-2 pb-2 text-xs font-semibold tracking-wider uppercase">
+        <div className="border-b border-border/60 p-3">
+          <p className="text-muted-foreground px-2 pb-2 text-xs font-semibold tracking-normal">
             {t("header.theme")}
           </p>
           <div className="grid grid-cols-3 gap-1">
@@ -176,8 +176,8 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
           </div>
         </div>
 
-        <div className="border-b p-3">
-          <p className="text-muted-foreground px-2 pb-2 text-xs font-semibold tracking-wider uppercase">
+        <div className="border-b border-border/60 p-3">
+          <p className="text-muted-foreground px-2 pb-2 text-xs font-semibold tracking-normal">
             {t("header.language")}
           </p>
           <div className="grid grid-cols-2 gap-1">

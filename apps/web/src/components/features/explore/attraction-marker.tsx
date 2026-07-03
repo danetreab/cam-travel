@@ -32,7 +32,7 @@ export function AttractionMarker({
     >
       <div
         className={cn(
-          "bg-muted flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-white shadow-md transition-transform",
+          "glass-control bg-muted flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-white/80 transition-transform",
           "hover:z-10 hover:scale-110",
           active && "ring-primary z-20 scale-110 ring-2",
         )}

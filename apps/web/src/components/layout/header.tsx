@@ -78,7 +78,7 @@ export function Header() {
     <>
       <MobileMenu user={user} onOpenSearch={() => setSearchOpen(true)} />
       <GlobalSearch open={searchOpen} onOpenChange={setSearchOpen} />
-      <header className="sticky top-0 z-40 hidden border-b bg-background md:block">
+      <header className="glass-panel sticky top-0 z-40 hidden border-x-0 border-t-0 md:block">
         <div className="flex h-14 items-center justify-between gap-4 px-4">
         <Link
           to="/"

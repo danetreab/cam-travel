@@ -44,12 +44,12 @@ export function AttractionListCard({
         }
       }}
       className={cn(
-        "group flex w-full cursor-pointer flex-row gap-3 rounded-none p-3 transition-colors",
-        "hover:bg-muted/50 focus-visible:ring-ring/50 focus-visible:ring-2 focus-visible:outline-none",
-        active && "bg-muted ring-ring/40 ring-2",
+        "group flex w-full cursor-pointer flex-row gap-3 rounded-lg p-3 transition-colors",
+        "hover:bg-muted/60 focus-visible:ring-ring/50 focus-visible:ring-2 focus-visible:outline-none",
+        active && "bg-primary/10 ring-primary/35 ring-2",
       )}
     >
-      <div className="bg-muted h-20 w-20 shrink-0 overflow-hidden">
+      <div className="bg-muted h-20 w-20 shrink-0 overflow-hidden rounded-md">
         {image ? (
           <img
             src={image}

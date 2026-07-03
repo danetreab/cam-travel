@@ -329,7 +329,7 @@ export function ExploreView() {
           <button
             type="button"
             onClick={clearProvince}
-            className="inline-flex items-center gap-1.5 rounded-full border border-foreground bg-foreground px-3 py-1 text-xs font-medium text-background hover:opacity-90"
+            className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-medium text-primary hover:bg-primary/15"
             aria-label={`Clear ${provinceParam} filter`}
           >
             {provinceParam}
@@ -343,9 +343,9 @@ export function ExploreView() {
           type="button"
           onClick={() => setActivityType(null)}
           className={cn(
-            "shrink-0 border px-3 py-1 text-xs font-medium transition-colors",
+            "glass-control shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
             activityType === null
-              ? "border-foreground bg-foreground text-background"
+              ? "bg-primary text-primary-foreground"
               : "hover:bg-muted"
           )}
         >
@@ -359,9 +359,9 @@ export function ExploreView() {
               type="button"
               onClick={() => setActivityType(active ? null : type)}
               className={cn(
-                "shrink-0 border px-3 py-1 text-xs font-medium transition-colors",
+                "glass-control shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
                 active
-                  ? "border-foreground bg-foreground text-background"
+                  ? "bg-primary text-primary-foreground"
                   : "hover:bg-muted"
               )}
             >
@@ -429,7 +429,7 @@ export function ExploreView() {
       aria-label="Show my location"
       title="Show my location"
       className={cn(
-        "flex h-11 w-11 items-center justify-center rounded-full border bg-background text-foreground shadow-md transition-colors",
+        "glass-control flex h-11 w-11 items-center justify-center rounded-full text-foreground transition-colors",
         "hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60",
         userLocation.status === "granted" && "text-blue-600 dark:text-blue-400"
       )}
@@ -444,7 +444,7 @@ export function ExploreView() {
 
   const mapFetchingOverlay = isFetching && (
     <div className="pointer-events-none absolute top-4 left-1/2 z-10 -translate-x-1/2">
-      <div className="flex items-center gap-2 rounded-full border bg-background/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-md backdrop-blur">
+      <div className="glass-control flex items-center gap-2 rounded-full px-3 py-1.5 text-xs font-medium text-foreground">
         <SpinnerIcon className="size-3.5 animate-spin" />
         Updating…
       </div>
@@ -477,7 +477,7 @@ export function ExploreView() {
           >
             <aside
               ref={listRef}
-              className="relative h-full overflow-y-auto p-4"
+              className="glass-panel relative m-3 h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg p-4"
             >
               {sidebarInner}
             </aside>
@@ -515,7 +515,7 @@ export function ExploreView() {
       <aside
         ref={listRef}
         className={cn(
-          "absolute inset-0 overflow-y-auto bg-background p-4 transition-transform duration-300 ease-out",
+          "glass-panel-strong mobile-chrome-pt absolute inset-0 overflow-y-auto rounded-t-lg px-4 pb-28 transition-transform duration-300 ease-out",
           mobileView === "list" ? "translate-y-0" : "translate-y-full"
         )}
         aria-hidden={mobileView !== "list"}
@@ -526,7 +526,7 @@ export function ExploreView() {
       <button
         type="button"
         onClick={() => setMobileView((v) => (v === "map" ? "list" : "map"))}
-        className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background shadow-lg"
+        className="mobile-action-bottom glass-panel-strong absolute left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background"
       >
         {mobileView === "map" ? (
           <>

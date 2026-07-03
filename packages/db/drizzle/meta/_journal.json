@@ -50,6 +50,13 @@
       "when": 1783009284008,
       "tag": "0006_polite_hairball",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1783050211882,
+      "tag": "0007_opposite_tyrannus",
+      "breakpoints": true
     }
   ]
 }

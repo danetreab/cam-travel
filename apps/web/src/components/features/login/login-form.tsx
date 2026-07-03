@@ -34,11 +34,16 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       {!hideHeading && (
         <div className="flex flex-col items-center gap-2 text-center">
-          <h1 className="text-xl font-bold">Welcome</h1>
+          <h1 className="text-xl font-semibold tracking-tight">Welcome</h1>
           <p className="text-sm text-muted-foreground">Sign in to continue</p>
         </div>
       )}
-      <Button onClick={handleLoginWithGoogle} variant="outline" type="button">
+      <Button
+        onClick={handleLoginWithGoogle}
+        variant="outline"
+        type="button"
+        className="w-full"
+      >
         <FcGoogle className="mr-2 size-5" />
         Continue with Google
       </Button>

@@ -167,7 +167,7 @@ function AttractionTabBar({
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
 
   return (
-    <div className="border-t bg-popover/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] supports-backdrop-filter:bg-popover/80 supports-backdrop-filter:backdrop-blur">
+    <div className="glass-panel border-x-0 border-b-0 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
       <div className="mx-auto flex max-w-md items-stretch">
         <TabBarTab
           icon={
@@ -218,7 +218,7 @@ function AttractionGallery({
     // and immediately opens the lightbox).
     <div className={cn("mt-2", !galleryArmed && "pointer-events-none")}>
       {sections.length === 0 ? (
-        <div className="bg-muted text-muted-foreground flex h-72 items-center justify-center text-sm">
+        <div className="flex h-72 items-center justify-center rounded-lg bg-muted/70 text-sm text-muted-foreground">
           No photos or videos yet
         </div>
       ) : (
@@ -398,7 +398,7 @@ export function AttractionDetailDialog({
         >
           {/* Sticky header so the title + close X stay accessible while
               the body scrolls. Safe-area padding handles iOS notches. */}
-          <header className="sticky top-0 z-10 flex items-start gap-3 border-b bg-background/95 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3 supports-backdrop-filter:bg-background/80 supports-backdrop-filter:backdrop-blur">
+          <header className="glass-panel sticky top-0 z-10 flex items-start gap-3 border-x-0 border-t-0 px-4 pt-[max(0.75rem,env(safe-area-inset-top))] pb-3">
             <div className="min-w-0 flex-1">
               {attraction ? (
                 <>

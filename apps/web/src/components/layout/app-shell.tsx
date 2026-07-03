@@ -7,7 +7,7 @@ export function AppShell() {
     <LoginDialogProvider>
       <div className="bg-background min-h-svh">
         <Header />
-        <main>
+        <main className="relative">
           <Outlet />
         </main>
       </div>

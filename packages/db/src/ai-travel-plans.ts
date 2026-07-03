@@ -75,3 +75,67 @@ export const aiTravelPlanPlace = pgTable(
     index("ai_travel_plan_place_attraction_id_idx").on(table.attractionId),
   ],
 );
+
+export const aiTravelSession = pgTable(
+  "ai_travel_session",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    activePlanId: text("active_plan_id").references(() => aiTravelPlan.id, {
+      onDelete: "set null",
+    }),
+    title: text("title").notNull(),
+    destination: text("destination"),
+    language: text("language").default("en").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("ai_travel_session_user_id_idx").on(table.userId),
+    index("ai_travel_session_updated_at_idx").on(table.updatedAt),
+    index("ai_travel_session_active_plan_id_idx").on(table.activePlanId),
+  ],
+);
+
+export const aiTravelChatMessage = pgTable(
+  "ai_travel_chat_message",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    sessionId: text("session_id")
+      .notNull()
+      .references(() => aiTravelSession.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    planId: text("plan_id").references(() => aiTravelPlan.id, {
+      onDelete: "set null",
+    }),
+    role: text("role").notNull(),
+    content: text("content").notNull(),
+    error: boolean("error").default(false).notNull(),
+    position: integer("position").notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at")
+      .defaultNow()
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (table) => [
+    index("ai_travel_chat_message_session_id_idx").on(table.sessionId),
+    index("ai_travel_chat_message_user_id_idx").on(table.userId),
+    index("ai_travel_chat_message_plan_id_idx").on(table.planId),
+    index("ai_travel_chat_message_position_idx").on(
+      table.sessionId,
+      table.position,
+    ),
+  ],
+);

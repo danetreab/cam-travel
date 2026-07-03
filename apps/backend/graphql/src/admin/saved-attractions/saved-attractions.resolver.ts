@@ -10,8 +10,9 @@ type GqlContext = {
 };
 
 function requireUserId(ctx: GqlContext): string {
-  const id = ctx.user?.id;
-  console.log(ctx);
+  // Browser GraphQL traffic must enter through the API gateway. The gateway
+  // validates better-auth sessions and forwards the trusted user here.
+  const id = ctx.user?.id?.trim();
   if (!id) throw new UnauthorizedException("Sign in required");
   return id;
 }

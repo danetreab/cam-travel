@@ -180,7 +180,7 @@ function AttractionTabBar({
   const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
 
   return (
-    <div className="border-t bg-background/95 pb-[max(0.25rem,env(safe-area-inset-bottom))] supports-backdrop-filter:bg-background/80 supports-backdrop-filter:backdrop-blur">
+    <div className="glass-panel border-x-0 border-b-0 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
       <div className="mx-auto flex max-w-md items-stretch">
         <TabBarTab
           icon={
@@ -224,7 +224,7 @@ function AttractionGallery({
   const sections = buildSections(attraction.files, attraction.name)
   if (sections.length === 0) {
     return (
-      <div className="mt-2 bg-muted text-muted-foreground flex h-72 items-center justify-center text-sm">
+      <div className="mt-2 flex h-72 items-center justify-center rounded-lg bg-muted/70 text-sm text-muted-foreground">
         No photos or videos yet
       </div>
     )
@@ -335,12 +335,12 @@ function MobileShell({
       aria-label={attraction?.name ?? "Attraction details"}
       className="fixed inset-0 z-50 flex flex-col bg-background"
     >
-      <header className="sticky top-0 z-10 flex items-center gap-2 border-b bg-background/95 px-2 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2 supports-backdrop-filter:bg-background/80 supports-backdrop-filter:backdrop-blur">
+      <header className="glass-panel sticky top-0 z-10 flex items-center gap-2 border-x-0 border-t-0 px-2 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2">
         <button
           type="button"
           onClick={onClose}
           aria-label="Back"
-          className="-ml-1 rounded-md p-2 text-foreground active:bg-muted/40"
+          className="-ml-1 rounded-lg p-2 text-foreground active:bg-muted/60"
         >
           <ArrowLeft className="size-5" />
         </button>

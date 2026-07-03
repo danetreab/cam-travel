@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@source "../node_modules/streamdown/dist/*.js";
 
 @font-face {
   font-family: "Google Sans";
@@ -216,7 +217,7 @@
   .planner-session-header {
     position: relative;
     overflow: hidden;
-    max-height: 7rem;
+    max-height: 4rem;
     background:
       linear-gradient(180deg, oklch(1 0 0 / 38%), transparent 86%),
       color-mix(in oklch, var(--primary) 5%, transparent);
@@ -270,8 +271,8 @@
   }
 
   .planner-session-avatar {
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 999px;
     animation: planner-avatar-glow 4s ease-in-out infinite;
   }
@@ -308,8 +309,16 @@
   }
 
   .planner-chat-bubble-assistant {
-    background: color-mix(in oklch, var(--card) 94%, var(--primary) 6%) !important;
-    border-color: color-mix(in oklch, var(--border) 80%, var(--primary) 20%) !important;
+    background: color-mix(
+      in oklch,
+      var(--card) 94%,
+      var(--primary) 6%
+    ) !important;
+    border-color: color-mix(
+      in oklch,
+      var(--border) 80%,
+      var(--primary) 20%
+    ) !important;
     box-shadow: 0 1px 0 oklch(from var(--foreground) l c h / 6%);
     backdrop-filter: none !important;
   }
@@ -319,8 +328,16 @@
   }
 
   .planner-thinking-card {
-    background: color-mix(in oklch, var(--card) 94%, var(--primary) 6%) !important;
-    border-color: color-mix(in oklch, var(--border) 80%, var(--primary) 20%) !important;
+    background: color-mix(
+      in oklch,
+      var(--card) 94%,
+      var(--primary) 6%
+    ) !important;
+    border-color: color-mix(
+      in oklch,
+      var(--border) 80%,
+      var(--primary) 20%
+    ) !important;
     box-shadow: 0 1px 0 oklch(from var(--foreground) l c h / 6%);
     backdrop-filter: none !important;
     min-width: min(14rem, 78vw);

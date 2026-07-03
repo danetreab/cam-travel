@@ -1,5 +1,6 @@
 import { Controller, HttpException } from "@nestjs/common";
 import { MessagePattern, Payload } from "@nestjs/microservices";
+import { Observable } from "rxjs";
 import { AiTravelService } from "./ai-travel.service";
 import type {
   AiTravelPlacePatch,
@@ -8,6 +9,7 @@ import type {
   AiTravelRpcPayload,
   AiTravelSessionDetail,
   AiTravelSessionSummary,
+  AiTravelStreamEvent,
 } from "./ai-travel.types";
 
 type GetPlanBody = { planId: string };
@@ -35,6 +37,38 @@ export class AiTravelController {
         payload.body,
       ),
     );
+  }
+
+  @MessagePattern("ai.travel.stream")
+  travelStream(
+    @Payload() payload: AiTravelRpcPayload<AiTravelRequest>,
+  ): Observable<AiTravelStreamEvent> {
+    return new Observable<AiTravelStreamEvent>((subscriber) => {
+      void (async () => {
+        try {
+          const data = await this.aiTravel.travelWithProgress(
+            this.aiTravel.requireUserId(payload.user),
+            payload.body,
+            (status) => {
+              if (!subscriber.closed) {
+                subscriber.next({ type: "status", ...status });
+              }
+            },
+          );
+
+          if (!subscriber.closed) {
+            subscriber.next({ type: "result", data });
+            subscriber.complete();
+          }
+        } catch (error) {
+          if (!subscriber.closed) {
+            const normalized = this.normalizeError(error);
+            subscriber.next({ type: "error", ...normalized });
+            subscriber.complete();
+          }
+        }
+      })();
+    });
   }
 
   @MessagePattern("ai.plan.get")
@@ -88,23 +122,28 @@ export class AiTravelController {
     try {
       return { ok: true, data: await fn() };
     } catch (error) {
-      if (error instanceof HttpException) {
-        return {
-          ok: false,
-          error: {
-            statusCode: error.getStatus(),
-            message: this.httpMessage(error),
-          },
-        };
-      }
+      const normalized = this.normalizeError(error);
       return {
         ok: false,
-        error: {
-          statusCode: 500,
-          message: error instanceof Error ? error.message : String(error),
-        },
+        error: normalized,
       };
     }
+  }
+
+  private normalizeError(error: unknown): {
+    statusCode: number;
+    message: string;
+  } {
+    if (error instanceof HttpException) {
+      return {
+        statusCode: error.getStatus(),
+        message: this.httpMessage(error),
+      };
+    }
+    return {
+      statusCode: 500,
+      message: error instanceof Error ? error.message : String(error),
+    };
   }
 
   private httpMessage(error: HttpException): string {

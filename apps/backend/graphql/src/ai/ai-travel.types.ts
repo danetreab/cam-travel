@@ -126,6 +126,30 @@ export interface AiTravelSessionDetail extends AiTravelSessionSummary {
   plan: AiTravelResponse | null;
 }
 
+export type AiTravelStreamStatusStep =
+  | "session"
+  | "classify"
+  | "places"
+  | "draft"
+  | "save"
+  | "complete";
+
+export type AiTravelStreamEvent =
+  | {
+      type: "status";
+      step: AiTravelStreamStatusStep;
+      label: string;
+    }
+  | {
+      type: "result";
+      data: AiTravelResponse;
+    }
+  | {
+      type: "error";
+      statusCode: number;
+      message: string;
+    };
+
 export interface AiTravelRpcPayload<TBody = unknown> {
   body: TBody;
   user?: { id: string; email: string; role: string | null } | null;

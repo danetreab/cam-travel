@@ -31,6 +31,7 @@ import {
   type AiTravelResponse,
   type AiTravelSessionDetail,
   type AiTravelSessionSummary,
+  type AiTravelStreamStatusStep,
   type FollowUpAction,
   type TripIntent,
 } from "./ai-travel.types";
@@ -153,12 +154,38 @@ export class AiTravelService {
     userId: string,
     request: AiTravelRequest,
   ): Promise<AiTravelResponse> {
+    return this.runTravel(userId, request);
+  }
+
+  async travelWithProgress(
+    userId: string,
+    request: AiTravelRequest,
+    onProgress: (status: {
+      step: AiTravelStreamStatusStep;
+      label: string;
+    }) => void,
+  ): Promise<AiTravelResponse> {
+    return this.runTravel(userId, request, onProgress);
+  }
+
+  private async runTravel(
+    userId: string,
+    request: AiTravelRequest,
+    onProgress?: (status: {
+      step: AiTravelStreamStatusStep;
+      label: string;
+    }) => void,
+  ): Promise<AiTravelResponse> {
     const message = request.message?.trim();
     if (!message) throw new BadRequestException("message is required");
     if (message.length > 2000) {
       throw new BadRequestException("message must be 2000 characters or fewer");
     }
 
+    onProgress?.({
+      step: "session",
+      label: "Opening your planner session",
+    });
     const existingPlan = request.planId
       ? await this.requirePlan(userId, request.planId)
       : null;
@@ -178,12 +205,20 @@ export class AiTravelService {
       error: false,
     });
 
+    onProgress?.({
+      step: "classify",
+      label: "Understanding your travel request",
+    });
     const existingPlaces = existingPlan
       ? await this.listPlanPlaces(existingPlan.id)
       : [];
     const classification = await this.classify(message, request, existingPlan);
     const planId = existingPlan?.id ?? crypto.randomUUID();
 
+    onProgress?.({
+      step: "places",
+      label: "Finding real places that fit",
+    });
     let candidates =
       existingPlan && this.shouldReusePlanPlaces(classification.intent)
         ? this.candidatesFromPlanPlaces(existingPlaces)
@@ -195,6 +230,10 @@ export class AiTravelService {
       throw new NotFoundException("No real Google Places results found");
     }
 
+    onProgress?.({
+      step: "draft",
+      label: "Building your plan",
+    });
     const draft = await this.generateDraft(
       message,
       classification,
@@ -216,6 +255,10 @@ export class AiTravelService {
       session.id,
     );
 
+    onProgress?.({
+      step: "save",
+      label: "Saving this plan to your session",
+    });
     await this.savePlan({
       userId,
       planId,
@@ -236,6 +279,10 @@ export class AiTravelService {
       error: false,
     });
 
+    onProgress?.({
+      step: "complete",
+      label: "Plan ready",
+    });
     return response;
   }
 

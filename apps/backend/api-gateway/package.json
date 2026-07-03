@@ -17,6 +17,7 @@
     "@nestjs/microservices": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@repo/db": "*",
+    "ai": "6.0.218",
     "better-auth": "^1.6.9",
     "dotenv": "^16.4.7",
     "http-proxy-middleware": "^3.0.3",

@@ -18,6 +18,7 @@ import {
   Check,
   ChevronDown,
   Copy,
+  Ellipsis,
   ExternalLink,
   History,
   List,
@@ -71,6 +72,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import {
   ResizableHandle,
   ResizablePanel,
@@ -2047,16 +2054,13 @@ function PlannerPlaceCard({
   onSave: () => void
   onRemove: () => void
 }) {
-  const actionClassName =
-    "h-7 rounded-md px-2.5 text-xs font-medium normal-case tracking-normal"
-
   return (
     <div
       role="button"
       tabIndex={0}
       aria-pressed={active}
       className={cn(
-        "rounded-lg border border-border/70 bg-background p-2.5 text-sm transition-colors",
+        "rounded-md border border-border/70 bg-background p-2 text-sm transition-colors",
         "hover:border-border hover:bg-muted/30 focus-visible:ring-2 focus-visible:ring-ring/40 focus-visible:outline-none",
         active && "border-primary/45 bg-primary/5"
       )}
@@ -2072,78 +2076,86 @@ function PlannerPlaceCard({
         }
       }}
     >
-      <div className="grid min-w-0 grid-cols-[3.5rem_minmax(0,1fr)] gap-3">
+      <div className="grid min-w-0 grid-cols-[2.75rem_minmax(0,1fr)_auto] gap-2">
         <PlannerPlaceImage place={place} />
         <div className="min-w-0">
-          <div className="flex items-start justify-between gap-2">
-            <h4 className="min-w-0 text-sm leading-snug font-semibold">
-              {place.name}
-            </h4>
-            {place.rating != null && (
-              <span className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-muted-foreground">
-                <Star className="size-3 fill-current text-amber-500" />
-                {place.rating.toFixed(1)}
-              </span>
-            )}
-          </div>
+          <h4 className="line-clamp-1 text-[13px] leading-snug font-semibold">
+            {place.name}
+          </h4>
           {place.address && (
-            <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
+            <p className="mt-0.5 line-clamp-1 text-[11px] text-muted-foreground">
               {place.address}
             </p>
           )}
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            <Button
-              type="button"
-              size="xs"
-              variant={place.saved ? "secondary" : "outline"}
-              className={actionClassName}
-              disabled={saving}
-              onClick={(event) => {
-                event.stopPropagation()
-                onSave()
-              }}
+        </div>
+        <div className="flex shrink-0 flex-col items-end self-stretch">
+          {place.rating != null && (
+            <span className="inline-flex shrink-0 items-center gap-0.5 rounded-sm bg-muted/50 px-1.5 py-0.5 text-[10px] leading-none font-semibold text-muted-foreground">
+              <Star className="size-3 fill-current text-amber-500" />
+              {place.rating.toFixed(1)}
+            </span>
+          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  type="button"
+                  size="icon-xs"
+                  variant="ghost"
+                  className="mt-auto size-6 rounded-md p-0 text-muted-foreground"
+                />
+              }
+              aria-label="Place actions"
+              onClick={(event) => event.stopPropagation()}
             >
-              {place.saved ? (
-                <BookmarkCheck className="size-3.5" />
-              ) : (
-                <Bookmark className="size-3.5" />
-              )}
-              {place.saved ? copy.saved : copy.save}
-            </Button>
-            <Button
-              type="button"
-              size="xs"
-              variant="ghost"
-              className={cn(
-                actionClassName,
-                "text-muted-foreground hover:text-destructive"
-              )}
-              disabled={saving}
-              onClick={(event) => {
-                event.stopPropagation()
-                onRemove()
-              }}
+              <Ellipsis className="size-3.5" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              align="end"
+              className="w-36 min-w-36 rounded-md"
             >
-              <Trash2 className="size-3.5" />
-              {copy.remove}
-            </Button>
-            {place.googleMapsUri && (
-              <a
-                href={place.googleMapsUri}
-                target="_blank"
-                rel="noreferrer"
-                className={buttonVariants({
-                  size: "xs",
-                  variant: "ghost",
-                  className: cn(actionClassName, "text-muted-foreground"),
-                })}
-                onClick={(event) => event.stopPropagation()}
+              <DropdownMenuItem
+                disabled={saving}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onSave()
+                }}
               >
-                <ExternalLink className="size-3.5" />
-                {copy.maps}
-              </a>
-            )}
-          </div>
+                {place.saved ? (
+                  <BookmarkCheck className="size-3.5" />
+                ) : (
+                  <Bookmark className="size-3.5" />
+                )}
+                {place.saved ? copy.saved : copy.save}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                disabled={saving}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onRemove()
+                }}
+              >
+                <Trash2 className="size-3.5" />
+                {copy.remove}
+              </DropdownMenuItem>
+              {place.googleMapsUri && (
+                <DropdownMenuItem
+                  render={
+                    <a
+                      href={place.googleMapsUri}
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  }
+                  onClick={(event) => event.stopPropagation()}
+                >
+                  <ExternalLink className="size-3.5" />
+                  {copy.maps}
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>
@@ -2305,7 +2317,7 @@ function PlannerPlaceImage({ place }: { place: AiTravelPlace }) {
   const src = failed ? null : place.photoUrl
 
   return (
-    <div className="relative size-14 shrink-0 overflow-hidden rounded-md bg-muted">
+    <div className="relative size-11 shrink-0 overflow-hidden rounded-md bg-muted">
       {src ? (
         <img
           src={src}

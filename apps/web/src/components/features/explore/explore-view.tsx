@@ -1,25 +1,29 @@
 import { useEffect, useRef, useState } from "react"
-import { useQuery, keepPreviousData } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import {
   getRouteApi,
   useNavigate,
   useRouterState,
 } from "@tanstack/react-router"
-import {
-  ColorScheme,
-  Map,
-  useMap,
-  type MapCameraChangedEvent,
-} from "@vis.gl/react-google-maps"
+import { useVirtualizer } from "@tanstack/react-virtual"
+import { ColorScheme, Map, useMap } from "@vis.gl/react-google-maps"
 import { useTheme } from "next-themes"
-import type { Layout } from "react-resizable-panels"
 import {
   CrosshairIcon,
   ListIcon,
   MapTrifoldIcon,
   SpinnerIcon,
 } from "@phosphor-icons/react"
+import { toast } from "sonner"
+import { AttractionMarker } from "./attraction-marker"
+import { AttractionListCard } from "./attraction-list-card"
+import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
+import { UserLocationMarker } from "./user-location-marker"
+import type { MapCameraChangedEvent } from "@vis.gl/react-google-maps"
+import type { Layout } from "react-resizable-panels"
 
+import type { MapBounds } from "@/api/attractions.api"
+import type { Attraction } from "@/types/attraction"
 import { useDebouncedValue } from "@/hooks/use-debounced-value"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { useUserLocation } from "@/hooks/use-user-location"
@@ -28,20 +32,14 @@ import {
   attractionsListQueryOptions,
   attractionsTopPerProvinceQueryOptions,
 } from "@/queries/attractions.query"
-import type { MapBounds } from "@/api/attractions.api"
-import type { Attraction } from "@/types/attraction"
 import { cn } from "@/lib/utils"
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import { AttractionMarker } from "./attraction-marker"
-import { AttractionListCard } from "./attraction-list-card"
-import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
-import { UserLocationMarker } from "./user-location-marker"
 import { Badge } from "@/components/ui/badge"
-import { toast } from "sonner"
+import { Button } from "@/components/ui/button"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
 const DEFAULT_ZOOM = 7
@@ -138,10 +136,12 @@ export function ExploreView() {
   // the modal route without duplicating state.
   const selectedId = useRouterState({
     select: (s) => {
-      const m = s.matches.find(
-        (m) => m.routeId === "/_authed/_explore/attraction/$attractionId"
+      const match = s.matches.find(
+        (routeMatch) =>
+          routeMatch.routeId === "/_authed/_explore/attraction/$attractionId"
       )
-      return (m?.params as { attractionId?: string } | undefined)?.attractionId
+      return (match?.params as { attractionId?: string } | undefined)
+        ?.attractionId
     },
   })
   const listRef = useRef<HTMLDivElement>(null)
@@ -197,6 +197,13 @@ export function ExploreView() {
         )
         .slice(0, COUNTRY_VIEW_CAP)
     : rawItems
+  const rowVirtualizer = useVirtualizer({
+    count: items.length,
+    getScrollElement: () => listRef.current,
+    estimateSize: () => 136,
+    getItemKey: (index) => items[index]?.id ?? index,
+    overscan: 6,
+  })
 
   const userLocation = useUserLocation()
 
@@ -240,14 +247,10 @@ export function ExploreView() {
 
   useEffect(() => {
     if (!selectedId) return
-    // The list is off-screen on mobile while the map is showing; calling
-    // scrollIntoView on a translated element can scroll the page itself.
     if (!isDesktop && mobileView !== "list") return
-    const el = listRef.current?.querySelector<HTMLElement>(
-      `[data-attr-id="${selectedId}"]`
-    )
-    el?.scrollIntoView({ behavior: "smooth", block: "nearest" })
-  }, [selectedId, isDesktop, mobileView])
+    const index = items.findIndex((item) => item.id === selectedId)
+    if (index >= 0) rowVirtualizer.scrollToIndex(index, { align: "auto" })
+  }, [items, selectedId, isDesktop, mobileView, rowVirtualizer])
 
   const handleCameraChanged = (ev: MapCameraChangedEvent) => {
     const b = ev.detail.bounds
@@ -289,8 +292,7 @@ export function ExploreView() {
     })
   }
 
-  const handleCardClick = (a: Attraction) => {
-    openAttraction(a)
+  const focusAttractionOnMap = (a: Attraction) => {
     if (map) {
       map.panTo({ lat: a.latitude, lng: a.longitude })
       // Never zoom out — if user is already closer in, keep their zoom.
@@ -299,8 +301,13 @@ export function ExploreView() {
     }
   }
 
+  const handleAttractionOpen = (a: Attraction) => {
+    openAttraction(a)
+    focusAttractionOnMap(a)
+  }
+
   const sidebarInner = (
-    <>
+    <div className="flex h-full min-h-0 flex-col">
       <div className="mb-3 flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold tracking-tight">
           {debouncedBounds == null
@@ -318,9 +325,7 @@ export function ExploreView() {
       </div>
 
       {error && (
-        <Badge variant="destructive">
-          Failed to load: {(error as Error).message}
-        </Badge>
+        <Badge variant="destructive">Failed to load: {error.message}</Badge>
       )}
 
       {provinceParam && (
@@ -339,61 +344,80 @@ export function ExploreView() {
       )}
 
       <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
-        <button
+        <Button
           type="button"
+          variant={activityType === null ? "default" : "secondary"}
+          size="xs"
           onClick={() => setActivityType(null)}
-          className={cn(
-            "glass-control shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-            activityType === null
-              ? "bg-primary text-primary-foreground"
-              : "hover:bg-muted"
-          )}
+          className="shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors"
         >
           All
-        </button>
+        </Button>
         {ACTIVITY_TYPES.map((type) => {
           const active = activityType === type
           return (
-            <button
+            <Button
               key={type}
               type="button"
+              variant={active ? "default" : "secondary"}
+              size="xs"
               onClick={() => setActivityType(active ? null : type)}
-              className={cn(
-                "glass-control shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-                active
-                  ? "bg-primary text-primary-foreground"
-                  : "hover:bg-muted"
-              )}
+              className="shrink-0 rounded-full px-3 py-1 text-xs font-medium transition-colors"
             >
               {type}
-            </button>
+            </Button>
           )
         })}
       </div>
 
-      <div className="flex flex-col gap-2">
-        {isLoading && items.length === 0
-          ? Array.from({ length: 6 }).map((_, i) => (
+      <div
+        ref={listRef}
+        className="min-h-0 flex-1 overflow-y-auto pr-1 pb-28 md:pb-0"
+      >
+        {isLoading && items.length === 0 ? (
+          <div className="space-y-2">
+            {Array.from({ length: 6 }).map((_, i) => (
               <AttractionListCardSkeleton key={i} />
-            ))
-          : items.map((a) => (
-              <div key={a.id} data-attr-id={a.id}>
-                <AttractionListCard
-                  attraction={a}
-                  active={hoveredId === a.id || selectedId === a.id}
-                  onClick={() => handleCardClick(a)}
-                  onHover={() => setHoveredId(a.id)}
-                  onLeave={() => setHoveredId(null)}
-                />
-              </div>
             ))}
+          </div>
+        ) : items.length > 0 ? (
+          <div
+            className="relative w-full"
+            style={{ height: `${rowVirtualizer.getTotalSize()}px` }}
+          >
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const a = items[virtualRow.index]
+              return (
+                <div
+                  key={a.id}
+                  ref={rowVirtualizer.measureElement}
+                  data-index={virtualRow.index}
+                  data-attr-id={a.id}
+                  className="absolute top-0 left-0 w-full pb-2"
+                  style={{
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                  <AttractionListCard
+                    attraction={a}
+                    active={hoveredId === a.id || selectedId === a.id}
+                    selected={selectedId === a.id}
+                    onClick={() => handleAttractionOpen(a)}
+                    onHover={() => setHoveredId(a.id)}
+                    onLeave={() => setHoveredId(null)}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        ) : null}
         {!isFetching && debouncedBounds != null && items.length === 0 && (
           <p className="text-sm text-muted-foreground">
             No attractions in this area. Try panning or zooming out.
           </p>
         )}
       </div>
-    </>
+    </div>
   )
 
   const mapElement = (
@@ -412,7 +436,7 @@ export function ExploreView() {
           key={a.id}
           attraction={a}
           active={hoveredId === a.id || selectedId === a.id}
-          onClick={() => openAttraction(a)}
+          onClick={() => handleAttractionOpen(a)}
         />
       ))}
       {userLocation.position && (
@@ -475,10 +499,7 @@ export function ExploreView() {
             minSize="20%"
             maxSize="70%"
           >
-            <aside
-              ref={listRef}
-              className="glass-panel relative m-3 h-[calc(100%-1.5rem)] overflow-y-auto rounded-lg p-4"
-            >
+            <aside className="glass-panel relative m-3 h-[calc(100%-1.5rem)] overflow-hidden rounded-lg p-4">
               {sidebarInner}
             </aside>
           </ResizablePanel>
@@ -513,9 +534,8 @@ export function ExploreView() {
       )}
 
       <aside
-        ref={listRef}
         className={cn(
-          "glass-panel-strong mobile-chrome-pt absolute inset-0 overflow-y-auto rounded-t-lg px-4 pb-28 transition-transform duration-300 ease-out",
+          "glass-panel-strong mobile-chrome-pt absolute inset-0 overflow-hidden rounded-t-lg px-4 transition-transform duration-300 ease-out",
           mobileView === "list" ? "translate-y-0" : "translate-y-full"
         )}
         aria-hidden={mobileView !== "list"}

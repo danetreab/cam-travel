@@ -1,15 +1,22 @@
-import { useEffect, useMemo, useState } from "react"
 import { useChat } from "@ai-sdk/react"
-import { DefaultChatTransport, type UIMessage } from "ai"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import { getRouteApi, useNavigate } from "@tanstack/react-router"
-import { AdvancedMarker, ColorScheme, Map } from "@vis.gl/react-google-maps"
-import { useTheme } from "next-themes"
+import {
+  getRouteApi,
+  Outlet,
+  useNavigate,
+  useRouterState,
+} from "@tanstack/react-router"
+import {
+  AdvancedMarker,
+  ColorScheme,
+  Map as GoogleMap,
+} from "@vis.gl/react-google-maps"
+import { DefaultChatTransport, type UIMessage } from "ai"
 import {
   Bookmark,
   BookmarkCheck,
-  CalendarDays,
   Check,
+  ChevronDown,
   Copy,
   ExternalLink,
   History,
@@ -17,15 +24,21 @@ import {
   MapPinned,
   MessageSquare,
   RefreshCcw,
-  Route,
   Sparkles,
   Star,
   Trash2,
+  X,
 } from "lucide-react"
+import { useTheme } from "next-themes"
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
 
-import { patchAiTravelPlanPlace } from "@/api/ai-travel.api"
+import {
+  deleteAiTravelSession,
+  deleteAiTravelSessions,
+  patchAiTravelPlanPlace,
+} from "@/api/ai-travel.api"
 import {
   Conversation,
   ConversationContent,
@@ -46,11 +59,12 @@ import {
   type PromptInputMessage,
 } from "@/components/ai-elements/prompt-input"
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion"
-import { Button, buttonVariants } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -64,6 +78,7 @@ import {
 } from "@/components/ui/resizable"
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -92,15 +107,246 @@ import type {
 const DEFAULT_CENTER = { lat: 13.3622, lng: 103.8597 }
 const DEFAULT_ZOOM = 12
 const MAP_ID = "DEMO_MAP_ID"
-const STARTER_PROMPTS = [
-  "Recommend places to visit in Siem Reap",
-  "Plan 3 days in Siem Reap",
-  "Best local food in Siem Reap",
-]
-const INITIAL_ASSISTANT_MESSAGE =
-  "Tell me where you want to go, how long you have, or what kind of trip you want. I will build a plan and keep refining it here."
+
+type PlannerCopy = {
+  initialAssistant: string
+  starterPrompts: string[]
+  followUpPrompts: string[]
+  restoredPlan: string
+  emptyTitle: string
+  emptyDescription: string
+  planning: string
+  inputPlaceholder: string
+  showMap: string
+  showPlan: string
+  aiPlanner: string
+  history: string
+  plannerHistory: string
+  copySessionLink: string
+  newSession: string
+  closeHistory: string
+  loading: string
+  noSessions: string
+  messages: string
+  deleteAll: string
+  deleteSession: string
+  deleteSessionTitle: string
+  deleteSessionDescription: string
+  deleteAllTitle: string
+  deleteAllDescription: string
+  cancel: string
+  delete: string
+  itinerary: string
+  day: string
+  days: string
+  placeSuggestions: string
+  hidePlaces: string
+  showPlaces: string
+  showMorePlaces: (count: number) => string
+  showFewerPlaces: string
+  save: string
+  saved: string
+  remove: string
+  maps: string
+  details: string
+  whyVisit: string
+  openFullRoute: string
+  dayRoute: (day: number) => string
+  sessionDeleted: string
+  historyDeleted: string
+  sessionLinkCopied: string
+  copyFailed: string
+}
+
+function isKhmerLanguage(language: string) {
+  return language.toLowerCase().startsWith("km")
+}
+
+function getPlannerCopy(language: string): PlannerCopy {
+  if (isKhmerLanguage(language)) {
+    return {
+      initialAssistant:
+        "ប្រាប់ខ្ញុំថាអ្នកចង់ទៅណា មានពេលប៉ុន្មានថ្ងៃ ឬចង់ធ្វើដំណើរបែបណា។ ខ្ញុំនឹងរៀបចំគម្រោង ហើយកែសម្រួលបន្តនៅទីនេះ។",
+      starterPrompts: [
+        "ណែនាំកន្លែងគួរទៅនៅសៀមរាប",
+        "រៀបចំដំណើរ ៣ ថ្ងៃនៅសៀមរាប",
+        "ម្ហូបក្នុងស្រុកល្អៗនៅសៀមរាប",
+      ],
+      followUpPrompts: [
+        "ធ្វើឱ្យគម្រោងនេះមានរសជាតិក្នុងស្រុកជាងនេះ",
+        "បន្ថែមហាងកាហ្វេក្បែរនេះ",
+        "រៀបចំ Itinerary ៣ ថ្ងៃ",
+        "ធ្វើជម្រើសដែលចំណាយតិចជាងនេះ",
+      ],
+      restoredPlan: "បានស្ដារគម្រោងដែលបានរក្សាទុកពីតំណនេះ។",
+      emptyTitle: "ចាប់ផ្ដើមរៀបចំដំណើរ",
+      emptyDescription: "សួរអំពីកន្លែង ផ្លូវ ម្ហូប ឬការកែសម្រួល Itinerary។",
+      planning: "កំពុងរៀបចំដំណើររបស់អ្នក",
+      inputPlaceholder: "សួរអំពីផ្លូវ ប្ដូរកន្លែង បន្ថែមម្ហូប ឬកែប្រែថវិកា...",
+      showMap: "បង្ហាញផែនទី",
+      showPlan: "បង្ហាញគម្រោង",
+      aiPlanner: "AI រៀបចំដំណើរ",
+      history: "ប្រវត្តិ",
+      plannerHistory: "ប្រវត្តិគម្រោងដំណើរ",
+      copySessionLink: "ចម្លងតំណសម័យ",
+      newSession: "សម័យថ្មី",
+      closeHistory: "បិទប្រវត្តិគម្រោង",
+      loading: "កំពុងផ្ទុក...",
+      noSessions: "មិនទាន់មានសម័យដែលបានរក្សាទុកទេ។",
+      messages: "សារ",
+      deleteAll: "លុបទាំងអស់",
+      deleteSession: "លុបសម័យ",
+      deleteSessionTitle: "លុបសម័យរៀបចំដំណើរនេះ?",
+      deleteSessionDescription:
+        "វានឹងលុបប្រវត្តិសន្ទនាសម្រាប់សម័យនេះ។ គម្រោងដែលបានភ្ជាប់នៅតែអាចប្រើបាន។",
+      deleteAllTitle: "លុបប្រវត្តិគម្រោងទាំងអស់?",
+      deleteAllDescription:
+        "វានឹងលុបសម័យរៀបចំដំណើរ និងសារសន្ទនាទាំងអស់ពីប្រវត្តិរបស់អ្នក។ គម្រោងដែលបានភ្ជាប់នៅតែអាចប្រើបាន។",
+      cancel: "បោះបង់",
+      delete: "លុប",
+      itinerary: "Itinerary",
+      day: "ថ្ងៃទី",
+      days: "ថ្ងៃ",
+      placeSuggestions: "កន្លែងណែនាំ",
+      hidePlaces: "លាក់",
+      showPlaces: "បង្ហាញ",
+      showMorePlaces: (count) => `បង្ហាញ ${count} កន្លែងទៀត`,
+      showFewerPlaces: "បង្ហាញតែ ២ កន្លែង",
+      save: "រក្សាទុក",
+      saved: "បានរក្សាទុក",
+      remove: "ដកចេញ",
+      maps: "ផែនទី",
+      details: "ព័ត៌មានលម្អិត",
+      whyVisit: "ហេតុអ្វីគួរទៅ",
+      openFullRoute: "បើកផ្លូវពេញក្នុង Google Maps",
+      dayRoute: (day) => `ផ្លូវថ្ងៃទី ${day}`,
+      sessionDeleted: "បានលុបសម័យរៀបចំដំណើរ",
+      historyDeleted: "បានលុបប្រវត្តិគម្រោង",
+      sessionLinkCopied: "បានចម្លងតំណសម័យ",
+      copyFailed: "មិនអាចចម្លងតំណសម័យបានទេ",
+    }
+  }
+
+  return {
+    initialAssistant:
+      "Tell me where you want to go, how long you have, or what kind of trip you want. I will build a plan and keep refining it here.",
+    starterPrompts: [
+      "Recommend places to visit in Siem Reap",
+      "Plan 3 days in Siem Reap",
+      "Best local food in Siem Reap",
+    ],
+    followUpPrompts: [
+      "Make this more local",
+      "Add cafes nearby",
+      "Create a 3-day itinerary",
+      "Create a cheaper version",
+    ],
+    restoredPlan: "Restored your saved plan from this URL.",
+    emptyTitle: "Start a travel plan",
+    emptyDescription: "Ask for places, routes, food, or itinerary changes.",
+    planning: "Planning your trip",
+    inputPlaceholder:
+      "Ask for a route, swap a place, add food, change the budget...",
+    showMap: "Show map",
+    showPlan: "Show plan",
+    aiPlanner: "AI Planner",
+    history: "History",
+    plannerHistory: "Planner history",
+    copySessionLink: "Copy session link",
+    newSession: "New session",
+    closeHistory: "Close planner history",
+    loading: "Loading...",
+    noSessions: "No saved sessions yet.",
+    messages: "messages",
+    deleteAll: "Delete all",
+    deleteSession: "Delete session",
+    deleteSessionTitle: "Delete planner session?",
+    deleteSessionDescription:
+      "This removes the chat history for this session. Linked plans will remain available.",
+    deleteAllTitle: "Delete all planner history?",
+    deleteAllDescription:
+      "This removes all saved planner sessions and chat messages from your history. Linked plans will remain available.",
+    cancel: "Cancel",
+    delete: "Delete",
+    itinerary: "Itinerary",
+    day: "Day",
+    days: "days",
+    placeSuggestions: "Place suggestions",
+    hidePlaces: "Hide",
+    showPlaces: "Show",
+    showMorePlaces: (count) => `Show ${count} more`,
+    showFewerPlaces: "Show fewer",
+    save: "Save",
+    saved: "Saved",
+    remove: "Remove",
+    maps: "Maps",
+    details: "Details",
+    whyVisit: "Why visit",
+    openFullRoute: "Open full route in Google Maps",
+    dayRoute: (day) => `Day ${day} route`,
+    sessionDeleted: "Planner session deleted",
+    historyDeleted: "Planner history deleted",
+    sessionLinkCopied: "Session link copied",
+    copyFailed: "Could not copy the session link",
+  }
+}
 
 const plannerRouteApi = getRouteApi("/_authed/planner")
+
+type TravelPlannerContextValue = {
+  getPlaceById: (googlePlaceId: string) => AiTravelPlace | null
+  saving: boolean
+  onSavePlace: (place: AiTravelPlace) => void
+  onRemovePlace: (place: AiTravelPlace) => void
+}
+
+const TravelPlannerContext = createContext<TravelPlannerContextValue | null>(
+  null
+)
+
+export function useTravelPlannerContext() {
+  const context = useContext(TravelPlannerContext)
+  if (!context) {
+    throw new Error(
+      "useTravelPlannerContext must be used inside TravelPlannerView"
+    )
+  }
+  return context
+}
+
+export function PlannerPlaceRouteDialog({
+  googlePlaceId,
+}: {
+  googlePlaceId: string
+}) {
+  const navigate = useNavigate()
+  const { getPlaceById, saving, onSavePlace, onRemovePlace } =
+    useTravelPlannerContext()
+  const place = getPlaceById(googlePlaceId)
+
+  const close = () => {
+    navigate({
+      to: "/planner",
+      search: (prev) => prev,
+    })
+  }
+
+  return (
+    <PlannerPlaceDetailDialog
+      place={place}
+      open
+      saving={saving}
+      onOpenChange={(open) => {
+        if (!open) close()
+      }}
+      onSave={onSavePlace}
+      onRemove={(nextPlace) => {
+        close()
+        onRemovePlace(nextPlace)
+      }}
+    />
+  )
+}
 
 type PlannerMetadata = {
   planId?: string
@@ -156,26 +402,39 @@ function createTextMessage(
   }
 }
 
-function createInitialChatMessages(): AiTravelPlannerMessage[] {
-  return [createTextMessage("assistant", INITIAL_ASSISTANT_MESSAGE)]
+function createInitialChatMessages(
+  copy: PlannerCopy
+): AiTravelPlannerMessage[] {
+  return [createTextMessage("assistant", copy.initialAssistant)]
 }
 
 function chatMessagesFromSession(
-  detail: AiTravelSessionDetail
+  detail: AiTravelSessionDetail,
+  copy: PlannerCopy
 ): AiTravelPlannerMessage[] {
+  const sessionPlan = detail.plan
+  const reversedMessages = [...detail.messages].reverse()
+  const latestPlanMessageId =
+    sessionPlan &&
+    (reversedMessages.find(
+      (message) =>
+        message.role === "assistant" && message.planId === sessionPlan.planId
+    )?.id ??
+      reversedMessages.find((message) => message.role === "assistant")?.id)
+
   const messages = detail.messages.map((message): AiTravelPlannerMessage => {
     const parts: AiTravelPlannerMessage["parts"] = [
       { type: "text", text: message.content },
     ]
     if (
       message.role === "assistant" &&
-      detail.plan &&
-      message.planId === detail.plan.planId
+      sessionPlan &&
+      message.id === latestPlanMessageId
     ) {
       parts.push({
         type: "data-plan",
         id: "planner-plan",
-        data: detail.plan,
+        data: sessionPlan,
       })
     }
 
@@ -190,7 +449,18 @@ function chatMessagesFromSession(
     }
   })
 
-  return messages.length > 0 ? messages : createInitialChatMessages()
+  return messages.length > 0 ? messages : createInitialChatMessages(copy)
+}
+
+function planFromMessage(
+  message: AiTravelPlannerMessage
+): AiTravelResponse | null {
+  for (const part of message.parts) {
+    if (part.type === "data-plan" && isAiTravelResponse(part.data)) {
+      return part.data
+    }
+  }
+  return null
 }
 
 function addPlanToMessages(
@@ -270,6 +540,109 @@ function formatIntentLabel(value: string) {
     .join(" ")
 }
 
+type GoogleRouteLink = {
+  label: string
+  href: string
+  stopCount: number
+}
+
+function routePoint(place: AiTravelPlace) {
+  return `${place.latitude},${place.longitude}`
+}
+
+function uniquePlacesByIds(
+  ids: string[],
+  placeMap: Map<string, AiTravelPlace>
+): AiTravelPlace[] {
+  const seen = new Set<string>()
+  return ids
+    .map((id) => placeMap.get(id))
+    .filter((place): place is AiTravelPlace => {
+      if (!place || seen.has(place.googlePlaceId)) return false
+      seen.add(place.googlePlaceId)
+      return !place.removed
+    })
+}
+
+function fallbackRouteStops(result: AiTravelResponse): AiTravelPlace[] {
+  return [...result.places]
+    .filter((place) => !place.removed)
+    .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+}
+
+function buildRouteStops(result: AiTravelResponse): AiTravelPlace[] {
+  const placeMap = new Map(
+    result.places.map((place) => [place.googlePlaceId, place])
+  )
+  const itineraryIds =
+    result.itinerary?.days.flatMap((day) =>
+      [...day.places]
+        .sort((a, b) => a.order - b.order)
+        .map((place) => place.googlePlaceId)
+    ) ?? []
+  const stops = uniquePlacesByIds(itineraryIds, placeMap)
+  return stops.length >= 2 ? stops : fallbackRouteStops(result)
+}
+
+function buildGoogleMapsRouteUrl(stops: AiTravelPlace[]): string | null {
+  if (stops.length < 2) return null
+  const [origin, ...rest] = stops
+  const destination = rest[rest.length - 1]
+  if (!origin || !destination) return null
+  const waypoints = rest.slice(0, -1)
+  const params = new URLSearchParams({
+    api: "1",
+    origin: routePoint(origin),
+    destination: routePoint(destination),
+    travelmode: "driving",
+  })
+  if (waypoints.length > 0) {
+    params.set("waypoints", waypoints.map(routePoint).join("|"))
+  }
+  return `https://www.google.com/maps/dir/?${params.toString()}`
+}
+
+function buildRouteLinks(
+  result: AiTravelResponse,
+  copy: PlannerCopy
+): GoogleRouteLink[] {
+  const links: GoogleRouteLink[] = []
+  const allStops = buildRouteStops(result)
+  const fullHref = buildGoogleMapsRouteUrl(allStops)
+  if (fullHref) {
+    links.push({
+      label: copy.openFullRoute,
+      href: fullHref,
+      stopCount: allStops.length,
+    })
+  }
+
+  const placeMap = new Map(
+    result.places.map((place) => [place.googlePlaceId, place])
+  )
+  const days = result.itinerary?.days ?? []
+  if (days.length > 1) {
+    for (const day of days) {
+      const dayStops = uniquePlacesByIds(
+        [...day.places]
+          .sort((a, b) => a.order - b.order)
+          .map((place) => place.googlePlaceId),
+        placeMap
+      )
+      const href = buildGoogleMapsRouteUrl(dayStops)
+      if (href) {
+        links.push({
+          label: copy.dayRoute(day.day),
+          href,
+          stopCount: dayStops.length,
+        })
+      }
+    }
+  }
+
+  return links
+}
+
 export function TravelPlannerView() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -284,7 +657,6 @@ export function TravelPlannerView() {
   )
   const [selectedPlaceSnapshot, setSelectedPlaceSnapshot] =
     useState<AiTravelPlace | null>(null)
-  const [placeDetail, setPlaceDetail] = useState<AiTravelPlace | null>(null)
   const [mobileView, setMobileView] = useState<"plan" | "map">("plan")
   const [sessionId, setSessionId] = useState(
     () => plannerSearch.sid ?? createSessionId()
@@ -294,9 +666,27 @@ export function TravelPlannerView() {
   const [sessionToRestore, setSessionToRestore] = useState<string | null>(
     () => plannerSearch.sid ?? null
   )
+  const [suppressFirstPromptScroll, setSuppressFirstPromptScroll] =
+    useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const { resolvedTheme } = useTheme()
   const { i18n } = useTranslation()
+  const currentLanguage = i18n.resolvedLanguage ?? i18n.language ?? "en"
+  const plannerCopy = useMemo(
+    () => getPlannerCopy(currentLanguage),
+    [currentLanguage]
+  )
+  const activePlaceRouteId = useRouterState({
+    select: (state) => {
+      const match = state.matches.find(
+        (routeMatch) =>
+          typeof (routeMatch.params as { googlePlaceId?: unknown } | undefined)
+            ?.googlePlaceId === "string"
+      )
+      return (match?.params as { googlePlaceId?: string } | undefined)
+        ?.googlePlaceId
+    },
+  })
 
   const mapColorScheme =
     resolvedTheme === "dark" ? ColorScheme.DARK : ColorScheme.LIGHT
@@ -336,11 +726,53 @@ export function TravelPlannerView() {
     clearError,
   } = useChat<AiTravelPlannerMessage>({
     transport: chatTransport,
-    messages: createInitialChatMessages(),
+    messages: createInitialChatMessages(plannerCopy),
     onError: (error) => toast.error(error.message),
   })
 
   const chatBusy = chatStatus === "submitted" || chatStatus === "streaming"
+
+  useEffect(() => {
+    setChatMessages((messages) => {
+      if (messages.length !== 1) return messages
+      const [onlyMessage] = messages
+      if (onlyMessage?.role !== "assistant") return messages
+      const text = onlyMessage.parts
+        .filter((part) => part.type === "text")
+        .map((part) => part.text)
+        .join("")
+      const knownInitialMessages = [
+        getPlannerCopy("en").initialAssistant,
+        getPlannerCopy("km").initialAssistant,
+      ]
+      if (!knownInitialMessages.includes(text)) return messages
+      return createInitialChatMessages(plannerCopy)
+    })
+  }, [plannerCopy, setChatMessages])
+
+  useEffect(() => {
+    if (!suppressFirstPromptScroll) return
+    const hasAssistantResponse = chatMessages
+      .slice(1)
+      .some((chatMessage) => chatMessage.role === "assistant")
+
+    if (hasAssistantResponse || (!chatBusy && chatMessages.length > 1)) {
+      setSuppressFirstPromptScroll(false)
+    }
+  }, [chatBusy, chatMessages, suppressFirstPromptScroll])
+
+  const latestPlanDisplay = useMemo(() => {
+    let latest: { messageId: string } | null = null
+    for (const chatMessage of chatMessages) {
+      if (chatMessage.role !== "assistant") continue
+      const plan = planFromMessage(chatMessage)
+      if (!plan) continue
+      latest = {
+        messageId: chatMessage.id,
+      }
+    }
+    return latest
+  }, [chatMessages])
 
   const patchPlaceMutation = useMutation({
     mutationFn: ({
@@ -380,13 +812,6 @@ export function TravelPlannerView() {
       if (!data.places.some((place) => place.googlePlaceId === selectedId)) {
         setSelectedId(data.places[0]?.googlePlaceId ?? null)
       }
-      setPlaceDetail((current) =>
-        current
-          ? (data.places.find(
-              (place) => place.googlePlaceId === current.googlePlaceId
-            ) ?? null)
-          : null
-      )
     },
     onError: (error) => toast.error((error as Error).message),
   })
@@ -400,15 +825,6 @@ export function TravelPlannerView() {
         : undefined)
     )
   }, [result?.places, selectedId, selectedPlaceSnapshot])
-  const detailPlace = useMemo(() => {
-    if (!placeDetail) return null
-    return (
-      result?.places.find(
-        (place) => place.googlePlaceId === placeDetail.googlePlaceId
-      ) ?? placeDetail
-    )
-  }, [placeDetail, result?.places])
-
   useEffect(() => {
     if (!selectedId) {
       setSelectedPlaceSnapshot(null)
@@ -420,6 +836,15 @@ export function TravelPlannerView() {
     )
     if (place) setSelectedPlaceSnapshot(place)
   }, [result?.places, selectedId])
+
+  useEffect(() => {
+    if (!activePlaceRouteId) return
+    setSelectedId(activePlaceRouteId)
+    const place = result?.places.find(
+      (nextPlace) => nextPlace.googlePlaceId === activePlaceRouteId
+    )
+    if (place) setSelectedPlaceSnapshot(place)
+  }, [activePlaceRouteId, result?.places])
 
   useEffect(() => {
     let latestPlan: AiTravelResponse | undefined
@@ -447,21 +872,8 @@ export function TravelPlannerView() {
       }
       return plan.places[0]?.googlePlaceId ?? null
     })
-    setPlaceDetail((current) =>
-      current
-        ? (plan.places.find(
-            (place) => place.googlePlaceId === current.googlePlaceId
-          ) ?? null)
-        : null
-    )
     void queryClient.invalidateQueries({ queryKey: ["ai-travel-sessions"] })
   }, [chatMessages, queryClient])
-
-  useEffect(() => {
-    if (chatError) {
-      toast.error(chatError.message)
-    }
-  }, [chatError])
 
   useEffect(() => {
     const data = restoredPlanQuery.data
@@ -469,7 +881,6 @@ export function TravelPlannerView() {
 
     setResult(data)
     setActivePlanId(data.planId)
-    setPlaceDetail(null)
     setSelectedId((current) => {
       const preferred = current ?? plannerSearch.selected
       if (
@@ -481,13 +892,14 @@ export function TravelPlannerView() {
       return data.places[0]?.googlePlaceId ?? null
     })
     setChatMessages((messages) =>
-      addPlanToMessages(
-        messages,
-        data,
-        "Restored your saved plan from this URL."
-      )
+      addPlanToMessages(messages, data, plannerCopy.restoredPlan)
     )
-  }, [plannerSearch.selected, restoredPlanQuery.data, sessionToRestore])
+  }, [
+    plannerCopy.restoredPlan,
+    plannerSearch.selected,
+    restoredPlanQuery.data,
+    sessionToRestore,
+  ])
 
   useEffect(() => {
     const detail = restoredSessionQuery.data
@@ -496,7 +908,6 @@ export function TravelPlannerView() {
     setSessionId(detail.id)
     setResult(detail.plan)
     setActivePlanId(detail.activePlanId ?? detail.plan?.planId)
-    setPlaceDetail(null)
     setSelectedId((current) => {
       if (
         current &&
@@ -506,10 +917,10 @@ export function TravelPlannerView() {
       }
       return detail.plan?.places[0]?.googlePlaceId ?? null
     })
-    setChatMessages(chatMessagesFromSession(detail))
+    setChatMessages(chatMessagesFromSession(detail, plannerCopy))
     setHistoryOpen(false)
     setSessionToRestore(null)
-  }, [restoredSessionQuery.data])
+  }, [plannerCopy, restoredSessionQuery.data])
 
   useEffect(() => {
     if (restoredSessionQuery.isError) {
@@ -519,7 +930,7 @@ export function TravelPlannerView() {
 
   useEffect(() => {
     navigate({
-      to: "/planner",
+      to: ".",
       replace: true,
       search: (prev) => ({
         ...prev,
@@ -535,6 +946,14 @@ export function TravelPlannerView() {
     const trimmed = nextMessage.trim()
     if (!trimmed || chatBusy) return
     if (chatError) clearError()
+    if (
+      chatMessages.length === 1 &&
+      chatMessages[0]?.role === "assistant" &&
+      !result &&
+      !activePlanId
+    ) {
+      setSuppressFirstPromptScroll(true)
+    }
     setMessage("")
     void sendMessage(
       { text: trimmed },
@@ -543,14 +962,10 @@ export function TravelPlannerView() {
           planId: result?.planId ?? activePlanId,
           sessionId,
           userLocation: null,
-          language: i18n.resolvedLanguage ?? i18n.language ?? "en",
+          language: currentLanguage,
         },
       }
     )
-  }
-
-  const generateItinerary = (days: number) => {
-    submitPrompt(`Create a ${days}-day itinerary from this plan`)
   }
 
   const resetSession = () => {
@@ -559,22 +974,53 @@ export function TravelPlannerView() {
     setActivePlanId(undefined)
     setSelectedId(null)
     setSelectedPlaceSnapshot(null)
-    setPlaceDetail(null)
     setSessionId(createSessionId())
-    setChatMessages(createInitialChatMessages())
+    setChatMessages(createInitialChatMessages(plannerCopy))
     setSessionToRestore(null)
     if (chatError) clearError()
   }
+
+  const deleteSessionMutation = useMutation({
+    mutationFn: deleteAiTravelSession,
+    onSuccess: ({ id }) => {
+      queryClient.setQueryData<AiTravelSessionSummary[]>(
+        ["ai-travel-sessions"],
+        (sessions) => sessions?.filter((session) => session.id !== id) ?? []
+      )
+      queryClient.removeQueries({ queryKey: ["ai-travel-session", id] })
+      if (id === sessionId) resetSession()
+      toast.success(plannerCopy.sessionDeleted)
+    },
+    onError: (error) => toast.error((error as Error).message),
+  })
+
+  const deleteSessionsMutation = useMutation({
+    mutationFn: deleteAiTravelSessions,
+    onSuccess: ({ deletedCount }) => {
+      queryClient.setQueryData<AiTravelSessionSummary[]>(
+        ["ai-travel-sessions"],
+        []
+      )
+      queryClient.removeQueries({ queryKey: ["ai-travel-session"] })
+      resetSession()
+      toast.success(
+        deletedCount === 1
+          ? plannerCopy.sessionDeleted
+          : plannerCopy.historyDeleted
+      )
+    },
+    onError: (error) => toast.error((error as Error).message),
+  })
 
   const copySessionLink = async () => {
     if (typeof window === "undefined") return
     try {
       await navigator.clipboard.writeText(window.location.href)
       setLinkCopied(true)
-      toast.success("Session link copied")
+      toast.success(plannerCopy.sessionLinkCopied)
       window.setTimeout(() => setLinkCopied(false), 1600)
     } catch {
-      toast.error("Could not copy the session link")
+      toast.error(plannerCopy.copyFailed)
     }
   }
 
@@ -586,12 +1032,48 @@ export function TravelPlannerView() {
     if (place) setSelectedPlaceSnapshot(place)
   }
 
+  const openPlaceDetail = (place: AiTravelPlace) => {
+    selectPlace(place.googlePlaceId)
+    navigate({
+      to: "/planner/place/$googlePlaceId/modal",
+      params: { googlePlaceId: place.googlePlaceId },
+      search: (prev) => prev,
+      mask: {
+        to: "/planner/place/$googlePlaceId",
+        params: { googlePlaceId: place.googlePlaceId },
+        search: (prev) => prev,
+      },
+    })
+  }
+
+  const plannerContext = useMemo<TravelPlannerContextValue>(
+    () => ({
+      getPlaceById: (googlePlaceId) =>
+        result?.places.find((place) => place.googlePlaceId === googlePlaceId) ??
+        (selectedPlaceSnapshot?.googlePlaceId === googlePlaceId
+          ? selectedPlaceSnapshot
+          : null),
+      saving: patchPlaceMutation.isPending,
+      onSavePlace: (place) =>
+        patchPlaceMutation.mutate({
+          googlePlaceId: place.googlePlaceId,
+          patch: { saved: !place.saved },
+        }),
+      onRemovePlace: (place) =>
+        patchPlaceMutation.mutate({
+          googlePlaceId: place.googlePlaceId,
+          patch: { removed: true },
+        }),
+    }),
+    [patchPlaceMutation, result?.places, selectedPlaceSnapshot]
+  )
+
   const mapElement = (
     <PlannerMap
       result={result}
       selectedId={selectedId}
       colorScheme={mapColorScheme}
-      onSelect={selectPlace}
+      onOpenPlace={openPlaceDetail}
     />
   )
 
@@ -600,8 +1082,6 @@ export function TravelPlannerView() {
       <SessionHeader
         sessionId={sessionId}
         destination={result?.destination}
-        messageCount={chatMessages.length}
-        placeCount={result?.places.length ?? 0}
         restoring={restoredPlanQuery.isFetching}
         copied={linkCopied}
         historyOpen={historyOpen}
@@ -610,8 +1090,19 @@ export function TravelPlannerView() {
         }
         hidden={false}
         sessions={sessionsQuery.data ?? []}
+        copy={plannerCopy}
+        deletingSessionId={
+          deleteSessionMutation.isPending
+            ? (deleteSessionMutation.variables ?? null)
+            : null
+        }
+        deletingAllSessions={deleteSessionsMutation.isPending}
         onHistoryOpenChange={setHistoryOpen}
         onRestoreSession={setSessionToRestore}
+        onDeleteSession={(nextSessionId) =>
+          deleteSessionMutation.mutate(nextSessionId)
+        }
+        onDeleteAllSessions={() => deleteSessionsMutation.mutate()}
         onCopy={copySessionLink}
         onReset={resetSession}
       />
@@ -621,8 +1112,8 @@ export function TravelPlannerView() {
           {chatMessages.length === 0 ? (
             <ConversationEmptyState
               icon={<MessageSquare className="size-10" />}
-              title="Start a travel plan"
-              description="Ask for places, routes, food, or itinerary changes."
+              title={plannerCopy.emptyTitle}
+              description={plannerCopy.emptyDescription}
             />
           ) : (
             chatMessages.map((chatMessage, index) => (
@@ -630,13 +1121,12 @@ export function TravelPlannerView() {
                 key={chatMessage.id}
                 message={chatMessage}
                 index={index}
+                showPlan={chatMessage.id === latestPlanDisplay?.messageId}
+                copy={plannerCopy}
                 selectedId={selectedId}
                 saving={patchPlaceMutation.isPending}
                 onSelect={selectPlace}
-                onOpenPlace={(place) => {
-                  selectPlace(place.googlePlaceId)
-                  setPlaceDetail(place)
-                }}
+                onOpenPlace={openPlaceDetail}
                 onSave={(place) =>
                   patchPlaceMutation.mutate({
                     googlePlaceId: place.googlePlaceId,
@@ -654,7 +1144,7 @@ export function TravelPlannerView() {
           )}
 
           {chatStatus === "submitted" && (
-            <PlannerStatusMessage label="Planning your trip" />
+            <PlannerStatusMessage label={plannerCopy.planning} />
           )}
         </ConversationContent>
         <ConversationScrollButton />
@@ -663,18 +1153,12 @@ export function TravelPlannerView() {
       <div className="border-t border-border/60 p-4 md:p-5">
         <PromptChips
           prompts={
-            result
-              ? [
-                  "Make this more local",
-                  "Add cafes nearby",
-                  "Create a cheaper version",
-                ]
-              : STARTER_PROMPTS
+            result ? plannerCopy.followUpPrompts : plannerCopy.starterPrompts
           }
           loading={chatBusy}
           onPick={submitPrompt}
         />
-        {result && (
+        {/* {result && (
           <div className="mt-3 flex flex-wrap gap-2">
             {[1, 2, 3].map((days) => (
               <Button
@@ -690,7 +1174,7 @@ export function TravelPlannerView() {
               </Button>
             ))}
           </div>
-        )}
+        )} */}
         <PromptInput
           className={cn(
             "planner-composer mt-3",
@@ -702,7 +1186,7 @@ export function TravelPlannerView() {
             <PromptInputTextarea
               value={message}
               onChange={(event) => setMessage(event.target.value)}
-              placeholder="Ask for a route, swap a place, add food, change the budget..."
+              placeholder={plannerCopy.inputPlaceholder}
               className="max-h-36 min-h-12 p-2"
             />
           </PromptInputBody>
@@ -715,145 +1199,147 @@ export function TravelPlannerView() {
           </PromptInputFooter>
         </PromptInput>
       </div>
-      <PlannerPlaceDetailDialog
-        place={detailPlace}
-        open={Boolean(detailPlace)}
-        saving={patchPlaceMutation.isPending}
-        onOpenChange={(open) => {
-          if (!open) setPlaceDetail(null)
-        }}
-        onSave={(place) =>
-          patchPlaceMutation.mutate({
-            googlePlaceId: place.googlePlaceId,
-            patch: { saved: !place.saved },
-          })
-        }
-        onRemove={(place) => {
-          setPlaceDetail(null)
-          patchPlaceMutation.mutate({
-            googlePlaceId: place.googlePlaceId,
-            patch: { removed: true },
-          })
-        }}
-      />
     </aside>
   )
 
   if (isDesktop) {
     return (
-      <div className="h-svh md:h-[calc(100svh-3.5rem)]">
-        <ResizablePanelGroup orientation="horizontal" className="h-full">
-          <ResizablePanel defaultSize="38%" minSize="26%" maxSize="62%">
-            <div className="glass-panel m-3 h-[calc(100%-1.5rem)] rounded-lg">
-              {planPanel}
-            </div>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize="62%" minSize="30%">
-            <div className="relative h-full">
-              {mapElement}
-              {selectedPlace && <SelectedPlaceOverlay place={selectedPlace} />}
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </div>
+      <TravelPlannerContext.Provider value={plannerContext}>
+        <div className="h-svh md:h-[calc(100svh-3.5rem)]">
+          <ResizablePanelGroup orientation="horizontal" className="h-full">
+            <ResizablePanel defaultSize="38%" minSize="26%" maxSize="62%">
+              <div className="glass-panel m-3 h-[calc(100%-1.5rem)] rounded-lg">
+                {planPanel}
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize="62%" minSize="30%">
+              <div className="relative h-full">
+                {mapElement}
+                {selectedPlace && (
+                  <SelectedPlaceOverlay
+                    place={selectedPlace}
+                    copy={plannerCopy}
+                    onOpen={() => openPlaceDetail(selectedPlace)}
+                  />
+                )}
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </div>
+        <Outlet />
+      </TravelPlannerContext.Provider>
     )
   }
 
   return (
-    <div className="relative h-svh overflow-hidden md:h-[calc(100svh-3.5rem)]">
-      <div className="absolute inset-0">{mapElement}</div>
-      {selectedPlace && mobileView === "map" && (
-        <SelectedPlaceOverlay place={selectedPlace} />
-      )}
-      <div
-        className={cn(
-          "glass-panel-strong mobile-chrome-pt absolute inset-0 overflow-hidden rounded-t-lg transition-transform duration-300 ease-out",
-          mobileView === "plan" ? "translate-y-0" : "translate-y-full"
+    <TravelPlannerContext.Provider value={plannerContext}>
+      <div className="relative h-svh overflow-hidden md:h-[calc(100svh-3.5rem)]">
+        <div className="absolute inset-0">{mapElement}</div>
+        {selectedPlace && mobileView === "map" && (
+          <SelectedPlaceOverlay
+            place={selectedPlace}
+            copy={plannerCopy}
+            onOpen={() => openPlaceDetail(selectedPlace)}
+          />
         )}
-      >
-        {planPanel}
+        <div
+          className={cn(
+            "glass-panel-strong mobile-chrome-pt absolute inset-0 overflow-hidden rounded-t-lg transition-transform duration-300 ease-out",
+            mobileView === "plan" ? "translate-y-0" : "translate-y-full"
+          )}
+        >
+          {planPanel}
+        </div>
+        <Button
+          type="button"
+          className="mobile-action-bottom absolute left-1/2 z-10 -translate-x-1/2 rounded-full shadow-lg"
+          onClick={() =>
+            setMobileView((view) => (view === "plan" ? "map" : "plan"))
+          }
+        >
+          {mobileView === "plan" ? (
+            <>
+              <MapPinned className="size-4" />
+              {plannerCopy.showMap}
+            </>
+          ) : (
+            <>
+              <List className="size-4" />
+              {plannerCopy.showPlan}
+            </>
+          )}
+        </Button>
       </div>
-      <Button
-        type="button"
-        className="mobile-action-bottom absolute left-1/2 z-10 -translate-x-1/2 rounded-full shadow-lg"
-        onClick={() =>
-          setMobileView((view) => (view === "plan" ? "map" : "plan"))
-        }
-      >
-        {mobileView === "plan" ? (
-          <>
-            <MapPinned className="size-4" />
-            Show map
-          </>
-        ) : (
-          <>
-            <List className="size-4" />
-            Show plan
-          </>
-        )}
-      </Button>
-    </div>
+      <Outlet />
+    </TravelPlannerContext.Provider>
   )
 }
 
 function SessionHeader({
   sessionId,
   destination,
-  messageCount,
-  placeCount,
   restoring,
   copied,
   historyOpen,
   historyLoading,
   hidden,
   sessions,
+  copy,
+  deletingSessionId,
+  deletingAllSessions,
   onHistoryOpenChange,
   onRestoreSession,
+  onDeleteSession,
+  onDeleteAllSessions,
   onCopy,
   onReset,
 }: {
   sessionId: string
   destination?: string | null
-  messageCount: number
-  placeCount: number
   restoring: boolean
   copied: boolean
   historyOpen: boolean
   historyLoading: boolean
   hidden: boolean
   sessions: AiTravelSessionSummary[]
+  copy: PlannerCopy
+  deletingSessionId: string | null
+  deletingAllSessions: boolean
   onHistoryOpenChange: (open: boolean) => void
   onRestoreSession: (sessionId: string) => void
+  onDeleteSession: (sessionId: string) => void
+  onDeleteAllSessions: () => void
   onCopy: () => void
   onReset: () => void
 }) {
+  const [sessionToDelete, setSessionToDelete] =
+    useState<AiTravelSessionSummary | null>(null)
+  const [deleteAllOpen, setDeleteAllOpen] = useState(false)
+  const deletePending = Boolean(deletingSessionId) || deletingAllSessions
+
   return (
     <TooltipProvider>
       <Sheet open={historyOpen} onOpenChange={onHistoryOpenChange}>
         <div
           className={cn(
-            "planner-session-header border-b border-border/60 p-2",
+            "planner-session-header border-b border-border/60 px-2 py-1.5",
             hidden && "planner-session-header-hidden"
           )}
         >
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-3">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex min-w-0 items-center gap-2">
               <span className="planner-session-avatar">
-                <Sparkles className="size-4" />
+                <Sparkles className="size-3.5" />
               </span>
               <div className="min-w-0">
-                <div className="flex min-w-0 items-center gap-2">
-                  <h1 className="truncate text-lg font-semibold tracking-tight">
-                    AI Travel Planner
-                  </h1>
-                </div>
-                {/* <div className="mt-1 flex min-w-0 flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                  <span className="truncate">
-                    Session {sessionId.slice(0, 8)}
-                  </span>
+                <h1 className="truncate text-sm font-semibold tracking-tight">
+                  {copy.aiPlanner}
+                </h1>
+                {/* <div className="hidden min-w-0 items-center gap-1.5 text-[0.6875rem] text-muted-foreground sm:flex">
+                  <span className="truncate">{sessionId.slice(0, 8)}</span>
                   <span aria-hidden>•</span>
-                  <span>{messageCount} messages</span>
+                  <span>{messageCount} msgs</span>
                   {placeCount > 0 && (
                     <>
                       <span aria-hidden>•</span>
@@ -864,11 +1350,11 @@ function SessionHeader({
               </div>
             </div>
 
-            <div className="flex shrink-0 items-center gap-1.5">
+            <div className="flex shrink-0 items-center gap-1">
               {destination && (
                 <Badge
                   variant="secondary"
-                  className="hidden max-w-28 truncate sm:inline-flex"
+                  className="hidden h-6 max-w-24 truncate px-2 text-[0.6875rem] sm:inline-flex"
                 >
                   {destination}
                 </Badge>
@@ -884,7 +1370,7 @@ function SessionHeader({
                 >
                   <History className="size-4" />
                 </TooltipTrigger>
-                <TooltipContent>History</TooltipContent>
+                <TooltipContent>{copy.history}</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger
@@ -898,7 +1384,7 @@ function SessionHeader({
                     <Copy className="size-4" />
                   )}
                 </TooltipTrigger>
-                <TooltipContent>Copy session link</TooltipContent>
+                <TooltipContent>{copy.copySessionLink}</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger
@@ -908,66 +1394,178 @@ function SessionHeader({
                 >
                   <RefreshCcw className="size-4" />
                 </TooltipTrigger>
-                <TooltipContent>New session</TooltipContent>
+                <TooltipContent>{copy.newSession}</TooltipContent>
               </Tooltip>
             </div>
           </div>
         </div>
-        <SheetContent side="left" className="flex w-80 flex-col gap-0 p-0">
-          <SheetHeader className="border-b p-4">
+        <SheetContent
+          side="left"
+          showCloseButton={false}
+          className="flex w-80 flex-col gap-0 p-0"
+        >
+          <SheetHeader className="flex-row items-center justify-between gap-3 border-b p-4">
             <SheetTitle className="text-left text-base tracking-normal normal-case">
-              Planner history
+              {copy.plannerHistory}
             </SheetTitle>
+            <div className="flex shrink-0 items-center gap-1">
+              <Button
+                type="button"
+                variant="destructive"
+                size="xs"
+                disabled={
+                  sessions.length === 0 || historyLoading || deletePending
+                }
+                onClick={() => setDeleteAllOpen(true)}
+              >
+                <Trash2 className="size-3.5" />
+                {copy.deleteAll}
+              </Button>
+              <SheetClose
+                render={<Button type="button" variant="ghost" size="icon-xs" />}
+                aria-label={copy.closeHistory}
+              >
+                <X className="size-3.5" />
+              </SheetClose>
+            </div>
           </SheetHeader>
           <div className="min-h-0 flex-1 overflow-y-auto p-3">
             {historyLoading && sessions.length === 0 ? (
               <div className="px-2 py-8 text-sm text-muted-foreground">
-                Loading...
+                {copy.loading}
               </div>
             ) : sessions.length === 0 ? (
               <div className="px-2 py-8 text-sm text-muted-foreground">
-                No saved sessions yet.
+                {copy.noSessions}
               </div>
             ) : (
               <div className="space-y-2">
                 {sessions.map((session) => (
-                  <button
+                  <div
                     key={session.id}
-                    type="button"
                     className={cn(
-                      "w-full rounded-lg border border-border/60 p-3 text-left transition-colors",
-                      "hover:bg-muted/60 focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none",
+                      "flex w-full items-start gap-2 rounded-lg border border-border/60 p-3 transition-colors",
+                      "hover:bg-muted/60",
                       session.id === sessionId &&
                         "border-primary/40 bg-primary/10"
                     )}
-                    onClick={() => onRestoreSession(session.id)}
                   >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="truncate text-sm font-medium">
-                          {session.title}
-                        </div>
-                        <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-                          {session.destination && (
-                            <span className="truncate">
-                              {session.destination}
+                    <button
+                      type="button"
+                      className="min-w-0 flex-1 text-left focus-visible:ring-2 focus-visible:ring-ring/50 focus-visible:outline-none"
+                      disabled={deletePending}
+                      onClick={() => onRestoreSession(session.id)}
+                    >
+                      <div className="flex min-w-0 items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <div className="truncate text-sm font-medium">
+                            {session.title}
+                          </div>
+                          <div className="mt-1 flex min-w-0 flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+                            {session.destination && (
+                              <span className="truncate">
+                                {session.destination}
+                              </span>
+                            )}
+                            {session.destination && <span aria-hidden>•</span>}
+                            <span>
+                              {session.messageCount} {copy.messages}
                             </span>
-                          )}
-                          {session.destination && <span aria-hidden>•</span>}
-                          <span>{session.messageCount} messages</span>
+                          </div>
                         </div>
+                        <span className="shrink-0 text-[0.6875rem] text-muted-foreground">
+                          {formatSessionDate(session.updatedAt)}
+                        </span>
                       </div>
-                      <span className="shrink-0 text-[0.6875rem] text-muted-foreground">
-                        {formatSessionDate(session.updatedAt)}
-                      </span>
-                    </div>
-                  </button>
+                    </button>
+                    <Tooltip>
+                      <TooltipTrigger
+                        render={
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-xs"
+                            className="text-muted-foreground hover:text-destructive"
+                          />
+                        }
+                        aria-label={`${copy.deleteSession}: ${session.title}`}
+                        disabled={deletePending}
+                        onClick={(event) => {
+                          event.stopPropagation()
+                          setSessionToDelete(session)
+                        }}
+                      >
+                        <Trash2 className="size-3.5" />
+                      </TooltipTrigger>
+                      <TooltipContent>{copy.deleteSession}</TooltipContent>
+                    </Tooltip>
+                  </div>
                 ))}
               </div>
             )}
           </div>
         </SheetContent>
       </Sheet>
+
+      <Dialog
+        open={Boolean(sessionToDelete)}
+        onOpenChange={(open) => {
+          if (!open) setSessionToDelete(null)
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{copy.deleteSessionTitle}</DialogTitle>
+            <DialogDescription>
+              {copy.deleteSessionDescription}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button type="button" variant="outline" />}>
+              {copy.cancel}
+            </DialogClose>
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={!sessionToDelete || deletePending}
+              onClick={() => {
+                if (!sessionToDelete) return
+                onDeleteSession(sessionToDelete.id)
+                setSessionToDelete(null)
+              }}
+            >
+              <Trash2 className="size-4" />
+              {copy.delete}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deleteAllOpen} onOpenChange={setDeleteAllOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{copy.deleteAllTitle}</DialogTitle>
+            <DialogDescription>{copy.deleteAllDescription}</DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose render={<Button type="button" variant="outline" />}>
+              {copy.cancel}
+            </DialogClose>
+            <Button
+              type="button"
+              variant="destructive"
+              disabled={sessions.length === 0 || deletePending}
+              onClick={() => {
+                onDeleteAllSessions()
+                setDeleteAllOpen(false)
+              }}
+            >
+              <Trash2 className="size-4" />
+              {copy.deleteAll}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </TooltipProvider>
   )
 }
@@ -991,9 +1589,7 @@ function PromptChips({
           onClick={onPick}
           variant="secondary"
           size="xs"
-        >
-          <span className="planner-prompt-chip-text">{prompt}</span>
-        </Suggestion>
+        />
       ))}
     </Suggestions>
   )
@@ -1002,6 +1598,8 @@ function PromptChips({
 function PlannerChatMessage({
   message,
   index,
+  showPlan,
+  copy,
   selectedId,
   saving,
   onSelect,
@@ -1011,6 +1609,8 @@ function PlannerChatMessage({
 }: {
   message: AiTravelPlannerMessage
   index: number
+  showPlan: boolean
+  copy: PlannerCopy
   selectedId: string | null
   saving: boolean
   onSelect: (id: string) => void
@@ -1022,24 +1622,33 @@ function PlannerChatMessage({
   const hasPlan = message.parts.some(
     (part) => part.type === "data-plan" && isAiTravelResponse(part.data)
   )
+  const hasVisiblePlan = hasPlan && showPlan
+  const hasFinalText = message.parts.some(
+    (part) => part.type === "text" && part.text.trim()
+  )
+  const hasVisibleStatus = message.parts.some(
+    (part) =>
+      part.type === "data-status" &&
+      isPlannerStatusData(part.data) &&
+      !hasVisiblePlan &&
+      !hasFinalText &&
+      !message.metadata?.error &&
+      part.data.step !== "complete"
+  )
+
+  if (!hasFinalText && !hasVisiblePlan && !hasVisibleStatus) return null
 
   return (
     <Message
       from={message.role}
-      className={cn(
-        "planner-chat-row",
-        hasPlan && "max-w-full",
-        message.metadata?.error && "text-destructive"
-      )}
+      className={cn("planner-chat-row", hasVisiblePlan && "max-w-full")}
       style={{ animationDelay: `${Math.min(index, 8) * 35}ms` }}
     >
       <MessageContent
         className={cn(
           "planner-chat-bubble",
           isUser && "planner-chat-bubble-user",
-          message.metadata?.error &&
-            "planner-chat-bubble-error border border-destructive/30 bg-destructive/10 text-destructive",
-          hasPlan && "w-full"
+          hasVisiblePlan && "w-full"
         )}
       >
         {message.parts.map((part, partIndex) => {
@@ -1052,7 +1661,12 @@ function PlannerChatMessage({
           }
 
           if (part.type === "data-status" && isPlannerStatusData(part.data)) {
-            if (hasPlan || part.data.step === "complete") {
+            if (
+              hasVisiblePlan ||
+              hasFinalText ||
+              message.metadata?.error ||
+              part.data.step === "complete"
+            ) {
               return null
             }
 
@@ -1065,10 +1679,13 @@ function PlannerChatMessage({
           }
 
           if (part.type === "data-plan" && isAiTravelResponse(part.data)) {
+            if (!showPlan) return null
+
             return (
               <PlanResultContent
                 key={`${message.id}-${part.id ?? partIndex}`}
                 result={part.data}
+                copy={copy}
                 selectedId={selectedId}
                 saving={saving}
                 onSelect={onSelect}
@@ -1116,6 +1733,7 @@ function PlannerStatusCard({ label }: { label: string }) {
 
 function PlanResultContent({
   result,
+  copy,
   selectedId,
   saving,
   onSelect,
@@ -1124,6 +1742,7 @@ function PlanResultContent({
   onRemove,
 }: {
   result: AiTravelResponse
+  copy: PlannerCopy
   selectedId: string | null
   saving: boolean
   onSelect: (id: string) => void
@@ -1131,70 +1750,280 @@ function PlanResultContent({
   onSave: (place: AiTravelPlace) => void
   onRemove: (place: AiTravelPlace) => void
 }) {
+  const routeLinks = buildRouteLinks(result, copy)
+
   return (
     <div className="mt-5 space-y-6">
-      <section className="space-y-2 rounded-lg border border-border/60 bg-muted/20 p-3">
-        <div className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5 rounded-md bg-background px-2 py-1">
-            <Sparkles className="size-3.5 text-primary" />
-            {formatIntentLabel(result.intent)}
-          </span>
-          {result.destination && (
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-background px-2 py-1">
-              <MapPinned className="size-3.5" />
-              {result.destination}
-            </span>
-          )}
+      <section className="rounded-md border border-border/60 bg-muted/15 px-2.5 py-2">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div className="min-w-0 flex-1 space-y-1">
+            <div className="flex flex-wrap items-center gap-1.5 text-xs font-medium text-muted-foreground">
+              <Badge>
+                <Sparkles className="size-3 text-primary" />
+                {formatIntentLabel(result.intent)}
+              </Badge>
+              {result.destination && (
+                <Badge variant="secondary">{result.destination}</Badge>
+              )}
+            </div>
+            <h4 className="line-clamp-2 text-sm leading-snug font-semibold">
+              {result.title}
+            </h4>
+          </div>
+          {routeLinks.length > 0 && <PlannerRouteLinks links={routeLinks} />}
         </div>
-        <h2 className="text-xl font-semibold tracking-tight">{result.title}</h2>
       </section>
 
       {result.itinerary && (
-        <section className="space-y-3">
-          <h3 className="flex items-center gap-2 text-sm font-semibold">
-            <Route className="size-4" />
-            Itinerary
-          </h3>
-          <div className="space-y-2">
-            {result.itinerary.days.map((day) => (
-              <Card key={day.day} className="rounded-lg p-3">
-                <div className="mb-2 text-sm font-medium">
-                  Day {day.day}: {day.title}
-                </div>
-                <ol className="space-y-1 text-sm text-muted-foreground">
-                  {day.places.map((place) => (
-                    <li key={`${day.day}-${place.googlePlaceId}`}>
-                      {place.order}.{" "}
-                      {place.startTime ? `${place.startTime} ` : ""}
-                      {place.name}
-                    </li>
-                  ))}
-                </ol>
-              </Card>
-            ))}
-          </div>
-        </section>
+        <PlannerItineraryTimeline
+          result={result}
+          copy={copy}
+          selectedId={selectedId}
+          onSelect={onSelect}
+          onOpenPlace={onOpenPlace}
+        />
       )}
 
-      {result.groups.map((group) => (
-        <section key={group.category} className="space-y-2">
-          <h3 className="text-sm font-semibold">{group.category}</h3>
-          <div className="space-y-3">
-            {group.places.map((place) => (
-              <PlannerPlaceCard
-                key={place.googlePlaceId}
-                place={place}
-                active={place.googlePlaceId === selectedId}
-                saving={saving}
-                onSelect={() => onSelect(place.googlePlaceId)}
-                onOpen={() => onOpenPlace(place)}
-                onSave={() => onSave(place)}
-                onRemove={() => onRemove(place)}
-              />
-            ))}
-          </div>
-        </section>
-      ))}
+      <PlannerPlaceSuggestions
+        result={result}
+        copy={copy}
+        selectedId={selectedId}
+        saving={saving}
+        onSelect={onSelect}
+        onOpenPlace={onOpenPlace}
+        onSave={onSave}
+        onRemove={onRemove}
+      />
+    </div>
+  )
+}
+
+function PlannerPlaceSuggestions({
+  result,
+  copy,
+  selectedId,
+  saving,
+  onSelect,
+  onOpenPlace,
+  onSave,
+  onRemove,
+}: {
+  result: AiTravelResponse
+  copy: PlannerCopy
+  selectedId: string | null
+  saving: boolean
+  onSelect: (id: string) => void
+  onOpenPlace: (place: AiTravelPlace) => void
+  onSave: (place: AiTravelPlace) => void
+  onRemove: (place: AiTravelPlace) => void
+}) {
+  const [showAllPlaces, setShowAllPlaces] = useState(false)
+  const placeCount = result.groups.reduce(
+    (total, group) => total + group.places.length,
+    0
+  )
+  const visibleLimit = 2
+  const remainingCount = Math.max(0, placeCount - visibleLimit)
+  const visibleGroups = showAllPlaces
+    ? result.groups
+    : result.groups.reduce<AiTravelResponse["groups"]>((groups, group) => {
+        const visibleCount = groups.reduce(
+          (total, visibleGroup) => total + visibleGroup.places.length,
+          0
+        )
+        const slotsLeft = visibleLimit - visibleCount
+        if (slotsLeft <= 0) return groups
+        const places = group.places.slice(0, slotsLeft)
+        if (places.length === 0) return groups
+        return [...groups, { ...group, places }]
+      }, [])
+
+  return (
+    <section className="space-y-2">
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-sm font-semibold">
+          {copy.placeSuggestions}
+          <span className="ml-1 text-xs font-medium text-muted-foreground">
+            ({placeCount})
+          </span>
+        </h3>
+      </div>
+      <div className="space-y-2">
+        {visibleGroups.map((group) => (
+          <section key={group.category} className="space-y-2">
+            <h4 className="text-sm font-semibold">{group.category}</h4>
+            <div className="space-y-1">
+              {group.places.map((place) => (
+                <PlannerPlaceCard
+                  key={place.googlePlaceId}
+                  place={place}
+                  active={place.googlePlaceId === selectedId}
+                  saving={saving}
+                  copy={copy}
+                  onSelect={() => onSelect(place.googlePlaceId)}
+                  onOpen={() => onOpenPlace(place)}
+                  onSave={() => onSave(place)}
+                  onRemove={() => onRemove(place)}
+                />
+              ))}
+            </div>
+          </section>
+        ))}
+        {remainingCount > 0 && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="h-8 w-full rounded-md text-xs"
+            onClick={() => setShowAllPlaces((current) => !current)}
+          >
+            {showAllPlaces
+              ? copy.showFewerPlaces
+              : copy.showMorePlaces(remainingCount)}
+            <ChevronDown
+              className={cn(
+                "size-3.5 transition-transform",
+                showAllPlaces && "rotate-180"
+              )}
+            />
+          </Button>
+        )}
+      </div>
+    </section>
+  )
+}
+
+function PlannerItineraryTimeline({
+  result,
+  copy,
+  selectedId,
+  onSelect,
+  onOpenPlace,
+}: {
+  result: AiTravelResponse
+  copy: PlannerCopy
+  selectedId: string | null
+  onSelect: (id: string) => void
+  onOpenPlace: (place: AiTravelPlace) => void
+}) {
+  const placeMap = new Map(
+    result.places.map((place) => [place.googlePlaceId, place])
+  )
+  const days = result.itinerary?.days ?? []
+
+  return (
+    <section className="space-y-2">
+      <div className="flex items-center justify-between gap-3">
+        <h3 className="text-sm font-semibold">{copy.itinerary}</h3>
+        <Badge variant="outline" className="text-[11px]">
+          {days.length} {copy.days}
+        </Badge>
+      </div>
+      <div className="space-y-2">
+        {days.map((day) => {
+          const sortedPlaces = [...day.places].sort((a, b) => a.order - b.order)
+
+          return (
+            <div
+              key={day.day}
+              className="rounded-lg border border-border/60 bg-muted/20 p-2.5"
+            >
+              <div className="mb-2 flex min-w-0 items-baseline gap-2">
+                <span className="shrink-0 text-xs font-semibold text-primary">
+                  {copy.day} {day.day}
+                </span>
+                <h4 className="min-w-0 truncate text-sm font-semibold">
+                  {day.title}
+                </h4>
+              </div>
+              <ol className="space-y-0.5">
+                {sortedPlaces.map((place, placeIndex) => {
+                  const fullPlace = placeMap.get(place.googlePlaceId)
+                  const selected = selectedId === place.googlePlaceId
+                  const stopLabel = place.startTime ?? `${place.order}`
+
+                  return (
+                    <li
+                      key={`${day.day}-${place.googlePlaceId}`}
+                      className="grid grid-cols-[3.75rem_minmax(0,1fr)] gap-2"
+                    >
+                      <div className="relative flex justify-end">
+                        {placeIndex < sortedPlaces.length - 1 && (
+                          <span className="absolute top-5 right-[1.15rem] bottom-[-0.35rem] w-px bg-border" />
+                        )}
+                        <span
+                          className={cn(
+                            "relative z-10 flex h-6 min-w-10 items-center justify-center rounded-md border bg-background px-1.5 text-[11px] leading-none font-semibold tabular-nums",
+                            selected
+                              ? "border-primary/50 text-primary"
+                              : "text-muted-foreground"
+                          )}
+                        >
+                          {stopLabel}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        className={cn(
+                          "min-w-0 rounded-md px-2 py-1 text-left transition-colors",
+                          fullPlace &&
+                            "hover:bg-background focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:outline-none",
+                          selected && "bg-primary/10"
+                        )}
+                        disabled={!fullPlace}
+                        onClick={() => {
+                          if (!fullPlace) return
+                          onSelect(fullPlace.googlePlaceId)
+                          onOpenPlace(fullPlace)
+                        }}
+                      >
+                        <span className="block truncate text-sm font-medium">
+                          {place.name}
+                        </span>
+                        {place.notes && (
+                          <span className="line-clamp-1 text-xs text-muted-foreground">
+                            {place.notes}
+                          </span>
+                        )}
+                      </button>
+                    </li>
+                  )
+                })}
+              </ol>
+            </div>
+          )
+        })}
+      </div>
+    </section>
+  )
+}
+
+function PlannerRouteLinks({ links }: { links: Array<GoogleRouteLink> }) {
+  return (
+    <div className="flex shrink-0 flex-wrap justify-end gap-1">
+      {links.map((link, index) => {
+        const label = index === 0 ? "Google Maps" : link.label
+
+        return (
+          <a
+            key={link.label}
+            href={link.href}
+            target="_blank"
+            rel="noreferrer"
+            aria-label={`${link.label} (${link.stopCount})`}
+            className={buttonVariants({
+              size: "xs",
+              variant: index === 0 ? "outline" : "ghost",
+              className:
+                "h-6 rounded-md px-2 text-[10px] tracking-wide text-muted-foreground",
+            })}
+          >
+            <ExternalLink className="size-3" />
+            <span>{label}</span>
+            <span className="text-current/60">({link.stopCount})</span>
+          </a>
+        )
+      })}
     </div>
   )
 }
@@ -1203,6 +2032,7 @@ function PlannerPlaceCard({
   place,
   active,
   saving,
+  copy,
   onSelect,
   onOpen,
   onSave,
@@ -1211,6 +2041,7 @@ function PlannerPlaceCard({
   place: AiTravelPlace
   active: boolean
   saving: boolean
+  copy: PlannerCopy
   onSelect: () => void
   onOpen: () => void
   onSave: () => void
@@ -1277,7 +2108,7 @@ function PlannerPlaceCard({
               ) : (
                 <Bookmark className="size-3.5" />
               )}
-              {place.saved ? "Saved" : "Save"}
+              {place.saved ? copy.saved : copy.save}
             </Button>
             <Button
               type="button"
@@ -1294,7 +2125,7 @@ function PlannerPlaceCard({
               }}
             >
               <Trash2 className="size-3.5" />
-              Remove
+              {copy.remove}
             </Button>
             {place.googleMapsUri && (
               <a
@@ -1309,7 +2140,7 @@ function PlannerPlaceCard({
                 onClick={(event) => event.stopPropagation()}
               >
                 <ExternalLink className="size-3.5" />
-                Maps
+                {copy.maps}
               </a>
             )}
           </div>
@@ -1319,7 +2150,7 @@ function PlannerPlaceCard({
   )
 }
 
-function PlannerPlaceDetailDialog({
+export function PlannerPlaceDetailDialog({
   place,
   open,
   saving,
@@ -1334,16 +2165,22 @@ function PlannerPlaceDetailDialog({
   onSave: (place: AiTravelPlace) => void
   onRemove: (place: AiTravelPlace) => void
 }) {
+  const { i18n } = useTranslation()
+  const copy = getPlannerCopy(i18n.resolvedLanguage ?? i18n.language ?? "en")
+  const isKhmer = isKhmerLanguage(
+    i18n.resolvedLanguage ?? i18n.language ?? "en"
+  )
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[92svh] overflow-y-auto rounded-lg p-0 sm:max-w-lg">
+      <DialogContent className="max-h-[92svh] overflow-hidden rounded-lg p-0 sm:max-w-3xl">
         {place && (
-          <div>
-            <div className="relative h-52 overflow-hidden bg-muted">
+          <div className="flex max-h-[92svh] flex-col">
+            <div className="relative h-56 shrink-0 overflow-hidden bg-muted sm:h-72">
               {place.photoUrl ? (
                 <img
                   src={place.photoUrl}
-                  alt=""
+                  alt={place.name}
                   className="size-full object-cover"
                 />
               ) : (
@@ -1351,8 +2188,21 @@ function PlannerPlaceDetailDialog({
                   <MapPinned className="size-8" />
                 </div>
               )}
+              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/65 to-transparent p-5 pt-14 text-white">
+                <DialogHeader>
+                  <DialogTitle className="font-sans text-2xl leading-tight tracking-tight text-white normal-case">
+                    {place.name}
+                  </DialogTitle>
+                  {place.address && (
+                    <DialogDescription className="flex items-start gap-2 text-white/80">
+                      <MapPinned className="mt-0.5 size-4 shrink-0" />
+                      <span>{place.address}</span>
+                    </DialogDescription>
+                  )}
+                </DialogHeader>
+              </div>
               {place.rating != null && (
-                <div className="absolute right-4 bottom-4 inline-flex items-center gap-1.5 rounded-md bg-background/95 px-2.5 py-1.5 text-sm font-semibold shadow-sm">
+                <div className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-md bg-background/95 px-2.5 py-1.5 text-sm font-semibold text-foreground shadow-sm">
                   <Star className="size-4 fill-current text-amber-500" />
                   {place.rating.toFixed(1)}
                   {place.userRatingCount != null && (
@@ -1364,22 +2214,10 @@ function PlannerPlaceDetailDialog({
               )}
             </div>
 
-            <div className="space-y-5 p-5">
-              <DialogHeader>
-                <DialogTitle className="font-sans text-2xl leading-tight tracking-tight normal-case">
-                  {place.name}
-                </DialogTitle>
-                {place.address && (
-                  <DialogDescription className="flex items-start gap-2">
-                    <MapPinned className="mt-0.5 size-4 shrink-0" />
-                    <span>{place.address}</span>
-                  </DialogDescription>
-                )}
-              </DialogHeader>
-
+            <div className="min-h-0 flex-1 space-y-5 overflow-y-auto p-5">
               {place.reason && (
                 <section className="space-y-1.5">
-                  <h3 className="text-sm font-semibold">Why visit</h3>
+                  <h3 className="text-sm font-semibold">{copy.whyVisit}</h3>
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     {place.reason}
                   </p>
@@ -1390,7 +2228,7 @@ function PlannerPlaceDetailDialog({
                 {place.category && (
                   <div className="rounded-lg border border-border/70 bg-muted/20 p-3">
                     <div className="text-xs font-medium text-muted-foreground">
-                      Category
+                      {isKhmer ? "ប្រភេទ" : "Category"}
                     </div>
                     <div className="mt-1 text-sm font-medium">
                       {place.category}
@@ -1400,7 +2238,7 @@ function PlannerPlaceDetailDialog({
                 {place.types.length > 0 && (
                   <div className="rounded-lg border border-border/70 bg-muted/20 p-3">
                     <div className="text-xs font-medium text-muted-foreground">
-                      Tags
+                      {isKhmer ? "ស្លាក" : "Tags"}
                     </div>
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {place.types.slice(0, 4).map((type) => (
@@ -1415,47 +2253,46 @@ function PlannerPlaceDetailDialog({
                   </div>
                 )}
               </div>
-
-              <DialogFooter className="gap-2 sm:justify-start">
-                <Button
-                  type="button"
-                  variant={place.saved ? "secondary" : "outline"}
-                  disabled={saving}
-                  onClick={() => onSave(place)}
-                >
-                  {place.saved ? (
-                    <BookmarkCheck className="size-4" />
-                  ) : (
-                    <Bookmark className="size-4" />
-                  )}
-                  {place.saved ? "Saved" : "Save"}
-                </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  className="text-muted-foreground hover:text-destructive"
-                  disabled={saving}
-                  onClick={() => onRemove(place)}
-                >
-                  <Trash2 className="size-4" />
-                  Remove
-                </Button>
-                {place.googleMapsUri && (
-                  <a
-                    href={place.googleMapsUri}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={buttonVariants({
-                      variant: "ghost",
-                      className: "text-muted-foreground",
-                    })}
-                  >
-                    <ExternalLink className="size-4" />
-                    Maps
-                  </a>
-                )}
-              </DialogFooter>
             </div>
+
+            <DialogFooter className="border-t border-border/70 bg-background/95 p-3 sm:justify-start">
+              <Button
+                type="button"
+                variant={place.saved ? "secondary" : "outline"}
+                disabled={saving}
+                onClick={() => onSave(place)}
+              >
+                {place.saved ? (
+                  <BookmarkCheck className="size-4" />
+                ) : (
+                  <Bookmark className="size-4" />
+                )}
+                {place.saved ? copy.saved : copy.save}
+              </Button>
+              {place.googleMapsUri && (
+                <a
+                  href={place.googleMapsUri}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={buttonVariants({
+                    variant: "outline",
+                  })}
+                >
+                  <ExternalLink className="size-4" />
+                  {copy.maps}
+                </a>
+              )}
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-muted-foreground hover:text-destructive"
+                disabled={saving}
+                onClick={() => onRemove(place)}
+              >
+                <Trash2 className="size-4" />
+                {copy.remove}
+              </Button>
+            </DialogFooter>
           </div>
         )}
       </DialogContent>
@@ -1490,19 +2327,20 @@ function PlannerMap({
   result,
   selectedId,
   colorScheme,
-  onSelect,
+  onOpenPlace,
 }: {
   result: AiTravelResponse | null
   selectedId: string | null
   colorScheme: ColorScheme
-  onSelect: (id: string) => void
+  onOpenPlace: (place: AiTravelPlace) => void
 }) {
   const center = result?.map.center ?? DEFAULT_CENTER
   const zoom = result?.map.zoom ?? DEFAULT_ZOOM
-  const mapKey = `${result?.planId ?? "empty"}-${center.lat}-${center.lng}-${result?.map.pins.length ?? 0}`
+  const places = result?.places.filter((place) => !place.removed) ?? []
+  const mapKey = `${result?.planId ?? "empty"}-${center.lat}-${center.lng}-${places.length}`
 
   return (
-    <Map
+    <GoogleMap
       key={mapKey}
       mapId={MAP_ID}
       defaultCenter={center}
@@ -1512,40 +2350,98 @@ function PlannerMap({
       colorScheme={colorScheme}
       className="h-full w-full"
     >
-      {result?.map.pins.map((pin) => (
+      {places.map((place) => (
         <AdvancedMarker
-          key={pin.googlePlaceId}
-          position={{ lat: pin.lat, lng: pin.lng }}
+          key={place.googlePlaceId}
+          position={{ lat: place.latitude, lng: place.longitude }}
         >
-          <button
-            type="button"
-            className={cn(
-              "glass-control flex size-10 items-center justify-center rounded-full border-2 border-white/80 bg-primary text-xs font-semibold text-primary-foreground transition-transform",
-              "hover:z-10 hover:scale-110",
-              selectedId === pin.googlePlaceId &&
-                "z-20 scale-110 ring-2 ring-primary"
-            )}
-            aria-label={pin.name}
-            onClick={(event) => {
-              event.stopPropagation()
-              onSelect(pin.googlePlaceId)
-            }}
-          >
-            {pin.order ?? <MapPinned className="size-4" />}
-          </button>
+          <PlannerMapMarker
+            place={place}
+            active={selectedId === place.googlePlaceId}
+            onOpen={() => onOpenPlace(place)}
+          />
         </AdvancedMarker>
       ))}
-    </Map>
+    </GoogleMap>
   )
 }
 
-function SelectedPlaceOverlay({ place }: { place: AiTravelPlace }) {
+function PlannerMapMarker({
+  place,
+  active,
+  onOpen,
+}: {
+  place: AiTravelPlace
+  active: boolean
+  onOpen: () => void
+}) {
+  const [failed, setFailed] = useState(false)
+  const src = failed ? null : place.photoUrl
+
+  return (
+    <button
+      type="button"
+      className={cn(
+        "glass-control flex size-11 items-center justify-center overflow-hidden rounded-full border-2 border-white/80 bg-primary text-xs font-semibold text-primary-foreground",
+        "hover:z-10",
+        active && "z-20 ring-2 ring-primary"
+      )}
+      aria-label={place.name}
+      onClick={(event) => {
+        event.stopPropagation()
+        onOpen()
+      }}
+    >
+      {src ? (
+        <img
+          src={src}
+          alt={place.name}
+          loading="lazy"
+          className="size-full object-cover"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        (place.order ?? <MapPinned className="size-4" />)
+      )}
+    </button>
+  )
+}
+
+function SelectedPlaceOverlay({
+  place,
+  copy,
+  onOpen,
+}: {
+  place: AiTravelPlace
+  copy: PlannerCopy
+  onOpen: () => void
+}) {
   return (
     <div className="pointer-events-none absolute right-4 bottom-24 left-4 z-10 md:bottom-6 md:left-auto md:w-80">
-      <Card className="glass-panel-strong pointer-events-auto rounded-lg p-3">
+      <Card
+        role="button"
+        tabIndex={0}
+        className="glass-panel-strong pointer-events-auto rounded-lg p-3"
+        onClick={onOpen}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault()
+            onOpen()
+          }
+        }}
+      >
         <div className="flex items-start gap-3">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
-            {place.order ?? <MapPinned className="size-4" />}
+          <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-md bg-primary text-xs font-semibold text-primary-foreground">
+            {place.photoUrl ? (
+              <img
+                src={place.photoUrl}
+                alt=""
+                loading="lazy"
+                className="size-full object-cover"
+              />
+            ) : (
+              (place.order ?? <MapPinned className="size-4" />)
+            )}
           </div>
           <div className="min-w-0">
             <h3 className="line-clamp-1 text-sm font-medium">{place.name}</h3>
@@ -1554,6 +2450,10 @@ function SelectedPlaceOverlay({ place }: { place: AiTravelPlace }) {
                 {place.address}
               </p>
             )}
+            <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary">
+              {copy.details}
+              <ExternalLink className="size-3" />
+            </span>
           </div>
         </div>
       </Card>

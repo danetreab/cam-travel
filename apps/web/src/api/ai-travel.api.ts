@@ -64,6 +64,21 @@ export function getAiTravelSession(
   )
 }
 
+export function deleteAiTravelSession(
+  sessionId: string,
+): Promise<{ id: string }> {
+  return aiFetch<{ id: string }>(
+    `/api/v1/ai/sessions/${encodeURIComponent(sessionId)}`,
+    { method: "DELETE" },
+  )
+}
+
+export function deleteAiTravelSessions(): Promise<{ deletedCount: number }> {
+  return aiFetch<{ deletedCount: number }>("/api/v1/ai/sessions", {
+    method: "DELETE",
+  })
+}
+
 export function patchAiTravelPlanPlace(
   planId: string,
   googlePlaceId: string,

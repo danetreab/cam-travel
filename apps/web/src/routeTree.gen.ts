@@ -16,7 +16,9 @@ import { Route as AuthedSavedRouteImport } from "./routes/_authed/saved"
 import { Route as AuthedPlannerRouteImport } from "./routes/_authed/planner"
 import { Route as AuthedExploreRouteRouteImport } from "./routes/_authed/_explore/route"
 import { Route as AuthedExploreIndexRouteImport } from "./routes/_authed/_explore/index"
+import { Route as AuthedPlannerPlaceGooglePlaceIdRouteImport } from "./routes/_authed/planner.place.$googlePlaceId"
 import { Route as AuthedExploreAttractionAttractionIdRouteImport } from "./routes/_authed/_explore/attraction.$attractionId"
+import { Route as AuthedPlannerPlaceGooglePlaceIdModalRouteImport } from "./routes/_authed/planner.place.$googlePlaceId_.modal"
 
 const GuestRouteRoute = GuestRouteRouteImport.update({
   id: "/_guest",
@@ -50,37 +52,55 @@ const AuthedExploreIndexRoute = AuthedExploreIndexRouteImport.update({
   path: "/",
   getParentRoute: () => AuthedExploreRouteRoute,
 } as any)
+const AuthedPlannerPlaceGooglePlaceIdRoute =
+  AuthedPlannerPlaceGooglePlaceIdRouteImport.update({
+    id: "/place/$googlePlaceId",
+    path: "/place/$googlePlaceId",
+    getParentRoute: () => AuthedPlannerRoute,
+  } as any)
 const AuthedExploreAttractionAttractionIdRoute =
   AuthedExploreAttractionAttractionIdRouteImport.update({
     id: "/attraction/$attractionId",
     path: "/attraction/$attractionId",
     getParentRoute: () => AuthedExploreRouteRoute,
   } as any)
+const AuthedPlannerPlaceGooglePlaceIdModalRoute =
+  AuthedPlannerPlaceGooglePlaceIdModalRouteImport.update({
+    id: "/place/$googlePlaceId_/modal",
+    path: "/place/$googlePlaceId/modal",
+    getParentRoute: () => AuthedPlannerRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   "/": typeof AuthedExploreIndexRoute
-  "/planner": typeof AuthedPlannerRoute
+  "/planner": typeof AuthedPlannerRouteWithChildren
   "/saved": typeof AuthedSavedRoute
   "/login": typeof GuestLoginRoute
   "/attraction/$attractionId": typeof AuthedExploreAttractionAttractionIdRoute
+  "/planner/place/$googlePlaceId": typeof AuthedPlannerPlaceGooglePlaceIdRoute
+  "/planner/place/$googlePlaceId/modal": typeof AuthedPlannerPlaceGooglePlaceIdModalRoute
 }
 export interface FileRoutesByTo {
   "/": typeof AuthedExploreIndexRoute
-  "/planner": typeof AuthedPlannerRoute
+  "/planner": typeof AuthedPlannerRouteWithChildren
   "/saved": typeof AuthedSavedRoute
   "/login": typeof GuestLoginRoute
   "/attraction/$attractionId": typeof AuthedExploreAttractionAttractionIdRoute
+  "/planner/place/$googlePlaceId": typeof AuthedPlannerPlaceGooglePlaceIdRoute
+  "/planner/place/$googlePlaceId/modal": typeof AuthedPlannerPlaceGooglePlaceIdModalRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   "/_authed": typeof AuthedRouteRouteWithChildren
   "/_guest": typeof GuestRouteRouteWithChildren
   "/_authed/_explore": typeof AuthedExploreRouteRouteWithChildren
-  "/_authed/planner": typeof AuthedPlannerRoute
+  "/_authed/planner": typeof AuthedPlannerRouteWithChildren
   "/_authed/saved": typeof AuthedSavedRoute
   "/_guest/login": typeof GuestLoginRoute
   "/_authed/_explore/": typeof AuthedExploreIndexRoute
   "/_authed/_explore/attraction/$attractionId": typeof AuthedExploreAttractionAttractionIdRoute
+  "/_authed/planner/place/$googlePlaceId": typeof AuthedPlannerPlaceGooglePlaceIdRoute
+  "/_authed/planner/place/$googlePlaceId_/modal": typeof AuthedPlannerPlaceGooglePlaceIdModalRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,8 +110,17 @@ export interface FileRouteTypes {
     | "/saved"
     | "/login"
     | "/attraction/$attractionId"
+    | "/planner/place/$googlePlaceId"
+    | "/planner/place/$googlePlaceId/modal"
   fileRoutesByTo: FileRoutesByTo
-  to: "/" | "/planner" | "/saved" | "/login" | "/attraction/$attractionId"
+  to:
+    | "/"
+    | "/planner"
+    | "/saved"
+    | "/login"
+    | "/attraction/$attractionId"
+    | "/planner/place/$googlePlaceId"
+    | "/planner/place/$googlePlaceId/modal"
   id:
     | "__root__"
     | "/_authed"
@@ -102,6 +131,8 @@ export interface FileRouteTypes {
     | "/_guest/login"
     | "/_authed/_explore/"
     | "/_authed/_explore/attraction/$attractionId"
+    | "/_authed/planner/place/$googlePlaceId"
+    | "/_authed/planner/place/$googlePlaceId_/modal"
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -160,12 +191,26 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof AuthedExploreIndexRouteImport
       parentRoute: typeof AuthedExploreRouteRoute
     }
+    "/_authed/planner/place/$googlePlaceId": {
+      id: "/_authed/planner/place/$googlePlaceId"
+      path: "/place/$googlePlaceId"
+      fullPath: "/planner/place/$googlePlaceId"
+      preLoaderRoute: typeof AuthedPlannerPlaceGooglePlaceIdRouteImport
+      parentRoute: typeof AuthedPlannerRoute
+    }
     "/_authed/_explore/attraction/$attractionId": {
       id: "/_authed/_explore/attraction/$attractionId"
       path: "/attraction/$attractionId"
       fullPath: "/attraction/$attractionId"
       preLoaderRoute: typeof AuthedExploreAttractionAttractionIdRouteImport
       parentRoute: typeof AuthedExploreRouteRoute
+    }
+    "/_authed/planner/place/$googlePlaceId_/modal": {
+      id: "/_authed/planner/place/$googlePlaceId_/modal"
+      path: "/place/$googlePlaceId/modal"
+      fullPath: "/planner/place/$googlePlaceId/modal"
+      preLoaderRoute: typeof AuthedPlannerPlaceGooglePlaceIdModalRouteImport
+      parentRoute: typeof AuthedPlannerRoute
     }
   }
 }
@@ -184,15 +229,30 @@ const AuthedExploreRouteRouteChildren: AuthedExploreRouteRouteChildren = {
 const AuthedExploreRouteRouteWithChildren =
   AuthedExploreRouteRoute._addFileChildren(AuthedExploreRouteRouteChildren)
 
+interface AuthedPlannerRouteChildren {
+  AuthedPlannerPlaceGooglePlaceIdRoute: typeof AuthedPlannerPlaceGooglePlaceIdRoute
+  AuthedPlannerPlaceGooglePlaceIdModalRoute: typeof AuthedPlannerPlaceGooglePlaceIdModalRoute
+}
+
+const AuthedPlannerRouteChildren: AuthedPlannerRouteChildren = {
+  AuthedPlannerPlaceGooglePlaceIdRoute: AuthedPlannerPlaceGooglePlaceIdRoute,
+  AuthedPlannerPlaceGooglePlaceIdModalRoute:
+    AuthedPlannerPlaceGooglePlaceIdModalRoute,
+}
+
+const AuthedPlannerRouteWithChildren = AuthedPlannerRoute._addFileChildren(
+  AuthedPlannerRouteChildren,
+)
+
 interface AuthedRouteRouteChildren {
   AuthedExploreRouteRoute: typeof AuthedExploreRouteRouteWithChildren
-  AuthedPlannerRoute: typeof AuthedPlannerRoute
+  AuthedPlannerRoute: typeof AuthedPlannerRouteWithChildren
   AuthedSavedRoute: typeof AuthedSavedRoute
 }
 
 const AuthedRouteRouteChildren: AuthedRouteRouteChildren = {
   AuthedExploreRouteRoute: AuthedExploreRouteRouteWithChildren,
-  AuthedPlannerRoute: AuthedPlannerRoute,
+  AuthedPlannerRoute: AuthedPlannerRouteWithChildren,
   AuthedSavedRoute: AuthedSavedRoute,
 }
 

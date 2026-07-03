@@ -119,6 +119,7 @@ export function SavedView() {
               <AttractionListCard
                 attraction={a}
                 active={hoveredId === a.id || selected?.id === a.id}
+                selected={selected?.id === a.id}
                 onClick={() => handleCardClick(a)}
                 onHover={() => setHoveredId(a.id)}
                 onLeave={() => setHoveredId(null)}

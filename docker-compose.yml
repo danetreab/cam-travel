@@ -67,6 +67,7 @@ services:
       target: graphql
     environment:
       PORT: "3002"
+      NODE_ENV: ${NODE_ENV:-production}
       GRAPHQL_TCP_HOST: "0.0.0.0"
       GRAPHQL_TCP_PORT: "4002"
       DATABASE_URL: ${DATABASE_URL}

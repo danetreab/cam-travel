@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   Inject,
@@ -66,6 +67,11 @@ type AiTravelStreamEvent =
   | {
       type: "result";
       data: unknown;
+      message?: string;
+    }
+  | {
+      type: "refusal";
+      message: string;
     }
   | {
       type: "error";
@@ -137,7 +143,9 @@ export class AiController {
                 writer.write({
                   type: "text-delta",
                   id: textId,
-                  delta: "Here is a plan you can keep refining in this chat.",
+                  delta:
+                    event.message ??
+                    "Here is a plan you can keep refining in this chat.",
                 });
                 writer.write({ type: "text-end", id: textId });
                 writer.write({
@@ -145,6 +153,21 @@ export class AiController {
                   id: "planner-plan",
                   data: event.data,
                 });
+                return;
+              }
+
+              if (event.type === "refusal") {
+                writer.write({
+                  type: "message-metadata",
+                  messageMetadata: { error: true },
+                });
+                writer.write({ type: "text-start", id: textId });
+                writer.write({
+                  type: "text-delta",
+                  id: textId,
+                  delta: event.message,
+                });
+                writer.write({ type: "text-end", id: textId });
                 return;
               }
 
@@ -191,6 +214,16 @@ export class AiController {
   @Get("sessions/:id")
   getSession(@Param("id") sessionId: string, @Req() req: AuthedRequest) {
     return this.send("ai.session.get", { sessionId }, req);
+  }
+
+  @Delete("sessions/:id")
+  deleteSession(@Param("id") sessionId: string, @Req() req: AuthedRequest) {
+    return this.send("ai.session.delete", { sessionId }, req);
+  }
+
+  @Delete("sessions")
+  deleteSessions(@Req() req: AuthedRequest) {
+    return this.send("ai.sessions.deleteAll", {}, req);
   }
 
   @Patch("plans/:planId/places/:googlePlaceId")

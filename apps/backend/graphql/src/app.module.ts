@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { Module } from "@nestjs/common";
 import { ApolloDriver, type ApolloDriverConfig } from "@nestjs/apollo";
+import { ConfigModule } from "@nestjs/config";
 import { GraphQLModule } from "@nestjs/graphql";
 import type { Request, Response } from "express";
 import { DbModule } from "./db/db.module";
@@ -16,6 +17,7 @@ import { AiTravelModule } from "./ai/ai-travel.module";
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     DbModule,
     RedisModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({

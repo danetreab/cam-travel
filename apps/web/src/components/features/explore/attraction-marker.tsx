@@ -11,7 +11,7 @@ interface AttractionMarkerProps {
 
 function firstImage(a: Attraction): string | null {
   const thumb = a.files.find(
-    (f) => f.mimetype.startsWith("image/") && f.thumbnailUrl,
+    (f) => f.mimetype.startsWith("image/") && f.thumbnailUrl
   )
   if (thumb?.thumbnailUrl) return thumb.thumbnailUrl
   const full = a.files.find((f) => f.mimetype.startsWith("image/"))
@@ -32,9 +32,9 @@ export function AttractionMarker({
     >
       <div
         className={cn(
-          "glass-control bg-muted flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-white/80 transition-transform",
-          "hover:z-10 hover:scale-110",
-          active && "ring-primary z-20 scale-110 ring-2",
+          "glass-control flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-white/80 bg-muted",
+          "hover:z-10",
+          active && "z-20 ring-2 ring-primary"
         )}
       >
         {image ? (
@@ -45,7 +45,7 @@ export function AttractionMarker({
             className="h-full w-full object-cover"
           />
         ) : (
-          <MapPin className="text-muted-foreground h-4 w-4" />
+          <MapPin className="h-4 w-4 text-muted-foreground" />
         )}
       </div>
     </AdvancedMarker>

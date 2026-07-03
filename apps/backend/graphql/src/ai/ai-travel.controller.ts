@@ -13,6 +13,7 @@ import type {
 } from "./ai-travel.types";
 
 type GetPlanBody = { planId: string };
+type DeleteSessionBody = { sessionId: string };
 type PatchPlaceBody = {
   planId: string;
   googlePlaceId: string;
@@ -57,13 +58,27 @@ export class AiTravelController {
           );
 
           if (!subscriber.closed) {
-            subscriber.next({ type: "result", data });
+            subscriber.next({
+              type: "result",
+              data,
+              message:
+                data.summary ||
+                this.aiTravel.resultMessage(payload.body.language),
+            });
             subscriber.complete();
           }
         } catch (error) {
           if (!subscriber.closed) {
             const normalized = this.normalizeError(error);
-            subscriber.next({ type: "error", ...normalized });
+            if (
+              normalized.statusCode === 400 &&
+              normalized.message ===
+                "I can only help with Cambodia travel maps, places, and routes."
+            ) {
+              subscriber.next({ type: "refusal", message: normalized.message });
+            } else {
+              subscriber.next({ type: "error", ...normalized });
+            }
             subscriber.complete();
           }
         }
@@ -101,6 +116,27 @@ export class AiTravelController {
         this.aiTravel.requireUserId(payload.user),
         payload.body.sessionId,
       ),
+    );
+  }
+
+  @MessagePattern("ai.session.delete")
+  deleteSession(
+    @Payload() payload: AiTravelRpcPayload<DeleteSessionBody>,
+  ): Promise<AiRpcResult<{ id: string }>> {
+    return this.run(() =>
+      this.aiTravel.deleteSession(
+        this.aiTravel.requireUserId(payload.user),
+        payload.body.sessionId,
+      ),
+    );
+  }
+
+  @MessagePattern("ai.sessions.deleteAll")
+  deleteSessions(
+    @Payload() payload: AiTravelRpcPayload,
+  ): Promise<AiRpcResult<{ deletedCount: number }>> {
+    return this.run(() =>
+      this.aiTravel.deleteSessions(this.aiTravel.requireUserId(payload.user)),
     );
   }
 

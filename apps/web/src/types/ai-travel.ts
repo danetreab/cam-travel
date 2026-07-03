@@ -60,6 +60,7 @@ export interface AiTravelResponse {
   intent: TripIntent
   destination: string | null
   title: string
+  summary: string
   groups: AiTravelGroup[]
   places: AiTravelPlace[]
   itinerary: { days: AiTravelItineraryDay[] } | null

@@ -14,6 +14,7 @@ import {
   MapTrifoldIcon,
   SpinnerIcon,
 } from "@phosphor-icons/react"
+import { PanelRightClose, PanelRightOpen } from "lucide-react"
 import { toast } from "sonner"
 import { AttractionMarker } from "./attraction-marker"
 import { AttractionListCard } from "./attraction-list-card"
@@ -21,6 +22,7 @@ import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
 import { UserLocationMarker } from "./user-location-marker"
 import type { MapCameraChangedEvent } from "@vis.gl/react-google-maps"
 import type { Layout } from "react-resizable-panels"
+import type { PanelImperativeHandle } from "react-resizable-panels"
 
 import type { MapBounds } from "@/api/attractions.api"
 import type { Attraction } from "@/types/attraction"
@@ -40,6 +42,7 @@ import {
 } from "@/components/ui/resizable"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Header } from "@/components/layout/header"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
 const DEFAULT_ZOOM = 7
@@ -85,7 +88,7 @@ const ACTIVITY_TYPES = [
   "walking",
 ] as const
 
-const LAYOUT_STORAGE_KEY = "explore-layout:v2"
+const LAYOUT_STORAGE_KEY = "explore-layout:v3"
 const SIDEBAR_PANEL_ID = "explore-sidebar"
 const MAP_PANEL_ID = "explore-map"
 
@@ -109,6 +112,7 @@ export function ExploreView() {
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const [mobileView, setMobileView] = useState<"map" | "list">("map")
   const [defaultLayout] = useState<Layout | undefined>(readStoredLayout)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   const [bounds, setBounds] = useState<MapBounds | null>(null)
   const navigate = useNavigate()
   const { province: provinceParam, ...viewParams } = exploreRouteApi.useSearch()
@@ -145,6 +149,7 @@ export function ExploreView() {
     },
   })
   const listRef = useRef<HTMLDivElement>(null)
+  const sidebarPanelRef = useRef<PanelImperativeHandle>(null)
 
   // A picked province pins the result set to that province across zooms;
   // the per-province query (used at country zoom) ignores province filters,
@@ -209,6 +214,18 @@ export function ExploreView() {
 
   const handleLocateMe = () => {
     userLocation.locate()
+  }
+
+  const toggleSidebar = () => {
+    const panel = sidebarPanelRef.current
+    if (!panel) return
+    if (panel.isCollapsed()) {
+      panel.expand()
+      setSidebarOpen(true)
+      return
+    }
+    panel.collapse()
+    setSidebarOpen(false)
   }
 
   // Surface geolocation errors as a toast and pan the map when we get a fix.
@@ -475,9 +492,27 @@ export function ExploreView() {
     </div>
   )
 
+  const sidebarToggle = (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      className="shrink-0"
+      onClick={toggleSidebar}
+      aria-label={sidebarOpen ? "Hide places panel" : "Show places panel"}
+      title={sidebarOpen ? "Hide places panel" : "Show places panel"}
+    >
+      {sidebarOpen ? (
+        <PanelRightClose className="size-4" />
+      ) : (
+        <PanelRightOpen className="size-4" />
+      )}
+    </Button>
+  )
+
   if (isDesktop) {
     return (
-      <div className="h-svh md:h-[calc(100svh-3.5rem)]">
+      <div className="h-svh">
         <ResizablePanelGroup
           orientation="horizontal"
           defaultLayout={defaultLayout}
@@ -493,27 +528,37 @@ export function ExploreView() {
           }}
           className="h-full"
         >
+          <ResizablePanel id={MAP_PANEL_ID} defaultSize="64%" minSize="30%">
+            <div className="flex h-full min-h-0 flex-col">
+              <Header sidePanelControl={sidebarToggle} />
+              <div className="relative min-h-0 flex-1">
+                {mapElement}
+                {mapFetchingOverlay}
+                <div className="absolute right-4 bottom-6 z-10">
+                  {locateMeButton}
+                </div>
+              </div>
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle
+            withHandle
+            className={cn(!sidebarOpen && "pointer-events-none opacity-0")}
+          />
+
           <ResizablePanel
             id={SIDEBAR_PANEL_ID}
+            panelRef={sidebarPanelRef}
+            collapsible
+            collapsedSize={0}
             defaultSize="36%"
             minSize="20%"
             maxSize="70%"
+            onResize={(size) => setSidebarOpen(size.asPercentage > 0.5)}
           >
             <aside className="glass-panel relative m-3 h-[calc(100%-1.5rem)] overflow-hidden rounded-lg p-4">
               {sidebarInner}
             </aside>
-          </ResizablePanel>
-
-          <ResizableHandle withHandle />
-
-          <ResizablePanel id={MAP_PANEL_ID} defaultSize="64%" minSize="30%">
-            <div className="relative h-full">
-              {mapElement}
-              {mapFetchingOverlay}
-              <div className="absolute right-4 bottom-6 z-10">
-                {locateMeButton}
-              </div>
-            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
@@ -525,6 +570,7 @@ export function ExploreView() {
   // so its viewport state survives toggling and Google Maps doesn't reload.
   return (
     <div className="relative h-svh overflow-hidden md:h-[calc(100svh-3.5rem)]">
+      <Header />
       <div className="absolute inset-0">{mapElement}</div>
 
       {mobileView === "map" && mapFetchingOverlay}

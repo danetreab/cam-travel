@@ -24,6 +24,8 @@ import {
   List,
   MapPinned,
   MessageSquare,
+  PanelRightClose,
+  PanelRightOpen,
   RefreshCcw,
   Sparkles,
   Star,
@@ -31,9 +33,17 @@ import {
   X,
 } from "lucide-react"
 import { useTheme } from "next-themes"
-import { createContext, useContext, useEffect, useMemo, useState } from "react"
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { useTranslation } from "react-i18next"
 import { toast } from "sonner"
+import type { PanelImperativeHandle } from "react-resizable-panels"
 
 import {
   deleteAiTravelSession,
@@ -99,6 +109,7 @@ import {
 import { envClient } from "@/env"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils"
+import { Header } from "@/components/layout/header"
 import {
   aiTravelPlanQueryOptions,
   aiTravelSessionQueryOptions,
@@ -676,6 +687,8 @@ export function TravelPlannerView() {
   const [suppressFirstPromptScroll, setSuppressFirstPromptScroll] =
     useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
+  const [planPanelOpen, setPlanPanelOpen] = useState(true)
+  const planPanelRef = useRef<PanelImperativeHandle>(null)
   const { resolvedTheme } = useTheme()
   const { i18n } = useTranslation()
   const currentLanguage = i18n.resolvedLanguage ?? i18n.language ?? "en"
@@ -1075,6 +1088,36 @@ export function TravelPlannerView() {
     [patchPlaceMutation, result?.places, selectedPlaceSnapshot]
   )
 
+  const togglePlanPanel = () => {
+    const panel = planPanelRef.current
+    if (!panel) return
+    if (panel.isCollapsed()) {
+      panel.expand()
+      setPlanPanelOpen(true)
+      return
+    }
+    panel.collapse()
+    setPlanPanelOpen(false)
+  }
+
+  const planPanelToggle = (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      className="shrink-0"
+      onClick={togglePlanPanel}
+      aria-label={planPanelOpen ? "Hide planner panel" : "Show planner panel"}
+      title={planPanelOpen ? "Hide planner panel" : "Show planner panel"}
+    >
+      {planPanelOpen ? (
+        <PanelRightClose className="size-4" />
+      ) : (
+        <PanelRightOpen className="size-4" />
+      )}
+    </Button>
+  )
+
   const mapElement = (
     <PlannerMap
       result={result}
@@ -1212,24 +1255,38 @@ export function TravelPlannerView() {
   if (isDesktop) {
     return (
       <TravelPlannerContext.Provider value={plannerContext}>
-        <div className="h-svh md:h-[calc(100svh-3.5rem)]">
+        <div className="h-svh">
           <ResizablePanelGroup orientation="horizontal" className="h-full">
-            <ResizablePanel defaultSize="38%" minSize="26%" maxSize="62%">
-              <div className="glass-panel m-3 h-[calc(100%-1.5rem)] rounded-lg">
-                {planPanel}
+            <ResizablePanel defaultSize="62%" minSize="30%">
+              <div className="flex h-full min-h-0 flex-col">
+                <Header sidePanelControl={planPanelToggle} />
+                <div className="relative min-h-0 flex-1">
+                  {mapElement}
+                  {selectedPlace && (
+                    <SelectedPlaceOverlay
+                      place={selectedPlace}
+                      copy={plannerCopy}
+                      onOpen={() => openPlaceDetail(selectedPlace)}
+                    />
+                  )}
+                </div>
               </div>
             </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize="62%" minSize="30%">
-              <div className="relative h-full">
-                {mapElement}
-                {selectedPlace && (
-                  <SelectedPlaceOverlay
-                    place={selectedPlace}
-                    copy={plannerCopy}
-                    onOpen={() => openPlaceDetail(selectedPlace)}
-                  />
-                )}
+            <ResizableHandle
+              withHandle
+              className={cn(!planPanelOpen && "pointer-events-none opacity-0")}
+            />
+            <ResizablePanel
+              panelRef={planPanelRef}
+              collapsible
+              collapsedSize={0}
+              defaultSize="38%"
+              minSize="26%"
+              maxSize="62%"
+              onResize={(size) => setPlanPanelOpen(size.asPercentage > 0.5)}
+            >
+              <div className="glass-panel m-3 h-[calc(100%-1.5rem)] rounded-lg">
+                {planPanel}
               </div>
             </ResizablePanel>
           </ResizablePanelGroup>
@@ -1242,6 +1299,7 @@ export function TravelPlannerView() {
   return (
     <TravelPlannerContext.Provider value={plannerContext}>
       <div className="relative h-svh overflow-hidden md:h-[calc(100svh-3.5rem)]">
+        <Header />
         <div className="absolute inset-0">{mapElement}</div>
         {selectedPlace && mobileView === "map" && (
           <SelectedPlaceOverlay
@@ -1881,12 +1939,14 @@ function PlannerPlaceSuggestions({
             type="button"
             variant="ghost"
             size="xs"
-            className="h-8 w-full rounded-md"
+            className="w-full"
             onClick={() => setShowAllPlaces((current) => !current)}
           >
-            {showAllPlaces
-              ? copy.showFewerPlaces
-              : copy.showMorePlaces(remainingCount)}
+            <p className="text-xs font-medium text-muted-foreground">
+              {showAllPlaces
+                ? copy.showFewerPlaces
+                : copy.showMorePlaces(remainingCount)}
+            </p>
             <ChevronDown
               className={cn(
                 "size-3.5 transition-transform",
@@ -2128,17 +2188,6 @@ function PlannerPlaceCard({
                 )}
                 {place.saved ? copy.saved : copy.save}
               </DropdownMenuItem>
-              <DropdownMenuItem
-                variant="destructive"
-                disabled={saving}
-                onClick={(event) => {
-                  event.stopPropagation()
-                  onRemove()
-                }}
-              >
-                <Trash2 className="size-3.5" />
-                {copy.remove}
-              </DropdownMenuItem>
               {place.googleMapsUri && (
                 <DropdownMenuItem
                   render={
@@ -2154,6 +2203,17 @@ function PlannerPlaceCard({
                   {copy.maps}
                 </DropdownMenuItem>
               )}
+              <DropdownMenuItem
+                variant="destructive"
+                disabled={saving}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  onRemove()
+                }}
+              >
+                <Trash2 className="size-3.5" />
+                {copy.remove}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -9,6 +9,7 @@ import {
 import { Link } from "@tanstack/react-router"
 import { Compass, Save, Sparkles, Sticker } from "lucide-react"
 import { useTheme } from "next-themes"
+import type { ReactNode } from "react"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -51,7 +52,11 @@ const LANGUAGES = [
   { code: "km", label: "ខ្មែរ" },
 ] as const
 
-export function Header() {
+export function Header({
+  sidePanelControl,
+}: {
+  sidePanelControl?: ReactNode
+}) {
   const { data } = authClient.useSession()
   const user = data?.user
   const { t, i18n } = useTranslation()
@@ -126,97 +131,100 @@ export function Header() {
             />
           </div>
 
-          {!user ? (
-            <Button
-              variant="default"
-              size="sm"
-              onClick={() => loginDialog.open()}
-            >
-              Sign in
-            </Button>
-          ) : (
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className="rounded-full focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
-                aria-label="Open account menu"
+          <div className="flex items-center gap-2">
+            {sidePanelControl}
+            {!user ? (
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => loginDialog.open()}
               >
-                <Avatar className="size-9">
-                  <AvatarImage
-                    src={user?.image ?? undefined}
-                    alt={user?.name}
-                  />
-                  <AvatarFallback>{initials(user?.name)}</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <div className="flex flex-col px-2 py-1.5">
-                  <span className="text-sm font-medium">{user?.name}</span>
-                  <span className="truncate text-xs text-muted-foreground">
-                    {user?.email}
-                  </span>
-                </div>
-                <DropdownMenuSeparator />
+                Sign in
+              </Button>
+            ) : (
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className="rounded-full focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
+                  aria-label="Open account menu"
+                >
+                  <Avatar className="size-9">
+                    <AvatarImage
+                      src={user?.image ?? undefined}
+                      alt={user?.name}
+                    />
+                    <AvatarFallback>{initials(user?.name)}</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="flex flex-col px-2 py-1.5">
+                    <span className="text-sm font-medium">{user?.name}</span>
+                    <span className="truncate text-xs text-muted-foreground">
+                      {user?.email}
+                    </span>
+                  </div>
+                  <DropdownMenuSeparator />
 
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <PaletteIcon weight="bold" />
-                    {t("header.theme")}
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuRadioGroup
-                        value={activeTheme}
-                        onValueChange={setTheme}
-                      >
-                        <DropdownMenuRadioItem value="light">
-                          <SunIcon weight="bold" />
-                          {t("header.themeLight")}
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="dark">
-                          <MoonIcon weight="bold" />
-                          {t("header.themeDark")}
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="system">
-                          <DesktopIcon weight="bold" />
-                          {t("header.themeSystem")}
-                        </DropdownMenuRadioItem>
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
-
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <TranslateIcon weight="bold" />
-                    {t("header.language")}
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuPortal>
-                    <DropdownMenuSubContent>
-                      <DropdownMenuRadioGroup
-                        value={activeLanguage}
-                        onValueChange={(lng) => i18n.changeLanguage(lng)}
-                      >
-                        {LANGUAGES.map((lng) => (
-                          <DropdownMenuRadioItem
-                            key={lng.code}
-                            value={lng.code}
-                          >
-                            {lng.label}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <PaletteIcon weight="bold" />
+                      {t("header.theme")}
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuRadioGroup
+                          value={activeTheme}
+                          onValueChange={setTheme}
+                        >
+                          <DropdownMenuRadioItem value="light">
+                            <SunIcon weight="bold" />
+                            {t("header.themeLight")}
                           </DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuSubContent>
-                  </DropdownMenuPortal>
-                </DropdownMenuSub>
+                          <DropdownMenuRadioItem value="dark">
+                            <MoonIcon weight="bold" />
+                            {t("header.themeDark")}
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="system">
+                            <DesktopIcon weight="bold" />
+                            {t("header.themeSystem")}
+                          </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
 
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => signOutRedirect()}>
-                  <SignOutIcon weight="bold" />
-                  {t("header.signOut")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <TranslateIcon weight="bold" />
+                      {t("header.language")}
+                    </DropdownMenuSubTrigger>
+                    <DropdownMenuPortal>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuRadioGroup
+                          value={activeLanguage}
+                          onValueChange={(lng) => i18n.changeLanguage(lng)}
+                        >
+                          {LANGUAGES.map((lng) => (
+                            <DropdownMenuRadioItem
+                              key={lng.code}
+                              value={lng.code}
+                            >
+                              {lng.label}
+                            </DropdownMenuRadioItem>
+                          ))}
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuPortal>
+                  </DropdownMenuSub>
+
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOutRedirect()}>
+                    <SignOutIcon weight="bold" />
+                    {t("header.signOut")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
       </header>
     </>

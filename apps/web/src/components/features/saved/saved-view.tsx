@@ -8,6 +8,7 @@ import { AttractionDetailView } from "@/components/features/explore/attraction-d
 import { AttractionListCard } from "@/components/features/explore/attraction-list-card"
 import { AttractionListCardSkeleton } from "@/components/features/explore/attraction-list-card-skeleton"
 import { AttractionMarker } from "@/components/features/explore/attraction-marker"
+import { Header } from "@/components/layout/header"
 import { Badge } from "@/components/ui/badge"
 import {
   ResizableHandle,
@@ -154,7 +155,7 @@ export function SavedView() {
 
   if (isDesktop) {
     return (
-      <div className="h-svh md:h-[calc(100svh-3.5rem)]">
+      <div className="h-svh">
         <ResizablePanelGroup orientation="horizontal" className="h-full">
           <ResizablePanel
             id="saved-sidebar"
@@ -173,7 +174,10 @@ export function SavedView() {
           <ResizableHandle withHandle />
 
           <ResizablePanel id="saved-map" defaultSize="64%" minSize="30%">
-            <div className="relative h-full">{mapElement}</div>
+            <div className="flex h-full min-h-0 flex-col">
+              <Header />
+              <div className="relative min-h-0 flex-1">{mapElement}</div>
+            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
 
@@ -187,6 +191,7 @@ export function SavedView() {
 
   return (
     <div className="relative h-svh overflow-hidden md:h-[calc(100svh-3.5rem)]">
+      <Header />
       <div className="absolute inset-0">{mapElement}</div>
 
       <aside

@@ -41,11 +41,19 @@ const LANGUAGES = [
 const THEMES = [
   { value: "light", Icon: SunIcon, labelKey: "header.themeLight" as const },
   { value: "dark", Icon: MoonIcon, labelKey: "header.themeDark" as const },
-  { value: "system", Icon: DesktopIcon, labelKey: "header.themeSystem" as const },
+  {
+    value: "system",
+    Icon: DesktopIcon,
+    labelKey: "header.themeSystem" as const,
+  },
 ] as const
 
 interface MobileMenuProps {
-  user?: { name?: string | null; email?: string | null; image?: string | null } | null
+  user?: {
+    name?: string | null
+    email?: string | null
+    image?: string | null
+  } | null
   onOpenSearch?: () => void
 }
 
@@ -71,36 +79,42 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
           onClick={onOpenSearch}
         >
           <Search className="size-5 shrink-0" />
-          <span className="min-w-0 truncate">Search provinces or places...</span>
+          <span className="min-w-0 truncate">
+            Search provinces or places...
+          </span>
         </button>
       )}
-      <Button
-        variant="default"
-        size="icon"
+      <button
+        type="button"
         aria-label="Open menu"
-        className="fixed top-[max(1rem,env(safe-area-inset-top))] right-4 z-50 size-11 rounded-full shadow-lg md:hidden"
+        className="fixed top-[max(1rem,env(safe-area-inset-top))] right-4 z-50 flex size-11 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-colors hover:bg-primary/80 focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none md:hidden"
         onClick={() => setOpen(true)}
       >
         <Menu className="size-5" />
-      </Button>
+      </button>
 
       <SheetContent side="right" className="flex w-80 flex-col gap-0 p-0">
         <SheetHeader className="border-b p-4">
           {user ? (
-            <SheetTitle className="flex items-center gap-3 text-left text-base normal-case tracking-normal">
+            <SheetTitle className="flex items-center gap-3 text-left text-base tracking-normal normal-case">
               <Avatar className="size-10">
-                <AvatarImage src={user.image ?? undefined} alt={user.name ?? ""} />
+                <AvatarImage
+                  src={user.image ?? undefined}
+                  alt={user.name ?? ""}
+                />
                 <AvatarFallback>{initials(user.name)}</AvatarFallback>
               </Avatar>
               <span className="flex min-w-0 flex-col">
-                <span className="truncate text-sm font-medium">{user.name}</span>
-                <span className="text-muted-foreground truncate text-xs">
+                <span className="truncate text-sm font-medium">
+                  {user.name}
+                </span>
+                <span className="truncate text-xs text-muted-foreground">
                   {user.email}
                 </span>
               </span>
             </SheetTitle>
           ) : (
-            <SheetTitle className="text-left text-base normal-case tracking-normal">
+            <SheetTitle className="text-left text-base tracking-normal normal-case">
               <Button
                 variant="default"
                 size="sm"
@@ -122,7 +136,7 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
             onClick={() => setOpen(false)}
             className={cn(
               buttonVariants({ variant: "ghost", size: "sm" }),
-              "justify-start gap-2",
+              "justify-start gap-2"
             )}
           >
             <Compass className="size-4" />
@@ -135,7 +149,7 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
                 onClick={() => setOpen(false)}
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
-                  "justify-start gap-2",
+                  "justify-start gap-2"
                 )}
               >
                 <Sparkles className="size-4" />
@@ -146,7 +160,7 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
                 onClick={() => setOpen(false)}
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
-                  "justify-start gap-2",
+                  "justify-start gap-2"
                 )}
               >
                 <Bookmark className="size-4" />
@@ -157,7 +171,7 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
         </nav>
 
         <div className="border-b border-border/60 p-3">
-          <p className="text-muted-foreground px-2 pb-2 text-xs font-semibold tracking-normal">
+          <p className="px-2 pb-2 text-xs font-semibold tracking-normal text-muted-foreground">
             {t("header.theme")}
           </p>
           <div className="grid grid-cols-3 gap-1">
@@ -177,7 +191,7 @@ export function MobileMenu({ user, onOpenSearch }: MobileMenuProps) {
         </div>
 
         <div className="border-b border-border/60 p-3">
-          <p className="text-muted-foreground px-2 pb-2 text-xs font-semibold tracking-normal">
+          <p className="px-2 pb-2 text-xs font-semibold tracking-normal text-muted-foreground">
             {t("header.language")}
           </p>
           <div className="grid grid-cols-2 gap-1">

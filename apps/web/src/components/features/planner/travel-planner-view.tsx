@@ -200,7 +200,7 @@ function getPlannerCopy(language: string): PlannerCopy {
       emptyTitle: "ចាប់ផ្ដើមរៀបចំដំណើរ",
       emptyDescription: "សួរអំពីកន្លែង ផ្លូវ ម្ហូប ឬការកែសម្រួល Itinerary។",
       planning: "កំពុងរៀបចំដំណើររបស់អ្នក",
-      inputPlaceholder: "សួរអំពីផ្លូវ ប្ដូរកន្លែង បន្ថែមម្ហូប ឬកែប្រែថវិកា...",
+      inputPlaceholder: "សួរអំពីដំណើរកំសាន្ត...",
       showMap: "បង្ហាញផែនទី",
       showPlan: "បង្ហាញគម្រោង",
       aiPlanner: "AI រៀបចំដំណើរ",
@@ -263,8 +263,7 @@ function getPlannerCopy(language: string): PlannerCopy {
     emptyTitle: "Start a travel plan",
     emptyDescription: "Ask for places, routes, food, or itinerary changes.",
     planning: "Planning your trip",
-    inputPlaceholder:
-      "Ask for a route, swap a place, add food, change the budget...",
+    inputPlaceholder: "Ask about your trip...",
     showMap: "Show map",
     showPlan: "Show plan",
     aiPlanner: "AI Planner",
@@ -1128,7 +1127,7 @@ export function TravelPlannerView() {
   )
 
   const planPanel = (
-    <aside className="flex h-full min-h-0 flex-col">
+    <aside className="flex h-full min-h-0 flex-col pb-24 md:pb-0">
       <SessionHeader
         sessionId={sessionId}
         destination={result?.destination}
@@ -1316,11 +1315,14 @@ export function TravelPlannerView() {
         >
           {planPanel}
         </div>
-        <Button
+        <button
           type="button"
-          className="mobile-action-bottom absolute left-1/2 z-10 -translate-x-1/2 rounded-full shadow-lg"
+          className="mobile-action-bottom glass-panel-strong absolute left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-foreground px-5 py-3 text-sm font-semibold text-background"
           onClick={() =>
             setMobileView((view) => (view === "plan" ? "map" : "plan"))
+          }
+          aria-label={
+            mobileView === "plan" ? plannerCopy.showMap : plannerCopy.showPlan
           }
         >
           {mobileView === "plan" ? (
@@ -1334,7 +1336,7 @@ export function TravelPlannerView() {
               {plannerCopy.showPlan}
             </>
           )}
-        </Button>
+        </button>
       </div>
       <Outlet />
     </TravelPlannerContext.Provider>

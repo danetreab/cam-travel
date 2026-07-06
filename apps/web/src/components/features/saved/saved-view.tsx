@@ -2,14 +2,18 @@ import { useEffect, useRef, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { ColorScheme, Map, useMap } from "@vis.gl/react-google-maps"
 import { ListIcon, MapTrifoldIcon, SpinnerIcon } from "@phosphor-icons/react"
+import { PanelRightClose, PanelRightOpen } from "lucide-react"
 import { useTheme } from "next-themes"
+import type { PanelImperativeHandle } from "react-resizable-panels"
 
+import type { Attraction } from "@/types/attraction"
 import { AttractionDetailView } from "@/components/features/explore/attraction-detail-view"
 import { AttractionListCard } from "@/components/features/explore/attraction-list-card"
 import { AttractionListCardSkeleton } from "@/components/features/explore/attraction-list-card-skeleton"
 import { AttractionMarker } from "@/components/features/explore/attraction-marker"
 import { Header } from "@/components/layout/header"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   ResizableHandle,
   ResizablePanel,
@@ -18,7 +22,6 @@ import {
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { cn } from "@/lib/utils"
 import { savedAttractionsListQueryOptions } from "@/queries/saved-attractions.query"
-import type { Attraction } from "@/types/attraction"
 
 const DEFAULT_CENTER = { lat: 12.5657, lng: 104.991 }
 const DEFAULT_ZOOM = 7
@@ -34,10 +37,12 @@ export function SavedView() {
   const [mobileView, setMobileView] = useState<"map" | "list">("list")
   const [hoveredId, setHoveredId] = useState<string | null>(null)
   const [selected, setSelected] = useState<Attraction | null>(null)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
   const listRef = useRef<HTMLDivElement>(null)
+  const sidebarPanelRef = useRef<PanelImperativeHandle>(null)
 
   const { data, isLoading, isFetching, error } = useQuery(
-    savedAttractionsListQueryOptions(),
+    savedAttractionsListQueryOptions()
   )
   const items = data?.items ?? []
 
@@ -45,7 +50,7 @@ export function SavedView() {
     if (!selected) return
     if (!isDesktop && mobileView !== "list") return
     const el = listRef.current?.querySelector<HTMLElement>(
-      `[data-attr-id="${selected.id}"]`,
+      `[data-attr-id="${selected.id}"]`
     )
     el?.scrollIntoView({ behavior: "smooth", block: "nearest" })
   }, [selected, isDesktop, mobileView])
@@ -83,6 +88,18 @@ export function SavedView() {
     }
   }
 
+  const toggleSidebar = () => {
+    const panel = sidebarPanelRef.current
+    if (!panel) return
+    if (panel.isCollapsed()) {
+      panel.expand()
+      setSidebarOpen(true)
+      return
+    }
+    panel.collapse()
+    setSidebarOpen(false)
+  }
+
   const sidebarInner = (
     <>
       <div className="mb-3 flex items-center justify-between gap-2">
@@ -92,7 +109,7 @@ export function SavedView() {
             : `${items.length} saved pin${items.length === 1 ? "" : "s"}`}
         </h2>
         {isFetching && !isLoading && (
-          <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs">
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
             <SpinnerIcon className="size-3 animate-spin" />
             Updating…
           </span>
@@ -100,9 +117,7 @@ export function SavedView() {
       </div>
 
       {error && (
-        <Badge variant="destructive">
-          Failed to load: {(error as Error).message}
-        </Badge>
+        <Badge variant="destructive">Failed to load: {error.message}</Badge>
       )}
 
       <div className="flex flex-col gap-2">
@@ -111,7 +126,7 @@ export function SavedView() {
             <AttractionListCardSkeleton key={i} />
           ))
         ) : items.length === 0 ? (
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-muted-foreground">
             No saved pins yet. Open a place from Explore and tap Save.
           </p>
         ) : (
@@ -153,15 +168,49 @@ export function SavedView() {
     </Map>
   )
 
+  const sidebarToggle = (
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon"
+      className="shrink-0"
+      onClick={toggleSidebar}
+      aria-label={sidebarOpen ? "Hide saved panel" : "Show saved panel"}
+      title={sidebarOpen ? "Hide saved panel" : "Show saved panel"}
+    >
+      {sidebarOpen ? (
+        <PanelRightClose className="size-4" />
+      ) : (
+        <PanelRightOpen className="size-4" />
+      )}
+    </Button>
+  )
+
   if (isDesktop) {
     return (
       <div className="h-svh">
         <ResizablePanelGroup orientation="horizontal" className="h-full">
+          <ResizablePanel id="saved-map" defaultSize="64%" minSize="30%">
+            <div className="flex h-full min-h-0 flex-col">
+              <Header sidePanelControl={sidebarToggle} />
+              <div className="relative min-h-0 flex-1">{mapElement}</div>
+            </div>
+          </ResizablePanel>
+
+          <ResizableHandle
+            withHandle
+            className={cn(!sidebarOpen && "pointer-events-none opacity-0")}
+          />
+
           <ResizablePanel
             id="saved-sidebar"
+            panelRef={sidebarPanelRef}
+            collapsible
+            collapsedSize={0}
             defaultSize="36%"
             minSize="20%"
             maxSize="70%"
+            onResize={(size) => setSidebarOpen(size.asPercentage > 0.5)}
           >
             <aside
               ref={listRef}
@@ -169,15 +218,6 @@ export function SavedView() {
             >
               {sidebarInner}
             </aside>
-          </ResizablePanel>
-
-          <ResizableHandle withHandle />
-
-          <ResizablePanel id="saved-map" defaultSize="64%" minSize="30%">
-            <div className="flex h-full min-h-0 flex-col">
-              <Header />
-              <div className="relative min-h-0 flex-1">{mapElement}</div>
-            </div>
           </ResizablePanel>
         </ResizablePanelGroup>
 
@@ -198,7 +238,7 @@ export function SavedView() {
         ref={listRef}
         className={cn(
           "glass-panel-strong mobile-chrome-pt absolute inset-0 overflow-y-auto rounded-t-lg px-4 pb-28 transition-transform duration-300 ease-out",
-          mobileView === "list" ? "translate-y-0" : "translate-y-full",
+          mobileView === "list" ? "translate-y-0" : "translate-y-full"
         )}
         aria-hidden={mobileView !== "list"}
       >

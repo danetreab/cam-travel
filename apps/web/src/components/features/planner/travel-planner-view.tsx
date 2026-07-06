@@ -2068,32 +2068,40 @@ function PlannerItineraryTimeline({
 }
 
 function PlannerRouteLinks({ links }: { links: Array<GoogleRouteLink> }) {
-  return (
-    <div className="flex shrink-0 flex-wrap justify-end gap-1">
-      {links.map((link, index) => {
-        const label = index === 0 ? "Google Maps" : link.label
+  const totalStopCount = links[0]?.stopCount ?? links.length
 
-        return (
-          <a
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            type="button"
+            size="xs"
+            variant="outline"
+            className="h-6 rounded-md px-2 text-[10px] tracking-wide text-muted-foreground"
+          />
+        }
+        aria-label="Open Google Maps routes"
+      >
+        <ExternalLink className="size-3" />
+        Google Maps
+        <span className="text-current/60">({totalStopCount})</span>
+        <ChevronDown className="size-3" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-52 min-w-52 rounded-md">
+        {links.map((link) => (
+          <DropdownMenuItem
             key={link.label}
-            href={link.href}
-            target="_blank"
-            rel="noreferrer"
+            render={<a href={link.href} target="_blank" rel="noreferrer" />}
             aria-label={`${link.label} (${link.stopCount})`}
-            className={buttonVariants({
-              size: "xs",
-              variant: index === 0 ? "outline" : "ghost",
-              className:
-                "h-6 rounded-md px-2 text-[10px] tracking-wide text-muted-foreground",
-            })}
           >
-            <ExternalLink className="size-3" />
-            <span>{label}</span>
-            <span className="text-current/60">({link.stopCount})</span>
-          </a>
-        )
-      })}
-    </div>
+            <ExternalLink className="size-3.5" />
+            <span className="min-w-0 flex-1 truncate">{link.label}</span>
+            <span className="ml-auto text-current/60">({link.stopCount})</span>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
 

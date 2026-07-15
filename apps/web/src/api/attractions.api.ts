@@ -67,6 +67,7 @@ const ATTRACTIONS_LIST = `
         longitude
         province
         activityType
+        googlePlaceId
         cachedRating
         cachedUserRatingsTotal
         files {
@@ -106,6 +107,7 @@ const ATTRACTIONS_TOP_PER_PROVINCE = `
       longitude
       province
       activityType
+      googlePlaceId
       cachedRating
       cachedUserRatingsTotal
       files {
@@ -154,6 +156,7 @@ const MY_SAVED_ATTRACTIONS = `
       longitude
       province
       activityType
+      googlePlaceId
       cachedRating
       cachedUserRatingsTotal
       files {
@@ -229,6 +232,7 @@ const ATTRACTION_BY_ID = `
         longitude
         province
         activityType
+        googlePlaceId
         cachedRating
         cachedUserRatingsTotal
         files {

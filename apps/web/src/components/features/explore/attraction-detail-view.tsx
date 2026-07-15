@@ -26,6 +26,7 @@ import Gallery, {
 } from "@/components/ui/gallery"
 import { Spinner } from "@/components/ui/spinner"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { getGoogleMapsPlaceUrl } from "@/lib/google-maps"
 import { cn } from "@/lib/utils"
 import type { Attraction, AttractionFile } from "@/types/attraction"
 import {
@@ -177,7 +178,7 @@ function AttractionTabBar({
   onClose: () => void
 }) {
   const save = useSaveAttraction(attraction.id)
-  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
+  const mapsHref = getGoogleMapsPlaceUrl(attraction)
 
   return (
     <div className="glass-panel border-x-0 border-b-0 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
@@ -267,7 +268,7 @@ async function shareAttraction(attraction: Attraction) {
 }
 
 function DesktopActions({ attraction }: { attraction: Attraction }) {
-  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
+  const mapsHref = getGoogleMapsPlaceUrl(attraction)
   return (
     <div className="mt-4 flex flex-wrap items-center gap-3">
       <SaveAttractionButton attractionId={attraction.id} />

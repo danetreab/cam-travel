@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { getGoogleMapsPlaceUrl } from "@/lib/google-maps"
 import { cn } from "@/lib/utils"
 
 interface AttractionListCardProps {
@@ -47,7 +48,7 @@ export function AttractionListCard({
   const { signedIn, saved, isPending, toggle } = useSaveAttraction(
     attraction.id
   )
-  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
+  const mapsHref = getGoogleMapsPlaceUrl(attraction)
 
   return (
     <div

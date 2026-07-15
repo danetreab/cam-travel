@@ -14,6 +14,7 @@ export interface Attraction {
   longitude: number
   province: string | null
   activityType: string | null
+  googlePlaceId: string | null
   cachedRating: number | null
   cachedUserRatingsTotal: number | null
   files: AttractionFile[]

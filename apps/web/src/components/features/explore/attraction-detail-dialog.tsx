@@ -19,6 +19,7 @@ import {
 import Gallery from "@/components/ui/gallery"
 import { Lightbox, type LightboxImage } from "@/components/ui/lightbox"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { getGoogleMapsPlaceUrl } from "@/lib/google-maps"
 import { cn } from "@/lib/utils"
 
 function toGalleryItem(file: AttractionFile, name: string): GalleryItem | null {
@@ -164,7 +165,7 @@ function AttractionTabBar({
   onClose: () => void
 }) {
   const save = useSaveAttraction(attraction.id)
-  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
+  const mapsHref = getGoogleMapsPlaceUrl(attraction)
 
   return (
     <div className="glass-panel border-x-0 border-b-0 pb-[max(0.25rem,env(safe-area-inset-bottom))]">
@@ -263,7 +264,7 @@ async function shareAttraction(attraction: Attraction) {
 }
 
 function AttractionInlineActions({ attraction }: { attraction: Attraction }) {
-  const mapsHref = `https://www.google.com/maps/search/?api=1&query=${attraction.latitude},${attraction.longitude}`
+  const mapsHref = getGoogleMapsPlaceUrl(attraction)
   return (
     <div className="mt-4 flex flex-wrap items-center gap-3">
       <SaveAttractionButton attractionId={attraction.id} />

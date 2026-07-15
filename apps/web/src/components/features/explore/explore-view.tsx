@@ -21,8 +21,7 @@ import { AttractionListCard } from "./attraction-list-card"
 import { AttractionListCardSkeleton } from "./attraction-list-card-skeleton"
 import { UserLocationMarker } from "./user-location-marker"
 import type { MapCameraChangedEvent } from "@vis.gl/react-google-maps"
-import type { Layout } from "react-resizable-panels"
-import type { PanelImperativeHandle } from "react-resizable-panels"
+import type { Layout, PanelImperativeHandle } from "react-resizable-panels"
 
 import type { MapBounds } from "@/api/attractions.api"
 import type { Attraction } from "@/types/attraction"
@@ -310,12 +309,7 @@ export function ExploreView() {
   }
 
   const focusAttractionOnMap = (a: Attraction) => {
-    if (map) {
-      map.panTo({ lat: a.latitude, lng: a.longitude })
-      // Never zoom out — if user is already closer in, keep their zoom.
-      const next = Math.max(map.getZoom() ?? FOCUS_ZOOM, FOCUS_ZOOM)
-      map.setZoom(next)
-    }
+    map?.panTo({ lat: a.latitude, lng: a.longitude })
   }
 
   const handleAttractionOpen = (a: Attraction) => {

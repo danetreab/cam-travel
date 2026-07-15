@@ -81,11 +81,7 @@ export function SavedView() {
 
   const handleCardClick = (a: Attraction) => {
     setSelected(a)
-    if (map) {
-      map.panTo({ lat: a.latitude, lng: a.longitude })
-      const next = Math.max(map.getZoom() ?? FOCUS_ZOOM, FOCUS_ZOOM)
-      map.setZoom(next)
-    }
+    map?.panTo({ lat: a.latitude, lng: a.longitude })
   }
 
   const toggleSidebar = () => {

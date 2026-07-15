@@ -22,6 +22,8 @@ import {
   ExternalLink,
   History,
   List,
+  LoaderCircle,
+  LocateFixed,
   MapPinned,
   MessageSquare,
   PanelRightClose,
@@ -70,6 +72,7 @@ import {
   type PromptInputMessage,
 } from "@/components/ai-elements/prompt-input"
 import { Suggestion, Suggestions } from "@/components/ai-elements/suggestion"
+import { UserLocationMarker } from "@/components/features/explore/user-location-marker"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -108,6 +111,7 @@ import {
 } from "@/components/ui/tooltip"
 import { envClient } from "@/env"
 import { useMediaQuery } from "@/hooks/use-media-query"
+import { useUserLocation } from "@/hooks/use-user-location"
 import { cn } from "@/lib/utils"
 import { Header } from "@/components/layout/header"
 import {
@@ -130,11 +134,16 @@ type PlannerCopy = {
   initialAssistant: string
   starterPrompts: string[]
   followUpPrompts: string[]
+  nearbyTourPrompt: string
   restoredPlan: string
   emptyTitle: string
   emptyDescription: string
   planning: string
   inputPlaceholder: string
+  useCurrentLocation: string
+  locationEnabled: string
+  locating: string
+  disableLocation: string
   showMap: string
   showPlan: string
   aiPlanner: string
@@ -186,8 +195,8 @@ function getPlannerCopy(language: string): PlannerCopy {
       initialAssistant:
         "ប្រាប់ខ្ញុំថាអ្នកចង់ទៅណា មានពេលប៉ុន្មានថ្ងៃ ឬចង់ធ្វើដំណើរបែបណា។ ខ្ញុំនឹងរៀបចំគម្រោង ហើយកែសម្រួលបន្តនៅទីនេះ។",
       starterPrompts: [
-        "ណែនាំកន្លែងគួរទៅនៅសៀមរាប",
-        "រៀបចំដំណើរ ៣ ថ្ងៃនៅសៀមរាប",
+        "រៀបចំដំណើរនៅកម្ពុជា",
+        "ស្វែងរកកន្លែងក្បែរខ្ញុំនៅកម្ពុជា ហើយរៀបចំដំណើរកម្សាន្តខ្លីកន្លះថ្ងៃ",
         "ម្ហូបក្នុងស្រុកល្អៗនៅសៀមរាប",
       ],
       followUpPrompts: [
@@ -196,11 +205,17 @@ function getPlannerCopy(language: string): PlannerCopy {
         "រៀបចំ Itinerary ៣ ថ្ងៃ",
         "ធ្វើជម្រើសដែលចំណាយតិចជាងនេះ",
       ],
+      nearbyTourPrompt:
+        "ស្វែងរកកន្លែងក្បែរខ្ញុំនៅកម្ពុជា ហើយរៀបចំដំណើរកម្សាន្តខ្លីកន្លះថ្ងៃ",
       restoredPlan: "បានស្ដារគម្រោងដែលបានរក្សាទុកពីតំណនេះ។",
       emptyTitle: "ចាប់ផ្ដើមរៀបចំដំណើរ",
       emptyDescription: "សួរអំពីកន្លែង ផ្លូវ ម្ហូប ឬការកែសម្រួល Itinerary។",
       planning: "កំពុងរៀបចំដំណើររបស់អ្នក",
       inputPlaceholder: "សួរអំពីដំណើរកំសាន្ត...",
+      useCurrentLocation: "ប្រើទីតាំងបច្ចុប្បន្ន",
+      locationEnabled: "កំពុងប្រើទីតាំង",
+      locating: "កំពុងរកទីតាំង...",
+      disableLocation: "ឈប់ប្រើទីតាំង",
       showMap: "បង្ហាញផែនទី",
       showPlan: "បង្ហាញគម្រោង",
       aiPlanner: "AI រៀបចំដំណើរ",
@@ -249,8 +264,8 @@ function getPlannerCopy(language: string): PlannerCopy {
     initialAssistant:
       "Tell me where you want to go, how long you have, or what kind of trip you want. I will build a plan and keep refining it here.",
     starterPrompts: [
-      "Recommend places to visit in Siem Reap",
-      "Plan 3 days in Siem Reap",
+      "Plan a trip in Cambodia",
+      "Find places near me in Cambodia and plan a quick half-day tour",
       "Best local food in Siem Reap",
     ],
     followUpPrompts: [
@@ -259,11 +274,17 @@ function getPlannerCopy(language: string): PlannerCopy {
       "Create a 3-day itinerary",
       "Create a cheaper version",
     ],
+    nearbyTourPrompt:
+      "Find places near me in Cambodia and plan a quick half-day tour",
     restoredPlan: "Restored your saved plan from this URL.",
     emptyTitle: "Start a travel plan",
     emptyDescription: "Ask for places, routes, food, or itinerary changes.",
     planning: "Planning your trip",
     inputPlaceholder: "Ask about your trip...",
+    useCurrentLocation: "Use current location",
+    locationEnabled: "Using current location",
+    locating: "Finding location...",
+    disableLocation: "Stop using location",
     showMap: "Show map",
     showPlan: "Show plan",
     aiPlanner: "AI Planner",
@@ -695,6 +716,7 @@ export function TravelPlannerView() {
     () => getPlannerCopy(currentLanguage),
     [currentLanguage]
   )
+  const userLocation = useUserLocation()
   const activePlaceRouteId = useRouterState({
     select: (state) => {
       const match = state.matches.find(
@@ -750,6 +772,12 @@ export function TravelPlannerView() {
   })
 
   const chatBusy = chatStatus === "submitted" || chatStatus === "streaming"
+
+  useEffect(() => {
+    if (userLocation.error && userLocation.status !== "loading") {
+      toast.error(userLocation.error)
+    }
+  }, [userLocation.error, userLocation.status])
 
   useEffect(() => {
     setChatMessages((messages) => {
@@ -961,7 +989,10 @@ export function TravelPlannerView() {
     })
   }, [activePlanId, navigate, selectedId, sessionId])
 
-  const submitPrompt = (nextMessage = message) => {
+  const submitPrompt = (
+    nextMessage = message,
+    locationOverride?: { lat: number; lng: number } | null
+  ) => {
     const trimmed = nextMessage.trim()
     if (!trimmed || chatBusy) return
     if (chatError) clearError()
@@ -980,11 +1011,37 @@ export function TravelPlannerView() {
         body: {
           planId: result?.planId ?? activePlanId,
           sessionId,
-          userLocation: null,
+          userLocation:
+            locationOverride === undefined
+              ? userLocation.position
+              : locationOverride,
           language: currentLanguage,
         },
       }
     )
+  }
+
+  const planNearbyTour = async () => {
+    if (chatBusy || userLocation.status === "loading") return
+    const position = userLocation.position ?? (await userLocation.locate())
+    if (!position) return
+    submitPrompt(plannerCopy.nearbyTourPrompt, position)
+  }
+
+  const handlePromptPick = (prompt: string) => {
+    if (prompt === plannerCopy.nearbyTourPrompt) {
+      void planNearbyTour()
+      return
+    }
+    submitPrompt(prompt)
+  }
+
+  const toggleUserLocation = () => {
+    if (userLocation.position) {
+      userLocation.clear()
+      return
+    }
+    void userLocation.locate()
   }
 
   const resetSession = () => {
@@ -1121,6 +1178,7 @@ export function TravelPlannerView() {
     <PlannerMap
       result={result}
       selectedId={selectedId}
+      userLocation={userLocation.position}
       colorScheme={mapColorScheme}
       onOpenPlace={openPlaceDetail}
     />
@@ -1205,7 +1263,7 @@ export function TravelPlannerView() {
             result ? plannerCopy.followUpPrompts : plannerCopy.starterPrompts
           }
           loading={chatBusy}
-          onPick={submitPrompt}
+          onPick={handlePromptPick}
         />
         {/* {result && (
           <div className="mt-3 flex flex-wrap gap-2">
@@ -1239,7 +1297,38 @@ export function TravelPlannerView() {
               className="max-h-36 min-h-12 p-2"
             />
           </PromptInputBody>
-          <PromptInputFooter className="justify-end p-2">
+          <PromptInputFooter className="justify-between gap-2 p-2">
+            <Button
+              type="button"
+              variant={userLocation.position ? "secondary" : "ghost"}
+              size="xs"
+              disabled={chatBusy || userLocation.status === "loading"}
+              aria-pressed={Boolean(userLocation.position)}
+              aria-label={
+                userLocation.position
+                  ? plannerCopy.disableLocation
+                  : plannerCopy.useCurrentLocation
+              }
+              title={
+                userLocation.position
+                  ? plannerCopy.disableLocation
+                  : plannerCopy.useCurrentLocation
+              }
+              onClick={toggleUserLocation}
+            >
+              {userLocation.status === "loading" ? (
+                <LoaderCircle className="size-3.5 animate-spin" />
+              ) : (
+                <LocateFixed className="size-3.5" />
+              )}
+              <span className="max-w-36 truncate">
+                {userLocation.status === "loading"
+                  ? plannerCopy.locating
+                  : userLocation.position
+                    ? plannerCopy.locationEnabled
+                    : plannerCopy.useCurrentLocation}
+              </span>
+            </Button>
             <PromptInputSubmit
               status={chatStatus}
               onStop={stopChat}
@@ -2408,15 +2497,17 @@ function PlannerPlaceImage({ place }: { place: AiTravelPlace }) {
 function PlannerMap({
   result,
   selectedId,
+  userLocation,
   colorScheme,
   onOpenPlace,
 }: {
   result: AiTravelResponse | null
   selectedId: string | null
+  userLocation: { lat: number; lng: number } | null
   colorScheme: ColorScheme
   onOpenPlace: (place: AiTravelPlace) => void
 }) {
-  const center = result?.map.center ?? DEFAULT_CENTER
+  const center = result?.map.center ?? userLocation ?? DEFAULT_CENTER
   const zoom = result?.map.zoom ?? DEFAULT_ZOOM
   const places = result?.places.filter((place) => !place.removed) ?? []
   const mapKey = `${result?.planId ?? "empty"}-${center.lat}-${center.lng}-${places.length}`
@@ -2444,6 +2535,7 @@ function PlannerMap({
           />
         </AdvancedMarker>
       ))}
+      {userLocation && <UserLocationMarker position={userLocation} />}
     </GoogleMap>
   )
 }

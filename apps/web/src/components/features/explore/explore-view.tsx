@@ -212,7 +212,7 @@ export function ExploreView() {
   const userLocation = useUserLocation()
 
   const handleLocateMe = () => {
-    userLocation.locate()
+    void userLocation.locate()
   }
 
   const toggleSidebar = () => {

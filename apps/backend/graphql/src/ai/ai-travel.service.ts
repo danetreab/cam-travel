@@ -153,6 +153,18 @@ const DEFAULT_FOLLOW_UPS: FollowUpAction[] = [
 ];
 const CAMBODIA_SCOPE_ERROR =
   "I can only help with Cambodia travel maps, places, and routes.";
+const NEARBY_REQUEST_PATTERN =
+  /\b(?:nearby|near me|near us|around me|around us|close to me|close to us|current location|my location)\b|ក្បែរខ្ញុំ|នៅជិតខ្ញុំ|ទីតាំងបច្ចុប្បន្ន/iu;
+const TRAVEL_REQUEST_PATTERN =
+  /\b(?:place|places|tour|trip|itinerary|visit|attraction|restaurant|cafe|food|hotel|temple|museum|things to do|where to go|route)\b|កន្លែង|ដំណើរ|កម្សាន្ត|ម្ហូប|ភោជនីយដ្ឋាន|កាហ្វេ|សណ្ឋាគារ|ប្រាសាទ|សារមន្ទីរ/iu;
+const QUICK_TOUR_PATTERN =
+  /\b(?:tour|trip|itinerary)\b|ដំណើរ|កម្សាន្ត/iu;
+const CAMBODIA_BOUNDS = {
+  south: 9.9,
+  west: 102.3,
+  north: 14.7,
+  east: 107.7,
+} as const;
 const AI_TRAVEL_QUESTION_LIMIT = 5;
 const AI_TRAVEL_RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
 const AI_TRAVEL_RATE_LIMIT_MESSAGE =
@@ -308,6 +320,7 @@ export class AiTravelService {
     if (message.length > 2000) {
       throw new BadRequestException("message must be 2000 characters or fewer");
     }
+    this.validateUserLocation(request.userLocation);
 
     if (this.isDevelopmentEnvironment) {
       return this.runDevelopmentTravel(userId, request, message, onProgress);
@@ -869,6 +882,10 @@ export class AiTravelService {
     existingPlan: ExistingPlan | null,
   ): Promise<IntentClassification> {
     this.requireGeminiKey();
+    const locationAwareNearbyRequest = this.isLocationAwareNearbyRequest(
+      message,
+      request.userLocation,
+    );
     const previous = existingPlan
       ? `Existing plan: ${JSON.stringify({
           title: existingPlan.title,
@@ -885,6 +902,8 @@ export class AiTravelService {
         system: [
           "You classify travel planning prompts for a Cambodia-only map planner.",
           "Set allowed=false unless the user is asking about Cambodia travel, maps, routes, itineraries, or real places.",
+          "A nearby travel request such as 'near me', 'nearby', or 'current location' with a supplied user location inside Cambodia is Cambodia travel and must be allowed even when Cambodia is not named in the prompt.",
+          "A user location never makes a non-travel request allowed.",
           "Reject general knowledge, coding, unsafe, adult, medical, legal, financial, and non-Cambodia travel requests.",
           "If a follow-up depends on an existing Cambodia plan, it is allowed.",
           "Extract only facts stated or clearly implied. Return structured data only.",
@@ -902,17 +921,27 @@ export class AiTravelService {
           "searchQuery must be a Google Places text search query for real places inside Cambodia.",
         ].join("\n"),
       });
-      if (!output.allowed) {
+      if (!output.allowed && !locationAwareNearbyRequest) {
         throw new BadRequestException(CAMBODIA_SCOPE_ERROR);
       }
+      const nearbyGuardOverride =
+        locationAwareNearbyRequest && !output.allowed;
       const destination = this.normalizeCambodiaDestination(
         output.destination || existingPlan?.destination || null,
       );
       return {
         ...output,
+        allowed: true,
+        intent: nearbyGuardOverride
+          ? QUICK_TOUR_PATTERN.test(message)
+            ? "CREATE_ITINERARY"
+            : "FIND_NEARBY"
+          : output.intent,
         destination,
         searchQuery: this.ensureCambodiaSearchQuery(
-          output.searchQuery ||
+          (nearbyGuardOverride
+            ? "tourist attractions and local places near current location"
+            : output.searchQuery) ||
             this.defaultSearchQuery(output.intent, destination, message),
         ),
       };
@@ -999,7 +1028,10 @@ export class AiTravelService {
       pageSize: 15,
       languageCode: language.startsWith("km") ? "km" : "en",
     };
-    if (request.userLocation) {
+    if (
+      request.userLocation &&
+      this.isLocationInsideCambodia(request.userLocation)
+    ) {
       body.locationBias = {
         circle: {
           center: {
@@ -1677,6 +1709,47 @@ export class AiTravelService {
     const lower = value.toLowerCase();
     if (CAMBODIA_ALIASES.some((name) => lower.includes(name))) return value;
     return `${value}, Cambodia`;
+  }
+
+  private validateUserLocation(
+    location: AiTravelRequest["userLocation"],
+  ): void {
+    if (!location) return;
+    if (
+      !Number.isFinite(location.lat) ||
+      !Number.isFinite(location.lng) ||
+      location.lat < -90 ||
+      location.lat > 90 ||
+      location.lng < -180 ||
+      location.lng > 180
+    ) {
+      throw new BadRequestException(
+        "userLocation must contain valid latitude and longitude values",
+      );
+    }
+  }
+
+  private isLocationAwareNearbyRequest(
+    message: string,
+    location: AiTravelRequest["userLocation"],
+  ): boolean {
+    return Boolean(
+      location &&
+        this.isLocationInsideCambodia(location) &&
+        NEARBY_REQUEST_PATTERN.test(message) &&
+        TRAVEL_REQUEST_PATTERN.test(message),
+    );
+  }
+
+  private isLocationInsideCambodia(
+    location: NonNullable<AiTravelRequest["userLocation"]>,
+  ): boolean {
+    return (
+      location.lat >= CAMBODIA_BOUNDS.south &&
+      location.lat <= CAMBODIA_BOUNDS.north &&
+      location.lng >= CAMBODIA_BOUNDS.west &&
+      location.lng <= CAMBODIA_BOUNDS.east
+    );
   }
 
   private ensureCambodiaSearchQuery(query: string): string {

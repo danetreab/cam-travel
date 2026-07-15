@@ -37,6 +37,7 @@ export interface AiTravelPlace {
   address: string | null;
   latitude: number;
   longitude: number;
+  distanceMeters: number | null;
   rating: number | null;
   userRatingCount: number | null;
   googleMapsUri: string | null;

@@ -39,6 +39,11 @@ import {
   type FollowUpAction,
   type TripIntent,
 } from "./ai-travel.types";
+import {
+  buildNearbyTextSearchBody,
+  isLocationAwareNearbyRequest as isNearbyTravelRequest,
+  selectNearbyPlaces,
+} from "./nearby-search";
 
 type ExistingPlan = typeof aiTravelPlan.$inferSelect;
 type ExistingPlanPlace = typeof aiTravelPlanPlace.$inferSelect;
@@ -69,6 +74,7 @@ interface CandidatePlace {
   address: string | null;
   latitude: number;
   longitude: number;
+  distanceMeters: number | null;
   rating: number | null;
   userRatingCount: number | null;
   googleMapsUri: string | null;
@@ -153,12 +159,7 @@ const DEFAULT_FOLLOW_UPS: FollowUpAction[] = [
 ];
 const CAMBODIA_SCOPE_ERROR =
   "I can only help with Cambodia travel maps, places, and routes.";
-const NEARBY_REQUEST_PATTERN =
-  /\b(?:nearby|near me|near us|around me|around us|close to me|close to us|current location|my location)\b|ក្បែរខ្ញុំ|នៅជិតខ្ញុំ|ទីតាំងបច្ចុប្បន្ន/iu;
-const TRAVEL_REQUEST_PATTERN =
-  /\b(?:place|places|tour|trip|itinerary|visit|attraction|restaurant|cafe|food|hotel|temple|museum|things to do|where to go|route)\b|កន្លែង|ដំណើរ|កម្សាន្ត|ម្ហូប|ភោជនីយដ្ឋាន|កាហ្វេ|សណ្ឋាគារ|ប្រាសាទ|សារមន្ទីរ/iu;
-const QUICK_TOUR_PATTERN =
-  /\b(?:tour|trip|itinerary)\b|ដំណើរ|កម្សាន្ត/iu;
+const QUICK_TOUR_PATTERN = /\b(?:tour|trip|itinerary)\b|ដំណើរ|កម្សាន្ត/iu;
 const CAMBODIA_BOUNDS = {
   south: 9.9,
   west: 102.3,
@@ -250,8 +251,7 @@ export class AiTravelService {
           draft: "កំពុងរៀបចំគម្រោងរបស់អ្នក",
           save: "កំពុងរក្សាទុកគម្រោងនេះទៅសម័យរបស់អ្នក",
           complete: "គម្រោងរួចរាល់",
-          planReadyMessage:
-            "នេះជាគម្រោងដែលអ្នកអាចបន្តកែសម្រួលក្នុងសន្ទនានេះ។",
+          planReadyMessage: "នេះជាគម្រោងដែលអ្នកអាចបន្តកែសម្រួលក្នុងសន្ទនានេះ។",
           recommended: "កន្លែងណែនាំ",
           fallbackReason: "ជាលទ្ធផលពិតពី Google Places ដែលសមនឹងសំណើរបស់អ្នក។",
           food: "ម្ហូបអាហារ",
@@ -259,6 +259,7 @@ export class AiTravelService {
           night: "សកម្មភាពពេលយប់",
           temples: "ប្រាសាទ និងប្រវត្តិសាស្ត្រ",
           placeCategory: "កន្លែង",
+          nearby: "កន្លែងនៅក្បែរ",
           day: "ថ្ងៃទី",
           tripPlan: "គម្រោងដំណើរ",
           foodRecommendations: "ការណែនាំម្ហូបអាហារ",
@@ -279,6 +280,7 @@ export class AiTravelService {
           night: "Night Activities",
           temples: "Temples & History",
           placeCategory: "Places",
+          nearby: "Nearby",
           day: "Day",
           tripPlan: "trip plan",
           foodRecommendations: "Food recommendations",
@@ -322,7 +324,7 @@ export class AiTravelService {
     }
     this.validateUserLocation(request.userLocation);
 
-    if (this.isDevelopmentEnvironment) {
+    if (this.isDevelopmentDummyMode) {
       return this.runDevelopmentTravel(userId, request, message, onProgress);
     }
 
@@ -566,10 +568,10 @@ export class AiTravelService {
     return this.config.get<string>("PUBLIC_API_URL") ?? "http://localhost:3000";
   }
 
-  private get isDevelopmentEnvironment(): boolean {
-    const env =
-      this.config.get<string>("NODE_ENV") ?? this.config.get<string>("APP_ENV");
-    return env === "development";
+  private get isDevelopmentDummyMode(): boolean {
+    return /^(?:1|true|yes)$/i.test(
+      this.config.get<string>("AI_TRAVEL_DUMMY_MODE")?.trim() ?? "",
+    );
   }
 
   private async enforceQuestionRateLimit(userId: string): Promise<void> {
@@ -703,7 +705,12 @@ export class AiTravelService {
     const places: Array<
       Omit<
         AiTravelPlace,
-        "attractionId" | "photoName" | "photoUrl" | "saved" | "removed"
+        | "attractionId"
+        | "distanceMeters"
+        | "photoName"
+        | "photoUrl"
+        | "saved"
+        | "removed"
       >
     > = [
       {
@@ -717,7 +724,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Angkor+Wat",
         types: ["tourist_attraction", "place_of_worship"],
         category: copy.temples,
-        reason: "Cambodia's signature temple complex and a strong first stop for any itinerary.",
+        reason:
+          "Cambodia's signature temple complex and a strong first stop for any itinerary.",
         order: 1,
       },
       {
@@ -731,7 +739,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Bayon+Temple",
         types: ["tourist_attraction", "place_of_worship"],
         category: copy.temples,
-        reason: "Known for carved stone faces and easy to combine with Angkor Thom stops.",
+        reason:
+          "Known for carved stone faces and easy to combine with Angkor Thom stops.",
         order: 2,
       },
       {
@@ -745,7 +754,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Ta+Prohm+Temple",
         types: ["tourist_attraction", "place_of_worship"],
         category: copy.temples,
-        reason: "A dramatic temple where tree roots and stone ruins make the route feel cinematic.",
+        reason:
+          "A dramatic temple where tree roots and stone ruins make the route feel cinematic.",
         order: 3,
       },
       {
@@ -759,7 +769,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Royal+Palace+Phnom+Penh",
         types: ["tourist_attraction", "museum"],
         category: copy.culture,
-        reason: "A central Phnom Penh landmark with classic architecture and easy riverside access.",
+        reason:
+          "A central Phnom Penh landmark with classic architecture and easy riverside access.",
         order: 4,
       },
       {
@@ -787,7 +798,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Tuol+Sleng+Genocide+Museum",
         types: ["museum", "tourist_attraction"],
         category: copy.culture,
-        reason: "An important historical site for travelers who want deeper context.",
+        reason:
+          "An important historical site for travelers who want deeper context.",
         order: 6,
       },
       {
@@ -801,7 +813,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Central+Market+Phnom+Penh",
         types: ["market", "tourist_attraction"],
         category: placeCategory.market,
-        reason: "Good for quick shopping, local snacks, and testing market-style planner cards.",
+        reason:
+          "Good for quick shopping, local snacks, and testing market-style planner cards.",
         order: 7,
       },
       {
@@ -815,7 +828,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Bokor+National+Park",
         types: ["park", "tourist_attraction"],
         category: placeCategory.nature,
-        reason: "A cooler mountain escape near Kampot with viewpoints and old hill-station stops.",
+        reason:
+          "A cooler mountain escape near Kampot with viewpoints and old hill-station stops.",
         order: 8,
       },
       {
@@ -829,7 +843,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Kampot+River",
         types: ["natural_feature", "tourist_attraction"],
         category: placeCategory.nature,
-        reason: "Useful for sunset cruises, kayaking, and relaxed follow-up itinerary tests.",
+        reason:
+          "Useful for sunset cruises, kayaking, and relaxed follow-up itinerary tests.",
         order: 9,
       },
       {
@@ -843,7 +858,8 @@ export class AiTravelService {
         googleMapsUri: "https://maps.google.com/?q=Kep+Crab+Market",
         types: ["restaurant", "market", "tourist_attraction"],
         category: copy.food,
-        reason: "A classic seafood stop and a good test case for food recommendations.",
+        reason:
+          "A classic seafood stop and a good test case for food recommendations.",
         order: 10,
       },
     ];
@@ -851,6 +867,7 @@ export class AiTravelService {
     return places.map((place) => ({
       ...place,
       attractionId: null,
+      distanceMeters: null,
       photoName: null,
       photoUrl: null,
       saved: false,
@@ -924,15 +941,14 @@ export class AiTravelService {
       if (!output.allowed && !locationAwareNearbyRequest) {
         throw new BadRequestException(CAMBODIA_SCOPE_ERROR);
       }
-      const nearbyGuardOverride =
-        locationAwareNearbyRequest && !output.allowed;
+      const nearbyGuardOverride = locationAwareNearbyRequest && !output.allowed;
       const destination = this.normalizeCambodiaDestination(
         output.destination || existingPlan?.destination || null,
       );
       return {
         ...output,
         allowed: true,
-        intent: nearbyGuardOverride
+        intent: locationAwareNearbyRequest
           ? QUICK_TOUR_PATTERN.test(message)
             ? "CREATE_ITINERARY"
             : "FIND_NEARBY"
@@ -965,6 +981,7 @@ export class AiTravelService {
       googlePlaceId: place.googlePlaceId,
       name: place.name,
       address: place.address,
+      distanceMeters: place.distanceMeters,
       rating: place.rating,
       userRatingCount: place.userRatingCount,
       types: place.types,
@@ -979,6 +996,7 @@ export class AiTravelService {
           "You are a travel recommendation assistant.",
           "Use only the places provided from Google Places API.",
           "Do not invent place names or place IDs.",
+          "For FIND_NEARBY, prefer the closest relevant candidates and preserve nearest-first order.",
           "Group recommendations by useful travel categories.",
           "Explain why each place is worth visiting.",
           "Also write responseText as a short conversational answer to the user before the structured places.",
@@ -1015,33 +1033,28 @@ export class AiTravelService {
     language: string,
   ): Promise<CandidatePlace[]> {
     const key = this.requirePlacesKey();
-    const textQuery = this.ensureCambodiaSearchQuery(
-      classification.searchQuery ||
-        this.defaultSearchQuery(
-          classification.intent,
-          classification.destination,
-          request.message,
-        ),
+    const nearbyLocation = this.nearbyLocation(request);
+    const defaultQuery = this.defaultSearchQuery(
+      classification.intent,
+      classification.destination,
+      request.message,
     );
-    const body: Record<string, unknown> = {
-      textQuery,
-      pageSize: 15,
-      languageCode: language.startsWith("km") ? "km" : "en",
-    };
-    if (
-      request.userLocation &&
-      this.isLocationInsideCambodia(request.userLocation)
-    ) {
-      body.locationBias = {
-        circle: {
-          center: {
-            latitude: request.userLocation.lat,
-            longitude: request.userLocation.lng,
-          },
-          radius: 25000,
-        },
-      };
-    }
+    const languageCode = language.startsWith("km") ? "km" : "en";
+    const body: Record<string, unknown> = nearbyLocation
+      ? buildNearbyTextSearchBody(
+          classification.searchQuery || defaultQuery,
+          request.message,
+          nearbyLocation,
+          CAMBODIA_BOUNDS,
+          languageCode,
+        )
+      : {
+          textQuery: this.ensureCambodiaSearchQuery(
+            classification.searchQuery || defaultQuery,
+          ),
+          pageSize: 15,
+          languageCode,
+        };
 
     try {
       const res = await this.http.axiosRef.post<{ places?: GooglePlace[] }>(
@@ -1054,7 +1067,18 @@ export class AiTravelService {
           },
         },
       );
-      return this.normalizePlaces(res.data.places ?? []);
+      const candidates = await this.normalizePlaces(res.data.places ?? []);
+      if (!nearbyLocation) return candidates;
+
+      return selectNearbyPlaces(
+        candidates.filter((place) =>
+          this.isLocationInsideCambodia({
+            lat: place.latitude,
+            lng: place.longitude,
+          }),
+        ),
+        nearbyLocation,
+      );
     } catch (error) {
       throw new BadGatewayException(
         `Google Places Text Search failed: ${this.httpErrorStatus(error)}`,
@@ -1082,6 +1106,7 @@ export class AiTravelService {
           address: p.formattedAddress ?? null,
           latitude: p.location?.latitude ?? 0,
           longitude: p.location?.longitude ?? 0,
+          distanceMeters: null,
           rating: p.rating ?? null,
           userRatingCount: p.userRatingCount ?? null,
           googleMapsUri: p.googleMapsUri ?? null,
@@ -1137,7 +1162,8 @@ export class AiTravelService {
             seen.add(candidate.googlePlaceId);
             const state = states.get(candidate.googlePlaceId);
             return this.toResponsePlace(candidate, {
-              category: group.category || this.inferCategory(candidate, language),
+              category:
+                group.category || this.inferCategory(candidate, language),
               reason: pick.reason,
               order: order++,
               saved: state?.saved ?? false,
@@ -1161,6 +1187,23 @@ export class AiTravelService {
             removed: state?.removed ?? false,
           });
         }),
+      });
+    }
+
+    if (classification.intent === "FIND_NEARBY") {
+      const nearestPlaces = groups
+        .flatMap((group) => group.places)
+        .sort(
+          (a, b) =>
+            (a.distanceMeters ?? Number.POSITIVE_INFINITY) -
+            (b.distanceMeters ?? Number.POSITIVE_INFINITY),
+        );
+      nearestPlaces.forEach((place, index) => {
+        place.order = index + 1;
+      });
+      groups.splice(0, groups.length, {
+        category: copy.nearby,
+        places: nearestPlaces,
       });
     }
 
@@ -1189,7 +1232,8 @@ export class AiTravelService {
       destination: classification.destination,
       title: draft.title || this.defaultTitle(classification, language),
       summary:
-        draft.responseText || this.defaultResponseText(classification, language),
+        draft.responseText ||
+        this.defaultResponseText(classification, language),
       groups,
       places,
       itinerary: responseItinerary,
@@ -1282,6 +1326,7 @@ export class AiTravelService {
       address: candidate.address,
       latitude: candidate.latitude,
       longitude: candidate.longitude,
+      distanceMeters: candidate.distanceMeters,
       rating: candidate.rating,
       userRatingCount: candidate.userRatingCount,
       googleMapsUri: candidate.googleMapsUri,
@@ -1623,7 +1668,11 @@ export class AiTravelService {
     );
     const apply = (place: AiTravelPlace): AiTravelPlace => {
       const state = stateMap.get(place.googlePlaceId);
-      return state ? { ...place, ...state } : place;
+      const normalized = {
+        ...place,
+        distanceMeters: place.distanceMeters ?? null,
+      };
+      return state ? { ...normalized, ...state } : normalized;
     };
     const groups = response.groups
       .map((group) => ({
@@ -1659,6 +1708,7 @@ export class AiTravelService {
           address: place.address,
           latitude: place.latitude,
           longitude: place.longitude,
+          distanceMeters: null,
           rating:
             rawPlace && typeof rawPlace.rating === "number"
               ? rawPlace.rating
@@ -1733,12 +1783,18 @@ export class AiTravelService {
     message: string,
     location: AiTravelRequest["userLocation"],
   ): boolean {
-    return Boolean(
-      location &&
-        this.isLocationInsideCambodia(location) &&
-        NEARBY_REQUEST_PATTERN.test(message) &&
-        TRAVEL_REQUEST_PATTERN.test(message),
-    );
+    return isNearbyTravelRequest(message, location, CAMBODIA_BOUNDS);
+  }
+
+  private nearbyLocation(
+    request: AiTravelRequest,
+  ): NonNullable<AiTravelRequest["userLocation"]> | null {
+    return this.isLocationAwareNearbyRequest(
+      request.message,
+      request.userLocation,
+    )
+      ? request.userLocation!
+      : null;
   }
 
   private isLocationInsideCambodia(

@@ -112,6 +112,7 @@ import {
 import { envClient } from "@/env"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { useUserLocation } from "@/hooks/use-user-location"
+import { formatDistanceValue } from "@/lib/distance"
 import { cn } from "@/lib/utils"
 import { Header } from "@/components/layout/header"
 import {
@@ -177,6 +178,8 @@ type PlannerCopy = {
   maps: string
   details: string
   whyVisit: string
+  distance: string
+  distanceAway: (distanceMeters: number | null) => string | null
   openFullRoute: string
   dayRoute: (day: number) => string
   sessionDeleted: string
@@ -251,6 +254,11 @@ function getPlannerCopy(language: string): PlannerCopy {
       maps: "ផែនទី",
       details: "ព័ត៌មានលម្អិត",
       whyVisit: "ហេតុអ្វីគួរទៅ",
+      distance: "ចម្ងាយ",
+      distanceAway: (distanceMeters) => {
+        const value = formatDistanceValue(distanceMeters)
+        return value ? `ចម្ងាយ ${value}` : null
+      },
       openFullRoute: "បើកផ្លូវពេញក្នុង Google Maps",
       dayRoute: (day) => `ផ្លូវថ្ងៃទី ${day}`,
       sessionDeleted: "បានលុបសម័យរៀបចំដំណើរ",
@@ -320,6 +328,11 @@ function getPlannerCopy(language: string): PlannerCopy {
     maps: "Maps",
     details: "Details",
     whyVisit: "Why visit",
+    distance: "Distance",
+    distanceAway: (distanceMeters) => {
+      const value = formatDistanceValue(distanceMeters)
+      return value ? `${value} away` : null
+    },
     openFullRoute: "Open full route in Google Maps",
     dayRoute: (day) => `Day ${day} route`,
     sessionDeleted: "Planner session deleted",
@@ -2213,6 +2226,8 @@ function PlannerPlaceCard({
   onSave: () => void
   onRemove: () => void
 }) {
+  const distanceLabel = copy.distanceAway(place.distanceMeters)
+
   return (
     <div
       role="button"
@@ -2244,6 +2259,12 @@ function PlannerPlaceCard({
           {place.address && (
             <p className="mt-0.5 line-clamp-1 text-[11px] text-muted-foreground">
               {place.address}
+            </p>
+          )}
+          {distanceLabel && (
+            <p className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-primary">
+              <LocateFixed className="size-3" />
+              {distanceLabel}
             </p>
           )}
         </div>
@@ -2341,6 +2362,7 @@ export function PlannerPlaceDetailDialog({
   const isKhmer = isKhmerLanguage(
     i18n.resolvedLanguage ?? i18n.language ?? "en"
   )
+  const distanceLabel = copy.distanceAway(place?.distanceMeters ?? null)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -2396,6 +2418,17 @@ export function PlannerPlaceDetailDialog({
               )}
 
               <div className="grid gap-2 sm:grid-cols-2">
+                {distanceLabel && (
+                  <div className="rounded-lg border border-border/70 bg-muted/20 p-3">
+                    <div className="text-xs font-medium text-muted-foreground">
+                      {copy.distance}
+                    </div>
+                    <div className="mt-1 flex items-center gap-1.5 text-sm font-medium">
+                      <LocateFixed className="size-3.5 text-primary" />
+                      {distanceLabel}
+                    </div>
+                  </div>
+                )}
                 {place.category && (
                   <div className="rounded-lg border border-border/70 bg-muted/20 p-3">
                     <div className="text-xs font-medium text-muted-foreground">

@@ -8,6 +8,7 @@
     "dev": "NODE_ENV=development nest start --watch",
     "build": "nest build",
     "start": "node dist/main",
+    "test": "vitest run",
     "lint": "eslint src --max-warnings 0",
     "check-types": "tsc --noEmit -p tsconfig.json"
   },
@@ -52,6 +53,7 @@
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "5.9.2"
+    "typescript": "5.9.2",
+    "vitest": "^3.2.4"
   }
 }

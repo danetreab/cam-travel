@@ -113,6 +113,7 @@ import { envClient } from "@/env"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { useUserLocation } from "@/hooks/use-user-location"
 import { formatDistanceValue } from "@/lib/distance"
+import { buildGoogleMapsRouteUrl } from "@/lib/google-maps-route"
 import { cn } from "@/lib/utils"
 import { Header } from "@/components/layout/header"
 import {
@@ -597,10 +598,6 @@ type GoogleRouteLink = {
   stopCount: number
 }
 
-function routePoint(place: AiTravelPlace) {
-  return `${place.latitude},${place.longitude}`
-}
-
 function uniquePlacesByIds(
   ids: string[],
   placeMap: Map<string, AiTravelPlace>
@@ -635,31 +632,14 @@ function buildRouteStops(result: AiTravelResponse): AiTravelPlace[] {
   return stops.length >= 2 ? stops : fallbackRouteStops(result)
 }
 
-function buildGoogleMapsRouteUrl(stops: AiTravelPlace[]): string | null {
-  if (stops.length < 2) return null
-  const [origin, ...rest] = stops
-  const destination = rest[rest.length - 1]
-  if (!origin || !destination) return null
-  const waypoints = rest.slice(0, -1)
-  const params = new URLSearchParams({
-    api: "1",
-    origin: routePoint(origin),
-    destination: routePoint(destination),
-    travelmode: "driving",
-  })
-  if (waypoints.length > 0) {
-    params.set("waypoints", waypoints.map(routePoint).join("|"))
-  }
-  return `https://www.google.com/maps/dir/?${params.toString()}`
-}
-
 function buildRouteLinks(
   result: AiTravelResponse,
-  copy: PlannerCopy
+  copy: PlannerCopy,
+  userLocation: { lat: number; lng: number } | null
 ): GoogleRouteLink[] {
   const links: GoogleRouteLink[] = []
   const allStops = buildRouteStops(result)
-  const fullHref = buildGoogleMapsRouteUrl(allStops)
+  const fullHref = buildGoogleMapsRouteUrl(allStops, userLocation)
   if (fullHref) {
     links.push({
       label: copy.openFullRoute,
@@ -680,7 +660,7 @@ function buildRouteLinks(
           .map((place) => place.googlePlaceId),
         placeMap
       )
-      const href = buildGoogleMapsRouteUrl(dayStops)
+      const href = buildGoogleMapsRouteUrl(dayStops, userLocation)
       if (href) {
         links.push({
           label: copy.dayRoute(day.day),
@@ -1241,6 +1221,7 @@ export function TravelPlannerView() {
                 key={chatMessage.id}
                 message={chatMessage}
                 index={index}
+                userLocation={userLocation.position}
                 showPlan={chatMessage.id === latestPlanDisplay?.messageId}
                 copy={plannerCopy}
                 selectedId={selectedId}
@@ -1767,6 +1748,7 @@ function PromptChips({
 function PlannerChatMessage({
   message,
   index,
+  userLocation,
   showPlan,
   copy,
   selectedId,
@@ -1778,6 +1760,7 @@ function PlannerChatMessage({
 }: {
   message: AiTravelPlannerMessage
   index: number
+  userLocation: { lat: number; lng: number } | null
   showPlan: boolean
   copy: PlannerCopy
   selectedId: string | null
@@ -1855,6 +1838,7 @@ function PlannerChatMessage({
                 key={`${message.id}-${part.id ?? partIndex}`}
                 result={part.data}
                 copy={copy}
+                userLocation={userLocation}
                 selectedId={selectedId}
                 saving={saving}
                 onSelect={onSelect}
@@ -1903,6 +1887,7 @@ function PlannerStatusCard({ label }: { label: string }) {
 function PlanResultContent({
   result,
   copy,
+  userLocation,
   selectedId,
   saving,
   onSelect,
@@ -1912,6 +1897,7 @@ function PlanResultContent({
 }: {
   result: AiTravelResponse
   copy: PlannerCopy
+  userLocation: { lat: number; lng: number } | null
   selectedId: string | null
   saving: boolean
   onSelect: (id: string) => void
@@ -1919,7 +1905,7 @@ function PlanResultContent({
   onSave: (place: AiTravelPlace) => void
   onRemove: (place: AiTravelPlace) => void
 }) {
-  const routeLinks = buildRouteLinks(result, copy)
+  const routeLinks = buildRouteLinks(result, copy, userLocation)
 
   return (
     <div className="mt-5 space-y-6">
